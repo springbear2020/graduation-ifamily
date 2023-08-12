@@ -1,6 +1,6 @@
 <template>
-  <!-- 内容描述标签如：[男 234] -->
-  <van-tag plain :type="type" :class="{'desc-tag-margin-right': right}" :size="size">
+  <!-- 内容描述标签如：[男 234] 或 [年龄 23] 等 -->
+  <van-tag :type="type" :class="{'content-margin': right}" plain>
     {{ text }} {{ number }}
   </van-tag>
 </template>
@@ -8,12 +8,12 @@
 <script>
 export default {
   name: "desc-tag",
-  props: ['text', 'number', 'type', 'right', 'size']
+  props: ['text', 'number', 'right', 'type']
 }
 </script>
 
 <style scoped>
-.desc-tag-margin-right {
+.content-margin {
   margin-right: 5px;
 }
 </style>

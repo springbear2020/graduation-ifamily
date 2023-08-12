@@ -9,7 +9,7 @@
     <!-- 绘制 LOGO 字体 -->
     <logo-pattern/>
 
-    <van-form @submit="login">
+    <van-form @submit="userLogin">
       <van-field v-model="mobile" type="tel" name="mobile" label="手机号" placeholder="手机号" autofocus/>
 
       <!-- 手机登录页面展示验证码输入框，密码登录页面展示密码登录输入框 -->
@@ -30,7 +30,7 @@
         </template>
       </van-field>
 
-      <div class="bottom-btn">
+      <div class="login-btn-container">
         <van-button block type="info" native-type="submit">登录</van-button>
       </div>
     </van-form>
@@ -55,7 +55,7 @@ export default {
     };
   },
   methods: {
-    login(data) {
+    userLogin(data) {
       console.log(data)
       this.$router.replace('/mine')
     },

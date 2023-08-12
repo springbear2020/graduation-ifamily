@@ -1,13 +1,13 @@
 <template>
   <!-- echarts 绘制 LOGO 图标文字：百家谱 -->
-  <div ref="logoPattern" class="logo-pattern"/>
+  <div ref="logoPattern" class="logo-container"/>
 </template>
 
 <script>
 import * as echarts from 'echarts'
 
 export default {
-  name: "logo",
+  name: "logo-pattern",
   mounted() {
     echarts.init(this.$refs.logoPattern).setOption({
       graphic: {
@@ -54,7 +54,7 @@ export default {
 </script>
 
 <style>
-.logo-pattern {
+.logo-container {
   width: 100%;
   height: 10em;
 }

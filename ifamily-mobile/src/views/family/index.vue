@@ -1,13 +1,13 @@
 <template>
   <div>
-    <van-nav-bar title="家族" @click-right="myFamilyList">
+    <van-nav-bar title="家族" @click-right="changeFamily">
       <template #right>
         <van-icon name="exchange" color="#1989fa" class="iconfont" class-prefix="icon" size="20"/>
       </template>
     </van-nav-bar>
 
-    <!-- 家族信息概况 -->
-    <family-brief-info @click.native="familyInfo"/>
+    <!-- 家族概况卡片 -->
+    <family-brief-info @click.native="familyInfo" :disabled="true"/>
 
     <van-grid square :gutter="8" :column-num="3">
       <van-grid-item icon="cluster-o" text="家族树谱" to="/family/tree"/>
@@ -17,17 +17,19 @@
 
     <van-tabs v-model="active">
       <van-tab title="成员动态">
-        <van-pull-refresh v-model="isLoading" success-text="刷新成功" @refresh="onRefresh">
+        <van-pull-refresh v-model="isRefreshing" success-text="刷新成功" @refresh="onRefresh">
           <van-empty description="无内容"/>
         </van-pull-refresh>
       </van-tab>
+
       <van-tab title="家族公告">
-        <van-pull-refresh v-model="isLoading" success-text="刷新成功" @refresh="onRefresh">
+        <van-pull-refresh v-model="isRefreshing" success-text="刷新成功" @refresh="onRefresh">
           <van-empty description="无内容"/>
         </van-pull-refresh>
       </van-tab>
+
       <van-tab title="修谱日志">
-        <van-pull-refresh v-model="isLoading" success-text="刷新成功" @refresh="onRefresh">
+        <van-pull-refresh v-model="isRefreshing" success-text="刷新成功" @refresh="onRefresh">
           <van-empty description="无内容"/>
         </van-pull-refresh>
       </van-tab>
@@ -44,21 +46,21 @@ export default {
   data() {
     return {
       active: 0,
-      isLoading: false,
+      isRefreshing: false
     };
   },
   methods: {
-    onRefresh() {
-      setTimeout(() => {
-        this.isLoading = false;
-      }, 1000);
-    },
-    myFamilyList() {
+    changeFamily() {
       this.$router.push('/family/list')
     },
     familyInfo() {
       this.$router.push('/family/info')
-    }
+    },
+    onRefresh() {
+      setTimeout(() => {
+        this.isRefreshing = false;
+      }, 1000);
+    },
   },
 }
 </script>

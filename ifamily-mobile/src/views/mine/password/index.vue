@@ -27,7 +27,7 @@
         </template>
       </van-field>
 
-      <div class="bottom-btn">
+      <div class="login-btn-container">
         <van-button block type="info" native-type="submit">确认</van-button>
       </div>
     </van-form>
@@ -54,9 +54,6 @@ export default {
     this.title = this.type === '2' ? '忘记密码' : (this.type === '3' ? '修改密码' : '用户注册')
   },
   methods: {
-    login(data) {
-      console.log(data)
-    },
     // 用户注册或重置密码
     registerOrResetPassword(data) {
       console.log(data)

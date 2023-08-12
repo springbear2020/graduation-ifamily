@@ -1,21 +1,21 @@
 <template>
   <span>
     <!-- [0]male -->
-    <van-tag v-if="sex === 0" :class="{'people-tag-margin-right': right, 'people-tag-margin-bottom': bottom}"
-             plain type="primary" size="medium">
-      <van-icon name="contact"/> {{ name }}
+    <van-tag :class="{'right-margin': right, 'bottom-margin': bottom}" type="primary" size="medium" plain
+             v-if="sex === 0">
+      <van-icon name="contact"/>&nbsp;{{ name }}
     </van-tag>
 
     <!-- [1]female -->
-    <van-tag v-else-if="sex === 1" :class="{'people-tag-margin-right': right, 'people-tag-margin-bottom': bottom}"
-             plain type="danger" size="medium">
-      <van-icon name="contact"/> {{ name }}
+    <van-tag :class="{'right-margin': right, 'bottom-margin': bottom}" type="danger" size="medium" plain
+             v-else-if="sex === 1">
+      <van-icon name="contact"/>&nbsp;{{ name }}
     </van-tag>
 
     <!-- known -->
-    <van-tag v-else :class="{'people-tag-margin-right': right, 'people-tag-margin-bottom': bottom}"
-             plain type="default" size="medium">
-      <van-icon name="circle"/> {{ name }}
+    <van-tag :class="{'right-margin': right, 'bottom-margin': bottom}" type="default" size="medium" plain
+             v-else>
+      <van-icon name="circle"/>&nbsp;{{ name }}
     </van-tag>
   </span>
 </template>
@@ -28,11 +28,11 @@ export default {
 </script>
 
 <style scoped>
-.people-tag-margin-right {
+.right-margin {
   margin-right: 5px;
 }
 
-.people-tag-margin-bottom {
+.bottom-margin {
   margin-bottom: 5px;
 }
 </style>

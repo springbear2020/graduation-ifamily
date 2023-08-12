@@ -61,6 +61,10 @@ let router = new VueRouter({
             component: () => import('@/views/family/album'),
         },
         {
+            path: '/family/album/post',
+            component: () => import('@/views/family/album/post'),
+        },
+        {
             path: '/family/info',
             component: () => import('@/views/family/info'),
         },
@@ -73,8 +77,8 @@ let router = new VueRouter({
             component: () => import('@/views/family/members'),
         },
         {
-            path: '/family/members/people',
-            component: () => import('@/views/family/members/members-people'),
+            path: '/family/people',
+            component: () => import('@/views/family/members/people'),
         },
         {
             path: '/family/tree',

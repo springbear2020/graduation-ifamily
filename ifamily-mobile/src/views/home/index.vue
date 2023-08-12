@@ -18,12 +18,15 @@
 
     <van-tabs v-model="active">
       <van-tab title="动态">
-        <van-pull-refresh v-model="isLoading" success-text="刷新成功" @refresh="onRefresh">
-          <van-empty description="无内容"/>
+        <van-pull-refresh v-model="isRefreshing" success-text="刷新成功" @refresh="onRefresh">
+          <van-list v-model="isLoading" :isFinished="isFinished" isFinished-text="没有更多了" @load="onLoad">
+            <social-moments :data-list="dataList" v-on:post-comment="postComment"/>
+          </van-list>
         </van-pull-refresh>
       </van-tab>
+
       <van-tab title="资讯">
-        <van-pull-refresh v-model="isLoading" success-text="刷新成功" @refresh="onRefresh">
+        <van-pull-refresh v-model="isRefreshing" success-text="刷新成功" @refresh="onRefresh">
           <van-empty description="无内容"/>
         </van-pull-refresh>
       </van-tab>
@@ -32,14 +35,21 @@
 </template>
 
 <script>
+import momentsList from '@/assets/json/moments.json'
+
 export default {
   name: "index",
   data() {
     return {
       active: 0,
+      dataList: [],
+      isRefreshing: false,
       isLoading: false,
-    };
-
+      isFinished: false,
+    }
+  },
+  mounted() {
+    this.dataList = momentsList && momentsList.length > 0 ? momentsList : []
   },
   methods: {
     messageCenter() {
@@ -47,9 +57,14 @@ export default {
     },
     onRefresh() {
       setTimeout(() => {
-        this.isLoading = false;
+        this.isRefreshing = false;
       }, 1000);
     },
+    onLoad() {
+    },
+    postComment(content, moment) {
+      console.log(content, moment)
+    }
   },
 }
 </script>

@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- 解决底部导航遮挡主体内容的问题 -->
-    <div class="footer-content-placeholder"/>
+    <div class="footer-placeholder"/>
 
     <van-tabbar v-model="active">
       <van-tabbar-item icon="home-o" replace to="/home">主页</van-tabbar-item>
@@ -23,7 +23,7 @@ export default {
 </script>
 
 <style scoped>
-.footer-content-placeholder {
+.footer-placeholder {
   padding-bottom: calc(50px + env(safe-area-inset-bottom));
 }
 </style>

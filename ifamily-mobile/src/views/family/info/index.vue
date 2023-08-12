@@ -3,26 +3,26 @@
     <van-nav-bar title="家族信息" left-arrow @click-left="backFamily"/>
 
     <!-- 家族照片 -->
-    <div class="img-portrait-father">
-      <van-image class="img-portrait" width="100" height="100" src="https://img01.yzcdn.cn/vant/cat.jpeg"/>
+    <div class="cover-container">
+      <van-image class="cover" width="100" height="100" src="https://img01.yzcdn.cn/vant/cat.jpeg"/>
     </div>
 
     <!-- 家族成员组成概况 -->
     <van-grid direction="horizontal" :border="false" :column-num="5">
       <van-grid-item>
-        <desc-tag text="男" number="234" type="primary" size="medium" @click.native="viewConditionalMembers"/>
+        <desc-tag text="男" number="234" type="primary" @click.native="viewConditionalMembers"/>
       </van-grid-item>
       <van-grid-item>
-        <desc-tag text="女" number="423" type="danger" size="medium" @click.native="viewConditionalMembers"/>
+        <desc-tag text="女" number="423" type="danger" @click.native="viewConditionalMembers"/>
       </van-grid-item>
       <van-grid-item>
-        <desc-tag text="总" number="657" type="warning" size="medium" @click.native="viewConditionalMembers"/>
+        <desc-tag text="总" number="657" type="warning" @click.native="viewConditionalMembers"/>
       </van-grid-item>
       <van-grid-item>
-        <desc-tag text="生" number="600" type="success" size="medium" @click.native="viewConditionalMembers"/>
+        <desc-tag text="生" number="600" type="success" @click.native="viewConditionalMembers"/>
       </van-grid-item>
       <van-grid-item>
-        <desc-tag text="逝" number="57" type="default" size="medium" @click.native="viewConditionalMembers"/>
+        <desc-tag text="逝" number="57" type="default" @click.native="viewConditionalMembers"/>
       </van-grid-item>
     </van-grid>
 
@@ -38,14 +38,10 @@
         <van-collapse-item title="管理员" name="3">
           <people-tag name="光头勇" :right="true" :bottom="true" :sex="0" @click.native="viewManager"/>
           <people-tag name="光头勇" :right="true" :sex="1" @click.native="viewManager"/>
-          <people-tag name="光头勇" :right="true" :bottom="true" :sex="0" @click.native="viewManager"/>
-          <people-tag name="光头勇" :right="true" :sex="1" @click.native="viewManager"/>
-          <people-tag name="光头勇" :right="true" :bottom="true" :sex="0" @click.native="viewManager"/>
-          <people-tag name="光头勇" :right="true" :sex="1" @click.native="viewManager"/>
         </van-collapse-item>
       </van-collapse>
       <van-cell title="创建者">
-        <people-tag name="光头勇" @click.native="viewManager" :sex="1"/>
+        <people-tag name="光头勇" @click.native="viewManager" :sex="0"/>
       </van-cell>
       <van-cell title="创建时间" value="2023-02-12 16:02:34"/>
     </van-cell-group>
@@ -65,7 +61,7 @@ export default {
       this.$router.replace('/family')
     },
     viewManager() {
-      this.$toast.success('查看管理员信息');
+      this.$toast.success('查看管理员');
     },
     viewConditionalMembers() {
       this.$toast.success('查看特定条件家族成员');

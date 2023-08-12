@@ -15,16 +15,16 @@ export default {
 </script>
 
 <style>
-.img-portrait-father {
+.cover-container {
   display: flex;
 }
 
-.img-portrait {
+.cover {
   margin: auto auto;
   padding: 30px
 }
 
-.bottom-btn {
+.login-btn-container {
   margin: 16px;
 }
 </style>

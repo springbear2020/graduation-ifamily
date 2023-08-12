@@ -2,9 +2,9 @@
   <div>
     <van-nav-bar title="家族成员" left-arrow @click-left="backFamily"/>
 
-    <van-search show-action v-model="memberName" placeholder="请输入家族成员姓名" @search="onSearch">
+    <van-search show-action v-model="memberName" placeholder="请输入家族成员姓名" @search="searchMember">
       <template #action>
-        <div @click="onSearch">搜索</div>
+        <div @click="searchMember">搜索</div>
       </template>
     </van-search>
 
@@ -12,10 +12,10 @@
       <div v-for="number in indexList" :key="number">
         <van-index-anchor :index="number">第 {{ number }} 世</van-index-anchor>
 
-        <van-cell is-link center @click="clickFamilyMember">
+        <van-cell is-link center @click="viewMember">
           <template #title>
             <van-image round width="50" height="50" src="https://img01.yzcdn.cn/vant/cat.jpeg"/>
-            <p class="van-cell-contact">
+            <p class="text-margin">
               <span>光头勇</span>
               <van-icon name="male" color="#1989fa" class="iconfont" class-prefix="icon" size="15"/>
             </p>
@@ -24,10 +24,11 @@
             <van-tag type="primary">健在</van-tag>
           </template>
         </van-cell>
-        <van-cell is-link center @click="clickFamilyMember">
+
+        <van-cell is-link center @click="viewMember">
           <template #title>
             <van-image round width="50" height="50" src="https://img01.yzcdn.cn/vant/cat.jpeg"/>
-            <p class="van-cell-contact">
+            <p class="text-margin">
               <span>小仙女</span>
               <van-icon name="female" color="#ee0a24" class="iconfont" class-prefix="icon" size="15"/>
             </p>
@@ -54,10 +55,10 @@ export default {
     backFamily() {
       this.$router.replace('/family')
     },
-    clickFamilyMember() {
-      this.$router.push('/family/members/people')
+    viewMember() {
+      this.$router.push('/family/people')
     },
-    onSearch() {
+    searchMember() {
       this.$toast.success(this.memberName);
     },
   }
@@ -66,11 +67,10 @@ export default {
 
 <style scoped>
 .van-cell__title {
-  text-align: center;
   display: flex;
 }
 
-.van-cell-contact {
+.text-margin {
   margin-left: 10px;
 }
 

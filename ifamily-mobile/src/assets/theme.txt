@@ -5,12 +5,12 @@
 @gray-3: #ebedf0;
 @gray-4: #dcdee0;
 @gray-5: #c8c9cc;
-@gray-6: #969799;
+@gray-6: #969799;   // default
 @gray-7: #646566;
 @gray-8: #323233;
-@red: #ee0a24;
-@blue: #1989fa;
-@orange: #ff976a;
+@red: #ee0a24;      // danger
+@blue: #1989fa;     // primary
+@orange: #ff976a;   // warning
 @orange-dark: #ed6a0c;
 @orange-light: #fffbe8;
-@green: #07c160;
+@green: #07c160;    // success

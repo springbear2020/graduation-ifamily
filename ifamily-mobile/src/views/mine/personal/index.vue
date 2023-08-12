@@ -7,8 +7,8 @@
     </van-nav-bar>
 
     <!-- 用户头像 -->
-    <div class="img-portrait-father">
-      <van-uploader v-model="formData.uploader" class="img-portrait" max-count="1"/>
+    <div class="cover-container">
+      <van-uploader v-model="formData.uploader" class="cover" max-count="1"/>
     </div>
 
     <van-cell-group>
