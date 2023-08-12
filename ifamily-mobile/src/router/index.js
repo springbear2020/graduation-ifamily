@@ -40,9 +40,17 @@ let router = new VueRouter({
             meta: {footerShow: true}
         },
         {
-            path: '/chat',
-            component: () => import('@/views/chat'),
+            path: '/home/announcement',
+            component: () => import('@/views/home/announcement'),
+        },
+        {
+            path: '/message',
+            component: () => import('@/views/message'),
             meta: {footerShow: true}
+        },
+        {
+            path: '/message/contacts',
+            component: () => import('@/views/message/contacts'),
         },
         {
             path: '/genealogy',
