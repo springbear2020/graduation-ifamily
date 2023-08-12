@@ -1,21 +1,21 @@
 <template>
   <span>
     <!-- [0]male -->
-    <van-tag :class="{'right': right, 'bottom': bottom}" type="primary" size="medium" plain
+    <van-tag :class="{'right': right, 'bottom': bottom}" color="#007bff" size="medium"
              v-if="sex === 0">
-      <van-icon name="contact"/>&nbsp;{{ name }}
+      <van-icon name="manager-o"/>&nbsp;{{ name }}
     </van-tag>
 
     <!-- [1]female -->
-    <van-tag :class="{'right': right, 'bottom': bottom}" type="danger" size="medium" plain
+    <van-tag :class="{'right': right, 'bottom': bottom}" color="#e83e8c" size="medium"
              v-else-if="sex === 1">
-      <van-icon name="contact"/>&nbsp;{{ name }}
+      <van-icon name="manager-o"/>&nbsp;{{ name }}
     </van-tag>
 
     <!-- known -->
-    <van-tag :class="{'right': right, 'bottom': bottom}" type="default" size="medium" plain
+    <van-tag :class="{'right': right, 'bottom': bottom}" size="medium"
              v-else>
-      <van-icon name="circle"/>&nbsp;{{ name }}
+      <van-icon name="circle" color="#6c757d"/>&nbsp;{{ name }}
     </van-tag>
   </span>
 </template>

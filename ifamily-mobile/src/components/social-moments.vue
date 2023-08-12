@@ -2,24 +2,12 @@
   <div>
     <van-cell-group v-for="moment in dataList" :key="moment.id">
       <!-- 头像、姓名、时间、更多 -->
-      <van-cell :border="false">
-        <template #title>
-          <van-image round width="50" height="50" :src="moment.portrait"/>
-          <div class="desc">
-            <p class="name">{{ moment.name }}</p>
-            <p>{{ moment.datetime }}</p>
-          </div>
-        </template>
-
-        <template #right-icon>
-          <van-icon name="ellipsis" @click="moreOperation"/>
-        </template>
-      </van-cell>
+      <portrait-desc :person="moment"/>
 
       <!-- 文本内容、图片列表、操作 -->
       <van-cell>
         <template #default>
-          <p class="text-content">{{ moment.content }}</p>
+          <p class="text-content">{{ moment.desc }}</p>
 
           <image-list :data-list="moment.photoList"/>
 
@@ -49,7 +37,7 @@
             <van-field class="comments-box" placeholder="说点什么吧..." left-icon="smile-comment-o"
                        v-model="commentContent" @click-right-icon="$emit('post-comment', moment, commentContent)">
               <template #right-icon>
-                <van-icon name="guide-o" color="#1989fa"/>
+                <van-icon name="guide-o"/>
               </template>
             </van-field>
           </div>
@@ -68,32 +56,11 @@ export default {
       commentContent: '',
     }
   },
-  props: ['dataList'],
-  methods: {
-    moreOperation() {
-      this.$toast.success('更多')
-    }
-  }
+  props: ['dataList']
 }
 </script>
 
 <style scoped>
-.van-cell__title {
-  display: flex;
-}
-
-.desc {
-  margin-left: 10px;
-}
-
-.desc p {
-  margin: 0 0;
-}
-
-.desc .name {
-  font-weight: bold;
-}
-
 .text-content {
   margin-top: 0;
   margin-bottom: 5px;

@@ -65,10 +65,6 @@ let router = new VueRouter({
             component: () => import('@/views/family/list'),
         },
         {
-            path: '/family/manage/create',
-            component: () => import('@/views/family/manage/create'),
-        },
-        {
             path: '/family/members',
             component: () => import('@/views/family/members'),
         },
@@ -79,6 +75,14 @@ let router = new VueRouter({
         {
             path: '/family/tree',
             component: () => import('@/views/family/tree'),
+        },
+        {
+            path: '/family/manage/create',
+            component: () => import('@/views/family/manage/create'),
+        },
+        {
+            path: '/family/manage/members/add',
+            component: () => import('@/views/family/manage/members/add'),
         },
         // 404 page must be placed at the end
         {

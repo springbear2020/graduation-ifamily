@@ -10,6 +10,7 @@ import descTag from './components/desc-tag'
 import socialMoments from './components/social-moments'
 import imageList from './components/image-list'
 import messageBox from './components/message-box'
+import portraitDesc from './components/portrait-desc'
 
 Vue.use(Vant)
 Vue.component('logo-pattern', logoPattern)
@@ -18,6 +19,7 @@ Vue.component('desc-tag', descTag)
 Vue.component('social-moments', socialMoments)
 Vue.component('image-list', imageList)
 Vue.component('message-box', messageBox)
+Vue.component('portrait-desc', portraitDesc)
 
 Vue.config.productionTip = false
 

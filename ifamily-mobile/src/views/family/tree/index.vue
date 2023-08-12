@@ -16,7 +16,7 @@
 
     <!-- 家族成员搜索动作面板 -->
     <van-action-sheet v-model="memberSearchSheet" title="搜索成员">
-      <van-search v-model="memberName" show-action placeholder="请输入家族成员姓名" @search="onSearch">
+      <van-search v-model="memberName" show-action placeholder="家族成员姓名" @search="onSearch">
         <template #action>
           <div @click="onSearch">搜索</div>
         </template>
@@ -29,7 +29,7 @@
       <van-grid :column-num="3" :gutter="8" square :border="false">
         <van-grid-item icon="cluster-o" text="ta 的关系"/>
         <van-grid-item icon="manager-o" text="ta 的主页" @click="handlePeopleHomePage"/>
-        <van-grid-item icon="add-o" text="添加亲人"/>
+        <van-grid-item icon="add-o" text="添加亲人" @click="addRelatives"/>
       </van-grid>
     </van-action-sheet>
   </div>
@@ -37,7 +37,7 @@
 
 <script>
 import FamilyTree from '@/views/family/tree/family-tree';
-import stone from '@/assets/json/ADreamInRedMansions.json'
+import stone from '@/assets/json/stone-story.json'
 
 export default {
   name: "index",
@@ -106,6 +106,9 @@ export default {
     },
     onSearch() {
       this.$toast.success('搜索成员')
+    },
+    addRelatives() {
+      this.$router.push('/family/manage/members/add')
     }
   }
 }

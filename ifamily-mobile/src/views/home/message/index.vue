@@ -31,7 +31,16 @@ export default {
       }, 1000);
     },
     handleClearAll() {
-      this.$toast.fail('清除所有')
+      this.$dialog.confirm({
+        title: '清除提示',
+        message: '您确定要清除所有未读消息吗？',
+      })
+          .then(() => {
+            this.$toast.success('清楚成功')
+          })
+          .catch(() => {
+            // on cancel
+          });
     }
   }
 }

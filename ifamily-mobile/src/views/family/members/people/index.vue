@@ -13,7 +13,7 @@
           <van-image round height="100" width="100" src="https://img01.yzcdn.cn/vant/cat.jpeg"/>
         </template>
         <template #text>
-          <p class="name">冯勇贤</p>
+          <p class="name">冯勇贤 <van-icon name="male" color="#007bff" class="iconfont" class-prefix="icon"/></p>
           <p class="signature">长相思兮长相忆，短相思兮无穷极。</p>
         </template>
       </van-grid-item>
@@ -22,19 +22,19 @@
     <!-- 人员信息概况 -->
     <van-grid direction="horizontal" :border="false" :column-num="5">
       <van-grid-item>
-        <desc-tag text="世代" number="5" type="primary"/>
+        <desc-tag text="世代" number="5" color="#ffc107"/>
       </van-grid-item>
       <van-grid-item>
-        <desc-tag text="排行" number="2" type="success"/>
+        <desc-tag text="排行" number="2" color="#17a2b8"/>
       </van-grid-item>
       <van-grid-item>
-        <van-icon name="male" color="#1989fa" class="iconfont" class-prefix="icon"/>
+        <desc-tag text="健在" color="#28a745"/>
       </van-grid-item>
       <van-grid-item>
-        <desc-tag text="年龄" number="35" type="warning"/>
+        <desc-tag text="年龄" number="35" color="#6610f2"/>
       </van-grid-item>
       <van-grid-item>
-        <desc-tag text="已故" type="default"/>
+        <desc-tag text="字辈" number="勇" color="#dc3545"/>
       </van-grid-item>
     </van-grid>
 
@@ -44,7 +44,7 @@
           <van-icon name="star-o"/>
         </template>
       </van-cell>
-      <van-cell :border="false" title="现居地" label="湖北省/武汉市/洪山区"/>
+      <van-cell :border="false" title="现居地" label="湖北省/武汉市/洪山区/洪山街道武汉理工大学南湖校区智园"/>
     </van-cell-group>
     <van-cell-group>
       <van-cell :border="false" title="生于" label="农历 一九三五年冬月十三"/>

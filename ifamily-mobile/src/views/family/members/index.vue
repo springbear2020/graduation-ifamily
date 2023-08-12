@@ -18,11 +18,11 @@
             <van-image round width="50" height="50" src="https://img01.yzcdn.cn/vant/cat.jpeg"/>
             <p class="text-margin">
               <span>光头勇</span>
-              <van-icon name="male" color="#1989fa" class="iconfont" class-prefix="icon" size="15"/>
+              <van-icon name="male" color="#007bff" class="iconfont" class-prefix="icon" size="15"/>
             </p>
           </template>
           <template #default>
-            <van-tag type="primary">健在</van-tag>
+            <van-tag color="#28a745">健在</van-tag>
           </template>
         </van-cell>
         <van-cell is-link center @click="handleViewMember">
@@ -30,11 +30,11 @@
             <van-image round width="50" height="50" src="https://img01.yzcdn.cn/vant/cat.jpeg"/>
             <p class="text-margin">
               <span>小仙女</span>
-              <van-icon name="female" color="#ee0a24" class="iconfont" class-prefix="icon" size="15"/>
+              <van-icon name="female" color="#e83e8c" class="iconfont" class-prefix="icon" size="15"/>
             </p>
           </template>
           <template #default>
-            <van-tag type="default">已故</van-tag>
+            <van-tag color="#6c757d">已故</van-tag>
           </template>
         </van-cell>
       </div>
