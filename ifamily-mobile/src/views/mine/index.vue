@@ -2,11 +2,11 @@
   <div>
     <van-nav-bar title="我的" @click-right="settings">
       <template #right>
-        <van-icon name="ellipsis" size="20"/>
+        <van-icon name="setting-o" size="20"/>
       </template>
     </van-nav-bar>
 
-    <!-- 用户头像、昵称、个性签名卡片 -->
+    <!-- 头像、昵称、个性签名 -->
     <van-card centered title="你不懂我&我不怪你" desc="长相思兮长相忆，短相思兮无穷极。"
               thumb="https://img01.yzcdn.cn/vant/leaf.jpg">
       <template #footer>
@@ -14,10 +14,11 @@
       </template>
     </van-card>
 
+    <!-- 个人中心宫格 -->
     <van-grid :column-num="3">
-      <van-grid-item icon="contact" text="联系人"/>
-      <van-grid-item icon="star-o" text="收藏夹"/>
-      <van-grid-item icon="info-o" text="23"/>
+      <van-grid-item icon="contact" text="好友"/>
+      <van-grid-item icon="star-o" text="收藏"/>
+      <van-grid-item icon="clock-o" text="历史"/>
     </van-grid>
 
     <van-cell-group>

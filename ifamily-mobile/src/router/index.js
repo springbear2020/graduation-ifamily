@@ -77,12 +77,28 @@ let router = new VueRouter({
             component: () => import('@/views/family/tree'),
         },
         {
-            path: '/family/manage/create',
-            component: () => import('@/views/family/manage/create'),
+            path: '/family/manage',
+            component: () => import('@/views/family/manage'),
+        },
+        {
+            path: '/family/manage/form/:type',
+            component: () => import('@/views/family/manage/form'),
+        },
+        {
+            path: '/family/manage/members',
+            component: () => import('@/views/family/manage/members'),
         },
         {
             path: '/family/manage/members/add',
             component: () => import('@/views/family/manage/members/add'),
+        },
+        {
+            path: '/family/manage/members/edit',
+            component: () => import('@/views/family/manage/members/edit'),
+        },
+        {
+            path: '/family/manage/seniority',
+            component: () => import('@/views/family/manage/seniority'),
         },
         // 404 page must be placed at the end
         {

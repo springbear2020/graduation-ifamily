@@ -8,6 +8,7 @@
       </template>
     </van-nav-bar>
 
+    <!-- 轮播图 -->
     <van-swipe :autoplay="3000" indicator-color="white">
       <van-swipe-item>1</van-swipe-item>
       <van-swipe-item>2</van-swipe-item>
@@ -16,8 +17,9 @@
       <van-swipe-item>5</van-swipe-item>
     </van-swipe>
 
+    <!-- tab 卡片 -->
     <van-tabs v-model="active">
-      <van-tab title="动态">
+      <van-tab title="广场">
         <van-pull-refresh v-model="isRefreshing" success-text="刷新成功" @refresh="onRefresh">
           <van-list isFinished-text="没有更多了" v-model="isLoading" :isFinished="isFinished" @load="onLoad"
                     :error.sync="error" error-text="请求失败，点击重新加载">
@@ -26,9 +28,12 @@
         </van-pull-refresh>
       </van-tab>
 
-      <van-tab title="寻亲">
+      <van-tab title="家族">
         <van-pull-refresh v-model="isRefreshing" success-text="刷新成功" @refresh="onRefresh">
-          <van-empty description="无内容"/>
+          <van-list isFinished-text="没有更多了" v-model="isLoading" :isFinished="isFinished" @load="onLoad"
+                    :error.sync="error" error-text="请求失败，点击重新加载">
+            <social-moments :data-list="dataList" v-on:post-comment="handlePostComment"/>
+          </van-list>
         </van-pull-refresh>
       </van-tab>
     </van-tabs>

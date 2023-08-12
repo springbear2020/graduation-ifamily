@@ -1,9 +1,9 @@
 import Vue from 'vue'
 import App from './App.vue'
 import router from '@/router'
-import './assets/iconfont/iconfont.css'
 import Vant from 'vant'
 import 'vant/lib/index.css'
+import './assets/iconfont/iconfont.css'
 import logoPattern from './components/logo-pattern'
 import peopleTag from './components/people-tag'
 import descTag from './components/desc-tag'
@@ -13,6 +13,7 @@ import messageBox from './components/message-box'
 import portraitDesc from './components/portrait-desc'
 
 Vue.use(Vant)
+
 Vue.component('logo-pattern', logoPattern)
 Vue.component('people-tag', peopleTag)
 Vue.component('desc-tag', descTag)

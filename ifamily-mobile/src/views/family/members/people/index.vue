@@ -6,11 +6,11 @@
       </template>
     </van-nav-bar>
 
-    <!-- 人员信息头像和姓名 -->
+    <!-- 头像、姓名、签名 -->
     <van-grid :border="false" :column-num="1">
       <van-grid-item>
         <template #icon>
-          <van-image round height="100" width="100" src="https://img01.yzcdn.cn/vant/cat.jpeg"/>
+          <van-image round height="100" width="100" :src="url" @click="viewImage"/>
         </template>
         <template #text>
           <p class="name">冯勇贤 <van-icon name="male" color="#007bff" class="iconfont" class-prefix="icon"/></p>
@@ -19,25 +19,26 @@
       </van-grid-item>
     </van-grid>
 
-    <!-- 人员信息概况 -->
+    <!-- 信息概况 -->
     <van-grid direction="horizontal" :border="false" :column-num="5">
       <van-grid-item>
-        <desc-tag text="世代" number="5" color="#ffc107"/>
+        <desc-tag title="世代" content="5" color="#ffc107"/>
       </van-grid-item>
       <van-grid-item>
-        <desc-tag text="排行" number="2" color="#17a2b8"/>
+        <desc-tag title="排行" content="2" color="#17a2b8"/>
       </van-grid-item>
       <van-grid-item>
-        <desc-tag text="健在" color="#28a745"/>
+        <desc-tag title="健在" color="#28a745"/>
       </van-grid-item>
       <van-grid-item>
-        <desc-tag text="年龄" number="35" color="#6610f2"/>
+        <desc-tag title="年龄" content="35" color="#6610f2"/>
       </van-grid-item>
       <van-grid-item>
-        <desc-tag text="字辈" number="勇" color="#dc3545"/>
+        <desc-tag title="字辈" content="勇" color="#dc3545"/>
       </van-grid-item>
     </van-grid>
 
+    <!-- 手机、现居地 -->
     <van-cell-group>
       <van-cell :border="false" center title="手机" label="13898564256" is-link @click="handleStarPeople">
         <template #right-icon>
@@ -46,15 +47,18 @@
       </van-cell>
       <van-cell :border="false" title="现居地" label="湖北省/武汉市/洪山区/洪山街道武汉理工大学南湖校区智园"/>
     </van-cell-group>
+    <!-- 生于、出生地 -->
     <van-cell-group>
       <van-cell :border="false" title="生于" label="农历 一九三五年冬月十三"/>
       <van-cell :border="false" title="出生地" label="广东省/深圳市/南山区"/>
     </van-cell-group>
+    <!-- 逝于、埋葬地 -->
     <van-cell-group>
       <van-cell :border="false" title="逝于" label="公历 2007-09-12"/>
       <van-cell :border="false" title="埋葬地" label="广东省/深圳市/南山区"/>
     </van-cell-group>
 
+    <!-- 家庭关系 -->
     <van-cell title="家庭关系">
       <template #label>
         <p>父亲：
@@ -71,6 +75,7 @@
       </template>
     </van-cell>
 
+    <!-- 个人动态 -->
     <van-cell title="个人动态">
       <template #label>
         <van-empty description="无内容"/>
@@ -80,8 +85,15 @@
 </template>
 
 <script>
+import {ImagePreview} from "vant";
+
 export default {
   name: "index",
+  data() {
+    return  {
+      url: 'https://img01.yzcdn.cn/vant/cat.jpeg',
+    }
+  },
   methods: {
     backMembers() {
       this.$router.replace('/family/members')
@@ -94,7 +106,12 @@ export default {
     },
     handleViewPeople() {
       this.$toast.success('查看人员信息')
-    }
+    },
+    viewImage() {
+      let images = []
+      images.push(this.url)
+      ImagePreview({images})
+    },
   }
 }
 </script>

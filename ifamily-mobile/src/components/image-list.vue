@@ -1,6 +1,7 @@
 <template>
   <div>
-    <van-image width="100" height="100" @click="viewImage(dataList, index)"
+    <!-- 图片列表展示，支持图片点击预览 -->
+    <van-image width="100" height="100" @click="viewImage(index)"
                v-for="(img, index) in dataList" :src="img.url" :key="img.id"
     />
   </div>
@@ -13,12 +14,12 @@ export default {
   name: "image-list",
   props: ['dataList'],
   methods: {
-    viewImage(dataList, index) {
+    viewImage(index) {
       let images = []
-      dataList.forEach(item => {
+      this.dataList.forEach(item => {
         images.push(item.url)
       })
-      ImagePreview({images: images, startPosition: index, closeable: true, showIndicators: true})
+      ImagePreview({images: images, startPosition: index})
     },
   }
 }

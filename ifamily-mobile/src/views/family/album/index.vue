@@ -8,7 +8,7 @@
 
     <van-pull-refresh v-model="isRefreshing" success-text="刷新成功" @refresh="onRefresh">
       <van-cell-group v-for="i in 10" :key="i">
-        <!-- 姓名、头像、时间、更多 -->
+        <!-- 头像、标题、时间、更多 -->
         <portrait-desc :person="person"/>
         <!-- 图片列表 -->
         <van-cell :border="false">

@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <router-view></router-view>
+    <router-view/>
     <footerTab v-show="$route.meta.footerShow"></footerTab>
   </div>
 </template>
@@ -15,16 +15,40 @@ export default {
 </script>
 
 <style>
-.cover-container {
+.flex-container {
   display: flex;
 }
 
-.cover {
+.flex-container .cover {
   margin: auto auto;
   padding: 30px
 }
 
-.login-btn-container {
+.block-btn-container {
   margin: 16px;
+}
+
+.full-address-container .van-field {
+  background-color: #f7f8fa;
+}
+
+.title-container {
+  margin-left: 10px;
+}
+
+.title-container p {
+  margin: 0 0;
+}
+
+.title-container .title {
+  font-weight: bold;
+}
+
+.van-step__title p {
+  margin: 0;
+}
+
+.van-step__title h3 {
+  margin: 0;
 }
 </style>

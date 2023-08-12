@@ -30,7 +30,7 @@
         </template>
       </van-field>
 
-      <div class="btn-container">
+      <div class="block-btn-container">
         <van-button block type="info" native-type="submit">登录</van-button>
       </div>
     </van-form>
@@ -71,9 +71,3 @@ export default {
   },
 }
 </script>
-
-<style scoped>
-.btn-container {
-  margin: 16px;
-}
-</style>

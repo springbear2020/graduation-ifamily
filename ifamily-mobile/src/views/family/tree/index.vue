@@ -2,9 +2,9 @@
   <div>
     <van-nav-bar fixed title="家族树谱" left-arrow @click-left="backFamily" @click-right="showPopover = true">
       <template #right>
-        <!-- 家族树操作弹出层 -->
-        <van-popover v-model="showPopover" :actions="popoverActions" placement="bottom-end" trigger="click"
-                     @select="onSelect">
+        <!-- 右上角操作弹出层 -->
+        <van-popover placement="bottom-end" trigger="click"
+                     v-model="showPopover" :actions="popoverActions" @select="onSelect">
           <template #reference>
             <van-icon name="apps-o"/>
           </template>
@@ -12,6 +12,7 @@
       </template>
     </van-nav-bar>
 
+    <!-- 家族系谱图 -->
     <FamilyTree :jsonData="jsonData" @click-node="handleViewPeople"/>
 
     <!-- 家族成员搜索动作面板 -->
@@ -23,8 +24,7 @@
       </van-search>
       <van-empty description="无内容"/>
     </van-action-sheet>
-
-    <!-- 树节点点击人员操作面板 -->
+    <!-- 点击树节点人员操作面板 -->
     <van-action-sheet v-model="peopleClickSheet" cancel-text="取消" description="光头勇">
       <van-grid :column-num="3" :gutter="8" square :border="false">
         <van-grid-item icon="cluster-o" text="ta 的关系"/>

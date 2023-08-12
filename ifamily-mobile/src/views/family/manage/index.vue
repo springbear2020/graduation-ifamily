@@ -6,16 +6,24 @@
       </template>
     </van-nav-bar>
 
-    <van-cell-group inset>
-      <van-cell title="家族信息" is-link/>
-      <van-cell title="成员管理" is-link/>
+    <van-cell-group>
+      <van-cell title="家族信息" is-link to="/family/manage/form/1"/>
+      <van-cell title="成员管理" is-link to="/family/manage/members"/>
+      <van-cell title="字辈管理" is-link to="/family/manage/seniority"/>
+      <van-cell title="公告管理" is-link/>
+      <van-cell title="权限设置" is-link/>
+      <van-cell title="访问控制" is-link/>
+      <van-cell title="修委会" is-link/>
     </van-cell-group>
   </div>
 </template>
 
 <script>
+import FamilyInfoCard from "@/views/family/list/family-info-card";
+
 export default {
   name: "index",
+  components: {FamilyInfoCard},
   methods: {
     backFamily() {
       this.$router.replace('/family')
