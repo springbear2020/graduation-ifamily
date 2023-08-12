@@ -12,10 +12,10 @@
           <image-list :data-list="moment.photoList"/>
 
           <div class="behavior-icon">
-            <van-icon name="good-job" size="20px" v-if="goodJob" @click="cancelThumbsUp"/>
-            <van-icon name="good-job-o" size="20px" v-else @click="thumbsUp"/>
-            <van-icon name="chat-o" size="20px" @click="giveComment = true"/>
-            <van-icon name="share-o" size="20px" @click="showShare = true"/>
+            <van-icon name="good-job" size="20" v-if="goodJob" @click="cancelThumbsUp"/>
+            <van-icon name="good-job-o" size="20" v-else @click="thumbsUp"/>
+            <van-icon name="chat-o" size="20" @click="giveComment = true"/>
+            <van-icon name="share-o" size="20" @click="showShare = true"/>
           </div>
         </template>
       </van-cell>
@@ -24,8 +24,8 @@
       <van-cell>
         <template #default>
           <p class="like-list">
-            <van-icon name="good-job" v-if="goodJob"/>
-            <van-icon name="good-job-o" v-else/>
+            <van-icon name="good-job" size="16" v-if="goodJob"/>
+            <van-icon name="good-job-o" size="16" v-else/>&nbsp;
             <span v-for="people in moment.likeList" :key="people.id">{{ people.name }}，</span>
           </p>
 
@@ -38,7 +38,7 @@
           <van-field class="comments-box" placeholder="说点什么吧..." left-icon="smile-comment-o"
                      v-model="comment" @click-right-icon="$emit('post-comment', moment, comment)" v-show="giveComment">
             <template #right-icon>
-              <van-icon name="guide-o"/>
+              <van-icon name="guide-o" size="16"/>
             </template>
           </van-field>
         </template>
@@ -76,7 +76,12 @@ export default {
       ],
     }
   },
-  props: ['dataList'],
+  props: {
+    dataList: {
+      type: Array,
+      required: true
+    }
+  },
   methods: {
     viewUserPersonal() {
       this.$toast.success('查看用户信息')

@@ -2,7 +2,7 @@
   <div>
     <van-nav-bar title="家族管理" left-arrow @click-left="backFamily" @click-right="deleteFamily">
       <template #right>
-        <van-icon name="delete-o"/>
+        <van-icon name="delete-o" size="20"/>
       </template>
     </van-nav-bar>
 

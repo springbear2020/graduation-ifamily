@@ -20,7 +20,7 @@
             <van-image round width="50" height="50" src="https://img01.yzcdn.cn/vant/cat.jpeg"/>
             <p class="name-container">
               <span>光头勇</span>
-              <van-icon name="male" color="#007bff" class="iconfont" class-prefix="icon" size="15"/>
+              <sex-tag/>
             </p>
           </template>
           <template #default>
@@ -32,7 +32,7 @@
             <van-image round width="50" height="50" src="https://img01.yzcdn.cn/vant/cat.jpeg"/>
             <p class="name-container">
               <span>小仙女</span>
-              <van-icon name="female" color="#e83e8c" class="iconfont" class-prefix="icon" size="15"/>
+              <sex-tag :sex="1"/>
             </p>
           </template>
           <template #default>
@@ -74,9 +74,5 @@ export default {
 
 .name-container {
   margin-left: 10px;
-}
-
-.iconfont {
-  margin-left: 5px;
 }
 </style>

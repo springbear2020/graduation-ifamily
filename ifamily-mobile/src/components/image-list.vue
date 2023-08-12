@@ -12,7 +12,12 @@ import {ImagePreview} from "vant";
 
 export default {
   name: "image-list",
-  props: ['dataList'],
+  props: {
+    dataList: {
+      type: Array,
+      required: true
+    }
+  },
   methods: {
     viewImage(index) {
       let images = []

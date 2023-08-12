@@ -2,7 +2,7 @@
   <div>
     <van-nav-bar title="字辈管理" left-arrow @click-left="backFamilyManagement" @click-right="addSeniority">
       <template #right>
-        <van-icon name="add-o"/>
+        <van-icon name="add-o" size="20"/>
       </template>
     </van-nav-bar>
 

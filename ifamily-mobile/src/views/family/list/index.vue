@@ -2,7 +2,7 @@
   <div>
     <van-nav-bar title="我的家族" left-arrow @click-left="backFamily" @click-right="createFamily">
       <template #right>
-        <van-icon name="add-o"/>
+        <van-icon name="add-o" size="20"/>
       </template>
     </van-nav-bar>
 

@@ -1,19 +1,19 @@
 <template>
   <div>
-    <van-nav-bar fixed title="家族树谱" left-arrow @click-left="backFamily" @click-right="showPopover = true">
+    <van-nav-bar fixed title="家族树谱" left-arrow @click-left="backFamily" @click-right="showPopover = true" style="z-index: 1">
       <template #right>
         <!-- 右上角操作弹出层 -->
         <van-popover placement="bottom-end" trigger="click"
                      v-model="showPopover" :actions="popoverActions" @select="onSelect">
           <template #reference>
-            <van-icon name="apps-o"/>
+            <van-icon name="apps-o" size="20"/>
           </template>
         </van-popover>
       </template>
     </van-nav-bar>
 
     <!-- 家族系谱图 -->
-    <FamilyTree :jsonData="jsonData" @click-node="handleViewPeople"/>
+    <FamilyTree :tree="tree" @click-node="handleViewPeople"/>
 
     <!-- 家族成员搜索动作面板 -->
     <van-action-sheet v-model="memberSearchSheet" title="搜索成员">
@@ -44,7 +44,7 @@ export default {
   components: {FamilyTree},
   data() {
     return {
-      jsonData: stone,
+      tree: stone,
       // [true]折叠全部节点 [false]展开全部节点
       isAllFold: true,
       showPopover: false,
@@ -72,7 +72,7 @@ export default {
           }
           return jsonData;
         }
-        extendKey(this.jsonData)
+        extendKey(this.tree)
       }
     }
   },

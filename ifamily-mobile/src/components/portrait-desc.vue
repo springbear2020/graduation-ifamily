@@ -9,7 +9,7 @@
       </div>
     </template>
     <template #right-icon>
-      <van-icon name="ellipsis" v-show="more" @click.stop="$emit('more-operation')"/>
+      <van-icon name="ellipsis" size="20" v-show="more" @click.stop="$emit('more-operation')"/>
     </template>
   </van-cell>
 </template>
@@ -17,7 +17,16 @@
 <script>
 export default {
   name: "portrait-desc",
-  props: ['person', 'more']
+  props: {
+    person: {
+      type: Object,
+      required: true
+    },
+    more: {
+      type: Boolean,
+      default: false
+    }
+  }
 }
 </script>
 

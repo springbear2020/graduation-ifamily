@@ -50,17 +50,17 @@
     <van-cell-group>
       <van-cell title="管理员" name="3" :border="false">
         <template #label>
-          <people-tag name="光头勇" :right="true" :bottom="true" :sex="0" @click.native="handleViewManager"/>
-          <people-tag name="光头勇" :right="true" :bottom="true" :sex="1" @click.native="handleViewManager"/>
-          <people-tag name="光头勇" :right="true" :bottom="true" :sex="0" @click.native="handleViewManager"/>
-          <people-tag name="光头勇" :right="true" :bottom="true" :sex="0" @click.native="handleViewManager"/>
-          <people-tag name="光头勇" :right="true" :bottom="true" :sex="1" @click.native="handleViewManager"/>
-          <people-tag name="光头勇" :right="true" :bottom="true" :sex="0" @click.native="handleViewManager"/>
-          <people-tag name="光头勇" :right="true" :bottom="true" :sex="1" @click.native="handleViewManager"/>
+          <people-tag name="光头勇" @click.native="handleViewManager"/>
+          <people-tag name="光头勇" :sex="1" @click.native="handleViewManager"/>
+          <people-tag name="光头勇" @click.native="handleViewManager"/>
+          <people-tag name="光头勇" @click.native="handleViewManager"/>
+          <people-tag name="光头勇" :sex="1" @click.native="handleViewManager"/>
+          <people-tag name="光头勇" @click.native="handleViewManager"/>
+          <people-tag name="光头勇" :sex="1" @click.native="handleViewManager"/>
         </template>
       </van-cell>
       <van-cell title="创建者" :border="false">
-        <people-tag name="光头勇" @click.native="handleViewManager" :sex="0"/>
+        <people-tag name="光头勇" @click.native="handleViewManager" :right="false" :bottom="false"/>
       </van-cell>
       <van-cell title="创建时间" value="2023-02-12 16:02"/>
     </van-cell-group>

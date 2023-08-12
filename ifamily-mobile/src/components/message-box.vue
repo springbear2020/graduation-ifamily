@@ -3,7 +3,7 @@
     <van-swipe-cell v-for="i in 20" :key="i">
       <!-- 右滑收藏 -->
       <template #left>
-        <van-button square type="info" icon="star-o" @click="starContacts"/>
+        <van-button square type="info" icon="like-o" @click="starContacts"/>
       </template>
 
       <!-- 徽标、头像、标题、内容、时间 -->

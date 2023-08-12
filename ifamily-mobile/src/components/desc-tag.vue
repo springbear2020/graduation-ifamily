@@ -8,7 +8,24 @@
 <script>
 export default {
   name: "desc-tag",
-  props: ['title', 'content', 'right', 'color']
+  props: {
+    title: {
+      type: String,
+      required: true
+    },
+    content: {
+      type: String,
+      required: true
+    },
+    color: {
+      type: String,
+      required: true
+    },
+    right: {
+      type: Boolean,
+      default: true
+    }
+  }
 }
 </script>
 

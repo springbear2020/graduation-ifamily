@@ -2,7 +2,7 @@
   <div>
     <van-nav-bar title="人员信息" left-arrow @click-left="backMembers" @click-right="handleLocatePeople">
       <template #right>
-        <van-icon name="aim"/>
+        <van-icon name="aim" size="20"/>
       </template>
     </van-nav-bar>
 
@@ -13,7 +13,9 @@
           <van-image round height="100" width="100" :src="url" @click="viewImage"/>
         </template>
         <template #text>
-          <p class="name">冯勇贤 <van-icon name="male" color="#007bff" class="iconfont" class-prefix="icon"/></p>
+          <p class="name">冯勇贤
+            <sex-tag/>
+          </p>
           <p class="signature">长相思兮长相忆，短相思兮无穷极。</p>
         </template>
       </van-grid-item>
@@ -28,7 +30,7 @@
         <desc-tag title="排行" content="2" color="#17a2b8"/>
       </van-grid-item>
       <van-grid-item>
-        <desc-tag title="健在" color="#28a745"/>
+        <desc-tag title="健在" content="" color="#28a745"/>
       </van-grid-item>
       <van-grid-item>
         <desc-tag title="年龄" content="35" color="#6610f2"/>
@@ -42,7 +44,7 @@
     <van-cell-group>
       <van-cell :border="false" center title="手机" label="13898564256" is-link @click="handleStarPeople">
         <template #right-icon>
-          <van-icon name="star-o"/>
+          <van-icon name="like-o" size="20"/>
         </template>
       </van-cell>
       <van-cell :border="false" title="现居地" label="湖北省/武汉市/洪山区/洪山街道武汉理工大学南湖校区智园"/>
@@ -62,14 +64,14 @@
     <van-cell title="家庭关系">
       <template #label>
         <p>父亲：
-          <people-tag :name="'冯世元'" :sex="0" @click.native="handleViewPeople"/>
+          <people-tag :name="'冯世元'" @click.native="handleViewPeople"/>
         </p>
         <p>母亲：</p>
         <p>配偶：</p>
         <p>子女：
-          <people-tag :name="'冯学慧'" :sex="3" :right="true" :bottom="true" @click.native="handleViewPeople"/>
-          <people-tag :name="'刘纯洲'" :sex="1" :right="true" :bottom="true" @click.native="handleViewPeople"/>
-          <people-tag :name="'冯学良'" :sex="0" :right="true" :bottom="true" @click.native="handleViewPeople"/>
+          <people-tag :name="'冯学慧'" :sex="3" @click.native="handleViewPeople"/>
+          <people-tag :name="'刘纯洲'" :sex="1" @click.native="handleViewPeople"/>
+          <people-tag :name="'冯学良'" @click.native="handleViewPeople"/>
         </p>
         <p>同胞：</p>
       </template>
@@ -90,7 +92,7 @@ import {ImagePreview} from "vant";
 export default {
   name: "index",
   data() {
-    return  {
+    return {
       url: 'https://img01.yzcdn.cn/vant/cat.jpeg',
     }
   },

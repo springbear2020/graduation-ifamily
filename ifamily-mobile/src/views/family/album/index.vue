@@ -2,7 +2,7 @@
   <div>
     <van-nav-bar left-arrow title="家族相册" @click-left="backFamily" @click-right="showActionSheet = true">
       <template #right>
-        <van-icon name="upgrade"/>
+        <van-icon name="upgrade" size="20"/>
       </template>
     </van-nav-bar>
 

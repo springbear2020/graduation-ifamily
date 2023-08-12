@@ -104,7 +104,6 @@ export default {
   name: "member-form",
   data() {
     return {
-
       // TODO [Vant bug]当 minDate 的 year 小于 100 时 [minYear, maxYear] 间的年份不能正常渲染
       // [1]出生日期 [2]逝世日期
       dateType: '1',
