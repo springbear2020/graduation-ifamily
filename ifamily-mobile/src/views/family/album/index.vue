@@ -1,12 +1,8 @@
 <template>
   <div>
-    <van-nav-bar left-arrow title="家族相册" @click-left="backFamily">
+    <van-nav-bar left-arrow title="家族相册" @click-left="backFamily" @click-right="postAlbum">
       <template #right>
-        <van-uploader>
-          <template #default>
-            <van-icon name="add-o"/>
-          </template>
-        </van-uploader>
+        <van-icon name="guide-o"/>
       </template>
     </van-nav-bar>
 
@@ -43,6 +39,9 @@ export default {
         this.isLoading = false;
       }, 1000);
     },
+    postAlbum() {
+      this.$toast.success('发布成功')
+    }
   }
 }
 </script>

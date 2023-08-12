@@ -23,4 +23,8 @@ export default {
   margin: auto auto;
   padding: 30px
 }
+
+.bottom-btn {
+  margin: 16px;
+}
 </style>

@@ -1,34 +1,33 @@
 <template>
   <div>
-    <van-nav-bar
-        title="首页"
-        @click-right="notification"
-    >
+    <van-nav-bar title="主页" @click-right="messageCenter">
       <template #right>
-        <van-icon name="envelop-o" size="20"/>
+        <van-badge content="99+">
+          <van-icon name="bell" color="#1989fa" class="iconfont" class-prefix="icon" size="20"/>
+        </van-badge>
       </template>
     </van-nav-bar>
 
-    <van-swipe class="my-swipe" :autoplay="3000" indicator-color="white">
+    <van-swipe :autoplay="3000" indicator-color="white">
       <van-swipe-item>1</van-swipe-item>
       <van-swipe-item>2</van-swipe-item>
       <van-swipe-item>3</van-swipe-item>
       <van-swipe-item>4</van-swipe-item>
+      <van-swipe-item>5</van-swipe-item>
     </van-swipe>
 
     <van-tabs v-model="active">
-      <van-tab title="家族">
-        <van-empty description="无内容"/>
-      </van-tab>
-      <van-tab title="关注">
-        <van-empty description="无内容"/>
+      <van-tab title="动态">
+        <van-pull-refresh v-model="isLoading" success-text="刷新成功" @refresh="onRefresh">
+          <van-empty description="无内容"/>
+        </van-pull-refresh>
       </van-tab>
       <van-tab title="资讯">
-        <van-empty description="无内容"/>
+        <van-pull-refresh v-model="isLoading" success-text="刷新成功" @refresh="onRefresh">
+          <van-empty description="无内容"/>
+        </van-pull-refresh>
       </van-tab>
     </van-tabs>
-
-
   </div>
 </template>
 
@@ -37,24 +36,27 @@ export default {
   name: "index",
   data() {
     return {
-      images: [
-        'https://img01.yzcdn.cn/vant/apple-1.jpg',
-        'https://img01.yzcdn.cn/vant/apple-2.jpg',
-      ],
-      active: 1
+      active: 0,
+      isLoading: false,
     };
 
   },
   methods: {
-    notification() {
-      this.$router.push('/home/announcement')
-    }
-  }
+    messageCenter() {
+      this.$router.push('/home/message')
+    },
+    onRefresh() {
+      setTimeout(() => {
+        this.isLoading = false;
+      }, 1000);
+    },
+  },
 }
 </script>
 
-<style>
-.my-swipe .van-swipe-item {
+<style scoped>
+/* TODO remove when the image url added */
+.van-swipe-item {
   color: #fff;
   font-size: 20px;
   line-height: 150px;

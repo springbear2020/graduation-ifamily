@@ -5,46 +5,50 @@ Vue.use(VueRouter)
 
 let router = new VueRouter({
     routes: [
-        // home
         {
             path: '/',
-            redirect: '/discover'
+            redirect: '/home'
         },
-        // user
+        // 404
         {
-            path: '/user',
-            component: () => import('@/views/user'),
-            meta: {footerShow: true},
+            path: '/404',
+            component: () => import('@/views/404')
         },
+        // home
         {
-            path: '/user/login',
-            component: () => import('@/views/user/login'),
-        },
-        {
-            path: '/user/password',
-            component: () => import('@/views/user/password'),
-        },
-        {
-            path: '/user/settings',
-            component: () => import('@/views/user/settings'),
-        },
-        {
-            path: '/user/settings/account',
-            component: () => import('@/views/user/settings/account-security'),
-        },
-        {
-            path: '/user/personal',
-            component: () => import('@/views/user/personal'),
-        },
-        // discover
-        {
-            path: '/discover',
-            component: () => import('@/views/discover'),
+            path: '/home',
+            component: () => import('@/views/home'),
             meta: {footerShow: true}
         },
         {
-            path: '/discover/message',
-            component: () => import('@/views/discover/message'),
+            path: '/home/message',
+            component: () => import('@/views/home/message'),
+        },
+        // mine
+        {
+            path: '/mine',
+            component: () => import('@/views/mine'),
+            meta: {footerShow: true},
+        },
+        {
+            path: '/mine/login',
+            component: () => import('@/views/mine/login'),
+        },
+        {
+            path: '/mine/password/:type',
+            component: () => import('@/views/mine/password'),
+        },
+        {
+            path: '/mine/personal',
+            component: () => import('@/views/mine/personal'),
+        },
+        {
+            path: '/mine/settings',
+            component: () => import('@/views/mine/settings'),
+        },
+        {
+            path: '/mine/settings/security',
+            component: () => import('@/views/mine/settings/security'),
         },
         // family
         {
@@ -53,40 +57,36 @@ let router = new VueRouter({
             meta: {footerShow: true}
         },
         {
-            path: '/family/list',
-            component: () => import('@/views/family/list'),
-        },
-        {
-            path: '/family/create',
-            component: () => import('@/views/family/create'),
+            path: '/family/album',
+            component: () => import('@/views/family/album'),
         },
         {
             path: '/family/info',
             component: () => import('@/views/family/info'),
         },
         {
-            path: '/family/tree',
-            component: () => import('@/views/family/tree/index'),
+            path: '/family/list',
+            component: () => import('@/views/family/list'),
         },
         {
             path: '/family/members',
             component: () => import('@/views/family/members'),
         },
         {
-            path: '/family/people',
-            component: () => import('@/views/family/people'),
+            path: '/family/members/people',
+            component: () => import('@/views/family/members/members-people'),
         },
         {
-            path: '/family/album',
-            component: () => import('@/views/family/album'),
+            path: '/family/tree',
+            component: () => import('@/views/family/tree'),
         },
+        // 404 page must be placed at the end
         {
-            path: '/family/manage',
-            component: () => import('@/views/family/manage'),
-        },
+            path: '*',
+            redirect: '/404'
+        }
     ],
     scrollBehavior() {
-        // to top
         return {y: 0}
     }
 })

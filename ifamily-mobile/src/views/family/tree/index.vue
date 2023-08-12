@@ -7,17 +7,17 @@
       </template>
     </van-nav-bar>
 
-    <FamilyTreeChart :jsonData="jsonData" @click-node="clickNode"/>
+    <FamilyTree :jsonData="jsonData" @click-node="clickNode"/>
   </div>
 </template>
 
 <script>
-import FamilyTreeChart from '@/views/family/tree/family-tree-chart';
-import stone from '@/assets/stone.json'
+import FamilyTree from '@/views/family/tree/family-tree';
+import stone from '@/assets/ADreamInRedMansions.json'
 
 export default {
   name: "index",
-  components: {FamilyTreeChart},
+  components: {FamilyTree},
   data() {
     return {
       jsonData: stone,

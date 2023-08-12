@@ -1,35 +1,35 @@
 @font-face {
-  font-family: "iconfont"; /* Project id 3906753 */
-  src: url('iconfont.woff2?t=1676987675697') format('woff2'),
-       url('iconfont.woff?t=1676987675697') format('woff'),
-       url('iconfont.ttf?t=1676987675697') format('truetype');
+    font-family: "iconfont"; /* Project id 3906753 */
+    src: url('iconfont.woff2?t=1676987675697') format('woff2'),
+    url('iconfont.woff?t=1676987675697') format('woff'),
+    url('iconfont.ttf?t=1676987675697') format('truetype');
 }
 
 .iconfont {
-  font-family: "iconfont" !important;
-  font-size: 16px;
-  font-style: normal;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+    font-family: "iconfont" !important;
+    font-size: 16px;
+    font-style: normal;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 .icon-exit:before {
-  content: "\e7cb";
+    content: "\e7cb";
 }
 
 .icon-female:before {
-  content: "\e71a";
+    content: "\e71a";
 }
 
 .icon-male:before {
-  content: "\e71c";
+    content: "\e71c";
 }
 
 .icon-exchange:before {
-  content: "\e618";
+    content: "\e618";
 }
 
 .icon-bell:before {
-  content: "\e672";
+    content: "\e672";
 }
 

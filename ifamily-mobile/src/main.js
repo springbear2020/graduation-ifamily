@@ -4,14 +4,16 @@ import router from '@/router'
 import Vant from 'vant'
 import 'vant/lib/index.css'
 import './assets/iconfont/iconfont.css'
-import footerTabSpan from './components/footer-tab-span'
-import logoCharacter from './components/logo-character'
-import familyPeopleTag from './components/family-people-tag'
+import logoPattern from './components/logo-pattern'
+import peopleTag from './components/people-tag'
+import descTag from './components/desc-tag'
 
 Vue.use(Vant)
-Vue.component('footer-tab-span', footerTabSpan)
-Vue.component('logo-character', logoCharacter)
-Vue.component('family-people-tag', familyPeopleTag)
+
+Vue.component('logo-pattern', logoPattern)
+Vue.component('people-tag', peopleTag)
+Vue.component('desc-tag', descTag)
+
 Vue.config.productionTip = false
 
 new Vue({
