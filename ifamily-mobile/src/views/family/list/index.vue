@@ -1,23 +1,31 @@
 <template>
   <div>
-    <van-nav-bar title="我的家族" left-arrow @click-left="backFamily"/>
+    <van-nav-bar title="我的家族" left-arrow @click-left="backFamily" @click-right="createFamily">
+      <template #right>
+        <van-icon name="add-o"/>
+      </template>
+    </van-nav-bar>
 
-    <family-brief-info :defaultFamily="i === 1" v-for="i in 10" :key="i" @click.native="setDefaultFamily"/>
+    <family-info-card :me-created="i === 3 || i ===1 " :defaultFamily="i === 1" v-for="i in 10" :key="i"
+                       @click.native="handleSetDefaultFamily"/>
   </div>
 </template>
 
 <script>
-import FamilyBriefInfo from "@/views/family/list/family-brief-info";
+import FamilyInfoCard from "@/views/family/list/family-info-card";
 
 export default {
   name: "index",
-  components: {FamilyBriefInfo},
+  components: {FamilyInfoCard},
   methods: {
     backFamily() {
       this.$router.replace('/family')
     },
-    setDefaultFamily() {
+    handleSetDefaultFamily() {
       this.$router.replace('/family')
+    },
+    createFamily() {
+      this.$router.push('/family/manage/create')
     }
   }
 }

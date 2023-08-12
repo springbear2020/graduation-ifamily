@@ -19,13 +19,14 @@
     <van-tabs v-model="active">
       <van-tab title="动态">
         <van-pull-refresh v-model="isRefreshing" success-text="刷新成功" @refresh="onRefresh">
-          <van-list v-model="isLoading" :isFinished="isFinished" isFinished-text="没有更多了" @load="onLoad">
-            <social-moments :data-list="dataList" v-on:post-comment="postComment"/>
+          <van-list isFinished-text="没有更多了" v-model="isLoading" :isFinished="isFinished" @load="onLoad"
+                    :error.sync="error" error-text="请求失败，点击重新加载">
+            <social-moments :data-list="dataList" v-on:post-comment="handlePostComment"/>
           </van-list>
         </van-pull-refresh>
       </van-tab>
 
-      <van-tab title="资讯">
+      <van-tab title="寻亲">
         <van-pull-refresh v-model="isRefreshing" success-text="刷新成功" @refresh="onRefresh">
           <van-empty description="无内容"/>
         </van-pull-refresh>
@@ -46,6 +47,7 @@ export default {
       isRefreshing: false,
       isLoading: false,
       isFinished: false,
+      error: false
     }
   },
   mounted() {
@@ -61,8 +63,13 @@ export default {
       }, 1000);
     },
     onLoad() {
+      setTimeout(() => {
+        this.isLoading = false;
+        this.error = true;
+      }, 1000);
     },
-    postComment(content, moment) {
+    handlePostComment(content, moment) {
+      this.$toast.success('评论成功')
       console.log(content, moment)
     }
   },

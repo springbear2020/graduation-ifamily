@@ -37,7 +37,7 @@
       <tr v-if="Array.isArray(jsonData.children) && jsonData.children.length && jsonData.extend">
         <td v-for="(children, index) in jsonData.children" :key="index" colspan="2" class="child">
           <!-- 循环递归生成子代节点 -->
-          <FamilyTreeChart :jsonData="children" @click-node="$emit('click-node', $event)"
+          <family-tree :jsonData="children" @click-node="$emit('click-node', $event)"
                            :single="jsonData.children.length === 1"/>
         </td>
       </tr>
@@ -47,7 +47,7 @@
 
 <script>
 export default {
-  name: "FamilyTreeChart",
+  name: "family-tree",
   props: ["jsonData", "single"],
 }
 </script>

@@ -39,10 +39,6 @@ let router = new VueRouter({
             component: () => import('@/views/mine/password'),
         },
         {
-            path: '/mine/personal',
-            component: () => import('@/views/mine/personal'),
-        },
-        {
             path: '/mine/settings',
             component: () => import('@/views/mine/settings'),
         },
@@ -61,10 +57,6 @@ let router = new VueRouter({
             component: () => import('@/views/family/album'),
         },
         {
-            path: '/family/album/post',
-            component: () => import('@/views/family/album/post'),
-        },
-        {
             path: '/family/info',
             component: () => import('@/views/family/info'),
         },
@@ -73,11 +65,15 @@ let router = new VueRouter({
             component: () => import('@/views/family/list'),
         },
         {
+            path: '/family/manage/create',
+            component: () => import('@/views/family/manage/create'),
+        },
+        {
             path: '/family/members',
             component: () => import('@/views/family/members'),
         },
         {
-            path: '/family/people',
+            path: '/family/members/people',
             component: () => import('@/views/family/members/people'),
         },
         {

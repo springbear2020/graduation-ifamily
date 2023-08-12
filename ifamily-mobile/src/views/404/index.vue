@@ -8,10 +8,10 @@
 
 <script>
 export default {
-  name: "404",
+  name: "index",
   methods: {
     backHome() {
-      this.$router.replace('/home')
+      this.$router.replace('/')
     }
   }
 }

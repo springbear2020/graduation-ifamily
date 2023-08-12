@@ -1,8 +1,8 @@
 <template>
   <div>
-    <van-nav-bar title="设置" left-arrow @click-left="backMine" @click-right="logout">
+    <van-nav-bar title="设置" left-arrow @click-left="backMine" @click-right="handleUserLogout">
       <template #right>
-        <van-icon name="exit" color="#ee0a24" class="iconfont" class-prefix="icon" size="20"/>
+        <van-icon name="exit" color="#1989fa" class="iconfont" class-prefix="icon" size="20"/>
       </template>
     </van-nav-bar>
 
@@ -30,7 +30,7 @@ export default {
     backMine() {
       this.$router.replace('/mine')
     },
-    logout() {
+    handleUserLogout() {
       this.$toast.fail('退出登录')
     }
   }

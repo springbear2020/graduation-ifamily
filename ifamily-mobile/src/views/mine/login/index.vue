@@ -9,10 +9,10 @@
     <!-- 绘制 LOGO 字体 -->
     <logo-pattern/>
 
-    <van-form @submit="userLogin">
+    <van-form @submit="handleUserLogin">
       <van-field v-model="mobile" type="tel" name="mobile" label="手机号" placeholder="手机号" autofocus/>
 
-      <!-- 手机登录页面展示验证码输入框，密码登录页面展示密码登录输入框 -->
+      <!-- 手机登录页面展示发送验证码按钮，密码登录页面展示密码输入框 -->
       <div v-if="type==='2'">
         <van-field v-model="code" type="number" name="code" label="验证码" placeholder="验证码" maxlength="6">
           <template #button>
@@ -30,13 +30,13 @@
         </template>
       </van-field>
 
-      <div class="login-btn-container">
+      <div class="btn-container">
         <van-button block type="info" native-type="submit">登录</van-button>
       </div>
     </van-form>
 
     <!-- 密码登录页面展示 “用户注册” 和 “忘记密码” -->
-    <van-nav-bar left-text="忘记密码" right-text="用户注册" :border="false"
+    <van-nav-bar right-text="用户注册" left-text="忘记密码" :border="false"
                  @click-left="forgetPassword" @click-right="userRegister" v-if="type==='1'"/>
   </div>
 </template>
@@ -55,7 +55,7 @@ export default {
     };
   },
   methods: {
-    userLogin(data) {
+    handleUserLogin(data) {
       console.log(data)
       this.$router.replace('/mine')
     },
@@ -71,3 +71,9 @@ export default {
   },
 }
 </script>
+
+<style scoped>
+.btn-container {
+  margin: 16px;
+}
+</style>

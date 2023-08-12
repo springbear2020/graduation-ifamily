@@ -3,7 +3,8 @@
     <van-nav-bar fixed title="家族树谱" left-arrow @click-left="backFamily" @click-right="showPopover = true">
       <template #right>
         <!-- 家族树操作弹出层 -->
-        <van-popover v-model="showPopover" trigger="click" :actions="actions" placement="bottom-end" @select="onSelect">
+        <van-popover v-model="showPopover" :actions="popoverActions" placement="bottom-end" trigger="click"
+                     @select="onSelect">
           <template #reference>
             <van-icon name="apps-o"/>
           </template>
@@ -11,16 +12,26 @@
       </template>
     </van-nav-bar>
 
-    <FamilyTree :jsonData="jsonData" @click-node="clickNode"/>
+    <FamilyTree :jsonData="jsonData" @click-node="handleViewPeople"/>
 
     <!-- 家族成员搜索动作面板 -->
-    <van-action-sheet v-model="showActionSheet" title="搜索成员">
-      <van-search v-model="memberName" show-action placeholder="请输入家族成员姓名"/>
+    <van-action-sheet v-model="memberSearchSheet" title="搜索成员">
+      <van-search v-model="memberName" show-action placeholder="请输入家族成员姓名" @search="onSearch">
+        <template #action>
+          <div @click="onSearch">搜索</div>
+        </template>
+      </van-search>
       <van-empty description="无内容"/>
     </van-action-sheet>
 
-    <!-- 查看树节点弹出层 -->
-    <van-popup v-model="showPopup">内容</van-popup>
+    <!-- 树节点点击人员操作面板 -->
+    <van-action-sheet v-model="peopleClickSheet" cancel-text="取消" description="光头勇">
+      <van-grid :column-num="3" :gutter="8" square :border="false">
+        <van-grid-item icon="cluster-o" text="ta 的关系"/>
+        <van-grid-item icon="manager-o" text="ta 的主页" @click="handlePeopleHomePage"/>
+        <van-grid-item icon="add-o" text="添加亲人"/>
+      </van-grid>
+    </van-action-sheet>
   </div>
 </template>
 
@@ -37,15 +48,15 @@ export default {
       // [true]折叠全部节点 [false]展开全部节点
       isAllFold: true,
       showPopover: false,
-      showActionSheet: false,
-      showPopup: false,
-      actions: [
+      popoverActions: [
         {text: '展开全部', icon: 'expand-o'},
         {text: '折叠全部', icon: 'shrink'},
         {text: '定位到我', icon: 'aim'},
         {text: '搜索成员', icon: 'search'},
       ],
-      memberName: ''
+      memberSearchSheet: false,
+      memberName: '',
+      peopleClickSheet: false
     }
   },
   watch: {
@@ -66,9 +77,9 @@ export default {
     }
   },
   methods: {
-    clickNode(node) {
+    handleViewPeople(node) {
       console.log(node)
-      this.showPopup = true
+      this.peopleClickSheet = true
     },
     backFamily() {
       this.$router.replace('/family')
@@ -85,12 +96,23 @@ export default {
           this.$toast.success('定位到我')
           break;
         case 3:
-          this.isAllFold = true
-          this.showActionSheet = true
+          this.memberSearchSheet = true
           break;
         default:
       }
+    },
+    handlePeopleHomePage() {
+      this.$router.push('/family/members/people')
+    },
+    onSearch() {
+      this.$toast.success('搜索成员')
     }
   }
 }
 </script>
+
+<style scoped>
+.van-action-sheet__gap {
+  height: 0;
+}
+</style>

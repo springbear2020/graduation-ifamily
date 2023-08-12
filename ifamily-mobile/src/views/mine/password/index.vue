@@ -5,7 +5,7 @@
     <!-- 绘制 LOGO 文字 -->
     <logo-pattern/>
 
-    <van-form @submit="registerOrResetPassword">
+    <van-form @submit="handleRegisterOrReset">
       <van-field autofocus v-model="mobile" type="tel" name="mobile" label="手机号" placeholder="手机号"/>
 
       <van-field v-model="code" type="number" name="code" label="验证码" placeholder="验证码" maxlength="6">
@@ -27,7 +27,7 @@
         </template>
       </van-field>
 
-      <div class="login-btn-container">
+      <div class="btn-container">
         <van-button block type="info" native-type="submit">确认</van-button>
       </div>
     </van-form>
@@ -44,18 +44,17 @@ export default {
       password: '',
       rePassword: '',
       agree: false,
-      type: '1',
       title: ''
     };
   },
   mounted() {
     // [1]用户注册 [2]忘记密码 [3]修改密码
-    this.type = this.$route.params.type
-    this.title = this.type === '2' ? '忘记密码' : (this.type === '3' ? '修改密码' : '用户注册')
+    const type = this.$route.params.type
+    this.title = type === '2' ? '忘记密码' : (type === '3' ? '修改密码' : '用户注册')
   },
   methods: {
     // 用户注册或重置密码
-    registerOrResetPassword(data) {
+    handleRegisterOrReset(data) {
       console.log(data)
       this.$router.replace('/mine/login')
     },
@@ -65,3 +64,9 @@ export default {
   },
 }
 </script>
+
+<style scoped>
+.btn-container {
+  margin: 16px;
+}
+</style>

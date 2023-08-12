@@ -4,19 +4,20 @@ import router from '@/router'
 import './assets/iconfont/iconfont.css'
 import Vant from 'vant'
 import 'vant/lib/index.css'
-
-Vue.use(Vant)
-
-
 import logoPattern from './components/logo-pattern'
 import peopleTag from './components/people-tag'
 import descTag from './components/desc-tag'
 import socialMoments from './components/social-moments'
+import imageList from './components/image-list'
+import messageBox from './components/message-box'
 
+Vue.use(Vant)
 Vue.component('logo-pattern', logoPattern)
 Vue.component('people-tag', peopleTag)
 Vue.component('desc-tag', descTag)
 Vue.component('social-moments', socialMoments)
+Vue.component('image-list', imageList)
+Vue.component('message-box', messageBox)
 
 Vue.config.productionTip = false
 

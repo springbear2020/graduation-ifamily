@@ -6,7 +6,7 @@
     <van-tabbar v-model="active">
       <van-tabbar-item icon="home-o" replace to="/home">主页</van-tabbar-item>
       <van-tabbar-item icon="cluster-o" replace to="/family">家族</van-tabbar-item>
-      <van-tabbar-item icon="user-circle-o" replace to="/mine">我的</van-tabbar-item>
+      <van-tabbar-item icon="user-o" replace to="/mine">我的</van-tabbar-item>
     </van-tabbar>
   </div>
 </template>

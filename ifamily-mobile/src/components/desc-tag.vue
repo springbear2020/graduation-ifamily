@@ -1,6 +1,6 @@
 <template>
   <!-- 内容描述标签如：[男 234] 或 [年龄 23] 等 -->
-  <van-tag :type="type" :class="{'content-margin': right}" plain>
+  <van-tag :type="type" :class="{'right': right}" plain>
     {{ text }} {{ number }}
   </van-tag>
 </template>
@@ -13,7 +13,7 @@ export default {
 </script>
 
 <style scoped>
-.content-margin {
+.right {
   margin-right: 5px;
 }
 </style>

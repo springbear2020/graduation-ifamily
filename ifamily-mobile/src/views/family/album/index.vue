@@ -1,24 +1,14 @@
 <template>
   <div>
-    <van-nav-bar left-arrow title="家族相册" @click-left="backFamily" @click-right="albumPost">
+    <van-nav-bar left-arrow title="家族相册" @click-left="backFamily" @click-right="uploadImage">
       <template #right>
-        <van-icon name="add-o"/>
+        <van-icon name="upgrade"/>
       </template>
     </van-nav-bar>
 
-    <van-tabs v-model="active">
-      <van-tab title="相册">
-        <van-pull-refresh v-model="isRefreshing" success-text="刷新成功" @refresh="onRefresh">
-          <van-empty description="无内容"/>
-        </van-pull-refresh>
-      </van-tab>
-
-      <van-tab title="视频">
-        <van-pull-refresh v-model="isRefreshing" success-text="刷新成功" @refresh="onRefresh">
-          <van-empty description="无内容"/>
-        </van-pull-refresh>
-      </van-tab>
-    </van-tabs>
+    <van-pull-refresh v-model="isRefreshing" success-text="刷新成功" @refresh="onRefresh">
+      <van-empty description="无内容"/>
+    </van-pull-refresh>
   </div>
 </template>
 
@@ -35,8 +25,8 @@ export default {
     backFamily() {
       this.$router.replace('/family')
     },
-    albumPost() {
-      this.$router.push('/family/album/post')
+    uploadImage() {
+      this.$toast.success('上传图片')
     },
     onRefresh() {
       setTimeout(() => {

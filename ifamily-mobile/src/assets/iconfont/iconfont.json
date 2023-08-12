@@ -6,6 +6,13 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "22830564",
+      "name": "SWEEP",
+      "font_class": "SWEEP",
+      "unicode": "ea00",
+      "unicode_decimal": 59904
+    },
+    {
       "icon_id": "1111736",
       "name": "exit",
       "font_class": "exit",
