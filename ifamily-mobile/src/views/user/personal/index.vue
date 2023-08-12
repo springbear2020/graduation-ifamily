@@ -11,86 +11,24 @@
       </template>
     </van-nav-bar>
 
-    <van-form>
-      <van-field name="uploader" label="头像">
-        <template #input>
-          <van-uploader v-model="formData.uploader" max-count="1"/>
-        </template>
-      </van-field>
-      <van-field
-          v-model="formData.nickname"
-          name="nickname"
-          label="昵称"
-          placeholder="昵称"
-      />
-      <van-field
-          v-model="formData.realName"
-          name="realName"
-          label="真实姓名"
-          placeholder="真实姓名"
-      />
-      <van-field
-          readonly
-          clickable
-          name="birthdate"
-          :value="formData.birthdate"
-          label="出生日期"
-          placeholder="点击选择生日"
-          @click="showCalendar = true"
-      />
-      <van-field
-          type="digit"
-          readonly
-          v-model="formData.age"
-          name="age"
-          label="年龄"
-          placeholder="年龄"
-      />
-      <van-field name="gender" label="性别">
-        <template #input>
-          <van-radio-group v-model="formData.gender" direction="horizontal">
-            <van-radio name="0">男</van-radio>
-            <van-radio name="1">女</van-radio>
-          </van-radio-group>
-        </template>
-      </van-field>
-      <van-field
-          readonly
-          clickable
-          name="nativePlace"
-          :value="formData.nativePlace"
-          label="籍贯"
-          placeholder="点击选择省市区"
-          @click="chooseArea('1')"
-      />
-      <van-field
-          readonly
-          clickable
-          name="presentAddress"
-          :value="formData.presentAddress"
-          label="现所在地"
-          placeholder="点击选择省市区"
-          @click="chooseArea('2')"
-      />
-      <van-field
-          type="digit"
-          readonly
-          v-model="formData.mobile"
-          name="mobile"
-          label="联系电话"
-          placeholder="联系电话"
-      />
-      <van-field
-          v-model="formData.signature"
-          rows="2"
-          label="个性签名"
-          type="textarea"
-          maxlength="100"
-          placeholder="个性签名"
-          show-word-limit
-      />
-    </van-form>
+    <van-field name="uploader" label="头像">
+      <template #input>
+        <van-uploader v-model="formData.uploader" max-count="1"/>
+      </template>
+    </van-field>
+    <van-cell-group>
+      <van-cell title="昵称" value="你不懂我&我不怪你" is-link/>
+      <van-cell title="真实姓名" value="陆平彪" is-link/>
+      <van-cell title="出生日期" value="1999-01-01" is-link @click="showCalendar = true"/>
+      <van-cell title="联系电话" value="13853289426" is-link/>
+      <van-cell title="年龄" value="12"/>
+      <van-cell title="性别" value="男" is-link/>
+      <van-cell title="籍贯" value="湖北省/武汉市/洪山区" is-link @click="chooseArea('1')"/>
+      <van-cell title="现居住地" value="北京市/昌平区" is-link @click="chooseArea('2')"/>
+      <van-cell title="个性签名" value="长相思兮长相忆" is-link/>
+    </van-cell-group>
 
+    <!-- 地址选择组件 -->
     <van-popup v-model="showArea" position="bottom">
       <van-area
           :area-list="areaList"
@@ -98,6 +36,7 @@
           @cancel="showArea = false"
       />
     </van-popup>
+    <!-- 日历选择组件 -->
     <van-calendar v-model="showCalendar" @confirm="confirmBirthdate"/>
   </div>
 </template>

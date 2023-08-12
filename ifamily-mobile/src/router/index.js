@@ -5,10 +5,12 @@ Vue.use(VueRouter)
 
 let router = new VueRouter({
     routes: [
+        // home
         {
             path: '/',
-            redirect: '/user'
+            redirect: '/discover'
         },
+        // user
         {
             path: '/user',
             component: () => import('@/views/user'),
@@ -34,32 +36,57 @@ let router = new VueRouter({
             path: '/user/personal',
             component: () => import('@/views/user/personal'),
         },
+        // discover
         {
-            path: '/home',
-            component: () => import('@/views/home'),
+            path: '/discover',
+            component: () => import('@/views/discover'),
             meta: {footerShow: true}
         },
         {
-            path: '/home/announcement',
-            component: () => import('@/views/home/announcement'),
+            path: '/discover/message',
+            component: () => import('@/views/discover/message'),
         },
+        // family
         {
-            path: '/message',
-            component: () => import('@/views/message'),
+            path: '/family',
+            component: () => import('@/views/family'),
             meta: {footerShow: true}
         },
         {
-            path: '/message/contacts',
-            component: () => import('@/views/message/contacts'),
+            path: '/family/list',
+            component: () => import('@/views/family/list'),
         },
         {
-            path: '/genealogy',
-            component: () => import('@/views/genealogy'),
-            meta: {footerShow: true}
+            path: '/family/create',
+            component: () => import('@/views/family/create'),
+        },
+        {
+            path: '/family/info',
+            component: () => import('@/views/family/info'),
+        },
+        {
+            path: '/family/tree',
+            component: () => import('@/views/family/tree/index'),
+        },
+        {
+            path: '/family/members',
+            component: () => import('@/views/family/members'),
+        },
+        {
+            path: '/family/people',
+            component: () => import('@/views/family/people'),
+        },
+        {
+            path: '/family/album',
+            component: () => import('@/views/family/album'),
+        },
+        {
+            path: '/family/manage',
+            component: () => import('@/views/family/manage'),
         },
     ],
     scrollBehavior() {
-        // 路由切换时回到最顶部
+        // to top
         return {y: 0}
     }
 })

@@ -1,9 +1,10 @@
 <template>
   <div>
+    <footer-tab-span/>
+
     <van-tabbar v-model="active">
-      <van-tabbar-item icon="home-o" replace to="/home">首页</van-tabbar-item>
-      <van-tabbar-item icon="chat-o" replace to="/message">消息</van-tabbar-item>
-      <van-tabbar-item icon="cluster-o" replace to="/genealogy">家族</van-tabbar-item>
+      <van-tabbar-item icon="guide-o" replace to="/discover">发现</van-tabbar-item>
+      <van-tabbar-item icon="cluster-o" replace to="/family">家族</van-tabbar-item>
       <van-tabbar-item icon="user-circle-o" replace to="/user">我的</van-tabbar-item>
     </van-tabbar>
   </div>

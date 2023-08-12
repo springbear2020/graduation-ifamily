@@ -13,3 +13,14 @@ export default {
   components: {footerTab},
 }
 </script>
+
+<style>
+.img-portrait-father {
+  display: flex;
+}
+
+.img-portrait {
+  margin: auto auto;
+  padding: 30px
+}
+</style>

@@ -1,0 +1,167 @@
+{
+  "name": "贾太公",
+  "extend": false,
+  "class": ["root-node"],
+  "children": [
+    {
+      "name": "贾演",
+      "extend": false,
+      "children": [
+        {
+          "name": "贾代化",
+          "extend": false,
+          "children": [
+            {
+              "name": "贾敷",
+              "extend": false
+            },
+            {
+              "name": "贾敬",
+              "extend": false,
+              "children": [
+                {
+                  "name": "贾珍",
+                  "extend": false,
+                  "imgUrl": "https://img01.yzcdn.cn/vant/cat.jpeg",
+                  "children": [
+                    {
+                      "name": "贾蓉",
+                      "extend": false,
+                      "mate": [
+                        {
+                          "name": "秦可卿",
+                          "extend": false
+                        }
+                      ]
+                    }
+                  ],
+                  "mate": [
+                    {
+                      "name": "尤氏",
+                      "extend": false
+                    }
+                  ]
+                },
+                {
+                  "name": "贾惜春",
+                  "extend": false
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "贾源",
+      "extend": false,
+      "children": [
+        {
+          "name": "贾代善",
+          "extend": false,
+          "imgUrl": "https://img01.yzcdn.cn/vant/cat.jpeg",
+          "mate": [
+            {
+              "name": "史太君",
+              "extend": false
+            }
+          ],
+          "children": [
+            {
+              "name": "贾赦",
+              "extend": false,
+              "children": [
+                {
+                  "name": "贾琏",
+                  "extend": false,
+                  "imgUrl": "https://img01.yzcdn.cn/vant/cat.jpeg",
+                  "mate": [
+                    {
+                      "name": "王熙凤",
+                      "extend": false
+                    },
+                    {
+                      "name": "尤二姐",
+                      "extend": false
+                    }
+                  ],
+                  "children": [
+                    {
+                      "name": "巧姐",
+                      "extend": false
+                    }
+                  ]
+                },
+                {
+                  "name": "贾迎春",
+                  "extend": false
+                }
+              ]
+            },
+            {
+              "name": "贾政",
+              "extend": false,
+              "imgUrl": "https://img01.yzcdn.cn/vant/cat.jpeg",
+              "children": [
+                {
+                  "name": "贾宝玉",
+                  "extend": false,
+                  "imgUrl": "https://img01.yzcdn.cn/vant/cat.jpeg",
+                  "mate": [
+                    {
+                      "name": "薛宝钗",
+                      "extend": false
+                    }
+                  ]
+                },
+                {
+                  "name": "贾元春",
+                  "extend": false
+                },
+                {
+                  "name": "贾珠",
+                  "extend": false
+                },
+                {
+                  "name": "贾探春",
+                  "extend": false
+                },
+                {
+                  "name": "贾环",
+                  "extend": false
+                }
+              ],
+              "mate": [
+                {
+                  "name": "王夫人",
+                  "extend": false
+                },
+                {
+                  "name": "赵姨娘",
+                  "extend": false
+                }
+              ]
+            },
+            {
+              "name": "贾敏",
+              "extend": false,
+              "imgUrl": "https://img01.yzcdn.cn/vant/cat.jpeg",
+              "children": [
+                {
+                  "name": "林黛玉",
+                  "extend": false
+                }
+              ],
+              "mate": [
+                {
+                  "name": "林如海",
+                  "extend": false
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

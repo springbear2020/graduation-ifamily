@@ -1,0 +1,44 @@
+{
+  "id": "3906753",
+  "name": "ifamily",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "1111736",
+      "name": "exit",
+      "font_class": "exit",
+      "unicode": "e7cb",
+      "unicode_decimal": 59339
+    },
+    {
+      "icon_id": "90846",
+      "name": "female",
+      "font_class": "female",
+      "unicode": "e71a",
+      "unicode_decimal": 59162
+    },
+    {
+      "icon_id": "90848",
+      "name": "male",
+      "font_class": "male",
+      "unicode": "e71c",
+      "unicode_decimal": 59164
+    },
+    {
+      "icon_id": "5978777",
+      "name": "exchange",
+      "font_class": "jiaohuan",
+      "unicode": "e618",
+      "unicode_decimal": 58904
+    },
+    {
+      "icon_id": "6360825",
+      "name": "bell",
+      "font_class": "bell",
+      "unicode": "e672",
+      "unicode_decimal": 58994
+    }
+  ]
+}

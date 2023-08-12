@@ -6,7 +6,7 @@
         @click-left="backPasswordLogin"
     />
 
-    <logo-charts/>
+    <logo-character/>
 
     <van-form @submit="registerOrPassword">
       <van-field
@@ -56,7 +56,7 @@
         </template>
       </van-field>
 
-      <div style="margin: 16px;">
+      <div class="login-btn">
         <van-button block type="info" native-type="submit">确认</van-button>
       </div>
     </van-form>
@@ -64,11 +64,8 @@
 </template>
 
 <script>
-import LogoCharts from "@/components/logo-charts";
-
 export default {
   name: "index",
-  components: {LogoCharts},
   data() {
     return {
       mobile: '',
@@ -99,3 +96,9 @@ export default {
   },
 }
 </script>
+
+<style scoped>
+.login-btn {
+  margin: 16px;
+}
+</style>
