@@ -1,6 +1,6 @@
 <template>
   <div>
-    <van-nav-bar fixed title="家族树谱" left-arrow @click-left="backFamily" @click-right="showPopover = true" style="z-index: 1">
+    <van-nav-bar title="家族树谱" left-arrow @click-left="backFamily" @click-right="showPopover = true">
       <template #right>
         <!-- 右上角操作弹出层 -->
         <van-popover placement="bottom-end" trigger="click"

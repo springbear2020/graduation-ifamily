@@ -32,7 +32,7 @@
       <van-area :area-list="areaList" @confirm="confirmArea" @cancel="showAreaPopup = false">
         <template #columns-bottom>
           <div class="full-address-container">
-            <van-field rows="1" label="详细地址" type="textarea" maxlength="100" placeholder="详细地址" show-word-limit
+            <van-field rows="1" autosize label="详细地址" type="textarea" maxlength="100" placeholder="详细地址" show-word-limit
                        v-model="fullAddress"/>
           </div>
         </template>

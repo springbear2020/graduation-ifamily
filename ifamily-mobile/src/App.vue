@@ -45,10 +45,10 @@ export default {
 }
 
 .van-step__title p {
-  margin: 0;
+  margin: 1px 0;
 }
 
 .van-step__title h3 {
-  margin: 0;
+  margin: 5px 0;
 }
 </style>

@@ -24,14 +24,16 @@
           </div>
 
           <!-- 展开/折叠箭头 -->
-          <div class="arrow" v-if="Array.isArray(tree.children) && tree.children.length" @click="tree.extend = !tree.extend;"></div>
+          <div class="arrow" v-if="Array.isArray(tree.children) && tree.children.length" @click="clickArrow(tree, $event)"></div>
         </td>
       </tr>
 
       <!-- 递归生成孩子节点 -->
       <tr v-if="Array.isArray(tree.children) && tree.children.length && tree.extend">
         <td v-for="(children, index) in tree.children" :key="index" colspan="2" class="child">
-          <family-tree-branch :tree="children" @click-node="$emit('click-node', $event)" :single="tree.children.length === 1"/>
+          <family-tree-branch :tree="children" :single="tree.children.length === 1"
+                              @click-node="$emit('click-node', $event)" @click-arrow="$emit('click-arrow', $event)"
+          />
         </td>
       </tr>
     </table>
@@ -41,7 +43,13 @@
 <script>
 export default {
   name: "family-tree-branch",
-  props: ['tree', 'single']
+  props: ['tree', 'single'],
+  methods: {
+    clickArrow(tree, $event) {
+      tree.extend = !tree.extend
+      this.$emit('click-arrow', $event)
+    }
+  }
 }
 </script>
 
@@ -75,6 +83,7 @@ td {
   padding: 10px;
   transform: translate3d(-15px, 0, 0);
   cursor: pointer;
+  background-color: blue;
 }
 
 .arrow:before {
@@ -163,6 +172,7 @@ td {
   box-sizing: border-box;
   text-align: center;
   white-space: nowrap;
+  background-color: green;
 }
 
 .couple .person {
@@ -172,6 +182,7 @@ td {
   width: 6em;
   overflow: hidden;
   white-space: normal;
+  background-color: purple;
 }
 
 .couple .person .avatar {

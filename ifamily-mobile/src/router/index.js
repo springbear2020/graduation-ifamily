@@ -100,6 +100,18 @@ let router = new VueRouter({
             path: '/family/manage/seniority',
             component: () => import('@/views/family/manage/seniority'),
         },
+        {
+            path: '/family/manage/notice',
+            component: () => import('@/views/family/manage/notice'),
+        },
+        {
+            path: '/family/manage/access',
+            component: () => import('@/views/family/manage/access'),
+        },
+        {
+            path: '/family/manage/permission',
+            component: () => import('@/views/family/manage/permission'),
+        },
         // 404 page must be placed at the end
         {
             path: '*',

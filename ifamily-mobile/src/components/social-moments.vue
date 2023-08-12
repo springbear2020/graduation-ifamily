@@ -5,7 +5,7 @@
       <portrait-desc :person="moment" @click.native="viewUserPersonal" :more="true" @more-operation="moreOperation"/>
 
       <!-- 文本内容、图片列表、操作图标 -->
-      <van-cell>
+      <van-cell class="cell-top">
         <template #default>
           <p class="text-content">{{ moment.desc }}</p>
 
@@ -134,5 +134,9 @@ export default {
 
 /deep/ .van-share-sheet__options {
   justify-content: center
+}
+
+.cell-top {
+  padding-top: 0;
 }
 </style>

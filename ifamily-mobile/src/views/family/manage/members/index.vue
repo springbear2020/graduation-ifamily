@@ -16,7 +16,7 @@
           <van-image round width="50" height="50" src="https://img01.yzcdn.cn/vant/cat.jpeg"/>
           <p class="name-container">
             <span>光头勇</span>
-            <van-icon name="male" color="#007bff" class="iconfont" class-prefix="icon" size="20"/>
+            <van-icon name="male" color="#007bff" class="iconfont" class-prefix="icon" size="16"/>
           </p>
         </template>
         <template #default>

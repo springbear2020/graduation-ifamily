@@ -21,7 +21,7 @@
       <!-- 修谱日志 -->
       <van-tab title="修谱日志">
         <van-pull-refresh success-text="刷新成功" v-model="isRefreshing" @refresh="onRefresh">
-          <van-steps direction="vertical" center>
+          <van-steps direction="vertical" center active-color="#ff976a">
             <van-step v-for="i in 10" :key="i">
               <h3>2016-07-12 12:40</h3>
               <p>光头勇添加了光头强</p>
@@ -36,8 +36,8 @@
         <van-pull-refresh success-text="刷新成功" v-model="isRefreshing" @refresh="onRefresh">
           <van-cell-group v-for="item in 10" :key="item">
             <portrait-desc :person="person"/>
-            <van-cell
-                value="族谱作为一个记载以血缘关系为主体的家族世代繁衍和重要人物事迹的特殊图书体裁。"/>
+            <van-cell class="cell-top"
+                      value="族谱作为一个记载以血缘关系为主体的家族世代繁衍和重要人物事迹的特殊图书体裁。"/>
           </van-cell-group>
         </van-pull-refresh>
       </van-tab>
@@ -106,3 +106,9 @@ export default {
   },
 }
 </script>
+
+<style scoped>
+.cell-top {
+  padding-top: 0;
+}
+</style>

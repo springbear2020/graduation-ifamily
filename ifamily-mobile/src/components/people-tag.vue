@@ -46,10 +46,10 @@ export default {
 
 <style scoped>
 .right {
-  margin-right: 5px;
+  margin-right: 1px;
 }
 
 .bottom {
-  margin-bottom: 5px;
+  margin-bottom: 1px;
 }
 </style>

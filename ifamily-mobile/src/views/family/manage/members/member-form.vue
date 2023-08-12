@@ -77,9 +77,17 @@
 
     <!-- 日期选择弹出层 -->
     <van-action-sheet v-model="showDatetimePicker">
-      <van-datetime-picker v-model="selectedDate" type="datetime" title="选择年月日小时分钟"
+      <van-datetime-picker v-model="selectedDate" type="date" title="选择年月日"
                            :min-date="minDate" :max-date="curDate" @cancel="showDatetimePicker = false"
-                           @confirm="confirmDate"/>
+                           @confirm="confirmDate">
+        <template #columns-bottom>
+          <van-cell center title="农历" class="lunar">
+            <template #right-icon>
+              <van-switch v-model="lunar" size="20"/>
+            </template>
+          </van-cell>
+        </template>
+      </van-datetime-picker>
     </van-action-sheet>
 
     <!-- 地址选择弹出层 -->
@@ -87,7 +95,7 @@
       <van-area :area-list="areaList" @confirm="confirmArea" @cancel="showAreaPopup = false">
         <template #columns-bottom>
           <div class="full-address-container">
-            <van-field rows="1" label="详细地址" type="textarea" maxlength="100" placeholder="详细地址" show-word-limit
+            <van-field rows="1" autosize label="详细地址" type="textarea" maxlength="100" placeholder="详细地址" show-word-limit
                        v-model="fullAddress"/>
           </div>
         </template>
@@ -116,7 +124,7 @@ export default {
       areaList: [],
       showAreaPopup: false,
       fullAddress: '',
-
+      lunar: false,
       formData: {
         portrait: [],
         surname: '',
@@ -144,7 +152,7 @@ export default {
       this.showForm = false
     },
     confirmDate() {
-      const dateStr = dayjs(this.selectedDate).format('YYYY-MM-DD HH:mm:ss')
+      const dateStr = dayjs(this.selectedDate).format('YYYY-MM-DD')
       if (this.dateType === '1') {
         this.formData.birthdate = dateStr
       } else {
@@ -188,5 +196,9 @@ export default {
 
 .flex-container button {
   margin-top: 16px;
+}
+
+.lunar {
+  padding: 20px 16px;
 }
 </style>
