@@ -14,7 +14,7 @@ import org.springframework.stereotype.Repository;
 public interface PeopleMapper extends BaseMapper<PeopleDO> {
 
     /**
-     * 家族所有成员（含已逻辑删除成员）世代增加 1
+     * FIXME 家族所有成员（含已逻辑删除成员）世代增加 1
      *
      * @param genealogyId 家族 ID
      * @return 影响的行数

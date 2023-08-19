@@ -12,11 +12,26 @@ import java.util.List;
 public interface AdminRoleService extends IService<AdminRoleDO> {
 
     /**
-     * 查询管理员拥有的所有角色名称集合
+     * 查询管理员对应的角色 ID 集合
      *
      * @param adminId 管理员 ID
-     * @return 角色名称集合
+     * @return 角色 ID 集合
      */
-    List<String> listRoleNamesOfAdmin(Long adminId);
+    List<Long> listRoleIdsOfAdmin(Long adminId);
+
+    /**
+     * 删除角色对应的所有管理员关系
+     *
+     * @param roleId 角色 ID
+     */
+    void removeByRoleId(Long roleId);
+
+    /**
+     * 查询角色对应的管理员 ID 集合
+     *
+     * @param roleId 角色 ID
+     * @return 管理员 ID 集合
+     */
+    List<Long> listAdminIdsOfRole(Long roleId);
 
 }

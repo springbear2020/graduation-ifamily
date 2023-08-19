@@ -12,11 +12,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 class UserRoleServiceTest {
 
     @Autowired
-    private UserRoleService userRoleService;
+    private RoleService roleService;
 
     @Test
     void listRoleNamesOfUser() {
-        System.out.println(userRoleService.listRoleNamesOfUser(1L));
+        System.out.println(roleService.listRoleNamesOfUser(1L));
     }
 
 }

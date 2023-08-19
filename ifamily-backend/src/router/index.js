@@ -5,6 +5,8 @@ Vue.use(Router)
 
 import Layout from '@/components/layout/Layout'
 
+import systemRoutes from "@/router/modules/system";
+
 /**
  * Note: sub-menu only appear when route children.length >= 1
  * Detail see: https://panjiachen.github.io/vue-element-admin-site/guide/essentials/router-and-nav.html
@@ -26,9 +28,56 @@ import Layout from '@/components/layout/Layout'
   }
  */
 
-// 常量路由，无需权限控制
+/**
+ * Constant routes, don't need permission control
+ */
 export const constantRoutes = [
     {
+        path: '/login',
+        component: () => import('@/views/login/index'),
+        hidden: true,
+        meta: {title: '登录'}
+    },
+    {
+        path: '/404',
+        component: () => import('@/views/error/404'),
+        hidden: true,
+        meta: {title: '404'}
+    },
+    {
+        path: '/403',
+        component: () => import('@/views/error/403'),
+        hidden: true,
+        meta: {title: '403'}
+    },
+    {
+        path: '/',
+        component: Layout,
+        redirect: '/dashboard',
+        children: [{
+            path: '/dashboard',
+            component: () => import('@/views/dashboard/index'),
+            name: 'Dashboard',
+            meta: {title: '首页', icon: 'dashboard', affix: true}
+        }]
+    },
+    {
+        path: '/mine',
+        component: Layout,
+        redirect: '/mine/index',
+        hidden: true,
+        children: [{
+            path: '/mine/index',
+            component: () => import('@/views/mine/index'),
+            name: 'UserProfile',
+            meta: {title: '我的'}
+        }]
+    },
+    {
+        /*
+         * Solve the problem that the request address does not change and the routing page does not refresh，
+         * details see https://panjiachen.gitee.io/vue-element-admin-site/zh/guide/essentials/router-and-nav.html
+         */
         path: '/redirect',
         component: Layout,
         hidden: true,
@@ -37,29 +86,24 @@ export const constantRoutes = [
             component: () => import('@/views/redirect/index')
         }]
     },
-
-    {
-        path: '/',
-        component: Layout,
-        redirect: '/dashboard',
-        children: [{
-            path: 'dashboard',
-            component: () => import('@/views/dashboard/index'),
-            name: 'Dashboard',
-            meta: {title: '主页', icon: 'dashboard', affix: true}
-        }]
-    }
 ]
 
-// 异步路由，需要权限控制
-export const asyncRoutes = []
+/**
+ * Async routes, need to grant the authorities, but except the `{path: '*', redirect: '/404', hidden: true}`
+ */
+export const asyncRoutes = [
+    systemRoutes,
+
+    // error 404 page must be placed at the end, can't move it to the constant routes
+    {path: '*', redirect: '/404', hidden: true}
+]
 
 const createRouter = () => new Router({
     scrollBehavior: () => ({y: 0}),
     routes: constantRoutes
 })
 
-// https://github.com/vuejs/vue-router/issues/1234#issuecomment-357941465
+// Details see: https://github.com/vuejs/vue-router/issues/1234#issuecomment-357941465
 export function resetRouter() {
     const newRouter = createRouter()
     router.matcher = newRouter.matcher

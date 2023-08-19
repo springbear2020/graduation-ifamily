@@ -15,8 +15,20 @@ public interface AdminRoleFeignService {
 
     /**
      * 查询管理员对应的角色名称集合
+     *
+     * @param adminId 管理员 ID
+     * @return 角色名称集合
      */
     @GetMapping("/acl/feign/role/admin")
     List<String> listRoleNamesOfAdmin(@RequestParam("adminId") Long adminId);
+
+    /**
+     * 查询管理员对应的菜单路径集合
+     *
+     * @param adminId 管理员 ID
+     * @return 菜单路径集合
+     */
+    @GetMapping("/acl/feign/menu/admin")
+    List<String> listMenuPathsOfAdmin(@RequestParam("adminId") Long adminId);
 
 }

@@ -10,6 +10,7 @@ import cn.edu.whut.springbear.ifamily.common.enumerate.AssertEnum;
 import cn.edu.whut.springbear.ifamily.common.exception.IncorrectConditionException;
 import cn.edu.whut.springbear.ifamily.common.pojo.vo.CommonUserVO;
 import cn.edu.whut.springbear.ifamily.common.pojo.dto.UserDTO;
+import cn.edu.whut.springbear.ifamily.common.pojo.vo.RoleUserVO;
 import cn.edu.whut.springbear.ifamily.common.util.NicknameGenerator;
 import cn.edu.whut.springbear.ifamily.common.util.WebUtils;
 import cn.edu.whut.springbear.ifamily.user.constant.MessageConstants;
@@ -24,6 +25,7 @@ import cn.edu.whut.springbear.ifamily.user.service.UserService;
 import cn.edu.whut.springbear.ifamily.user.service.UsernameLogService;
 import cn.edu.whut.springbear.ifamily.user.service.feign.AuthFeignService;
 import cn.edu.whut.springbear.ifamily.user.service.feign.UserRoleFeignService;
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateUnit;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.DesensitizedUtil;
@@ -39,10 +41,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author Spring-_-Bear
@@ -271,8 +270,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
         }
 
         // 验证用户输入的用户名是否已被占用
-        UserDO otherUser = this.baseMapper.selectByColumn("username", username);
-        if (otherUser != null) {
+        Object usernameObj = this.baseMapper.getCellValueByColumn("username", username);
+        if (usernameObj != null) {
             throw new IncorrectConditionException("UID 已被占用，请重新输入");
         }
 
@@ -364,6 +363,28 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
         return null;
     }
 
+    @Override
+    public List<RoleUserVO> listInBatchIds(List<Long> userIds) {
+        if (CollUtil.isEmpty(userIds)) {
+            return null;
+        }
+
+        List<UserDO> userDOList = this.listByIds(userIds);
+        if (CollUtil.isEmpty(userDOList)) {
+            return null;
+        }
+
+        // DO -> VO
+        List<RoleUserVO> resultList = new ArrayList<>();
+        for (UserDO userDO : userDOList) {
+            RoleUserVO roleUserVO = new RoleUserVO();
+            BeanUtils.copyProperties(userDO, roleUserVO);
+            resultList.add(roleUserVO);
+        }
+
+        return resultList;
+    }
+
     /**
      * 校验验证码正确性，将传入的验证码与 Redis 中存储的验证码进行比对
      *
@@ -390,8 +411,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
      * @param content 需要验证的内容
      */
     private void verifyPhoneOrEmailExistence(String column, String content) {
-        UserDO userDO = this.baseMapper.selectByColumn(column, content);
-        if (userDO != null) {
+        Object cellValue = this.baseMapper.getCellValueByColumn(column, content);
+        if (cellValue != null) {
             String chinese = "email".equals(column) ? "邮箱地址" : "手机号";
             throw new IncorrectConditionException(chinese + "已被占用，请重新输入");
         }

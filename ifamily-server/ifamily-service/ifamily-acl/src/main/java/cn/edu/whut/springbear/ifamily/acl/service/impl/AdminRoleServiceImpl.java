@@ -2,11 +2,10 @@ package cn.edu.whut.springbear.ifamily.acl.service.impl;
 
 import cn.edu.whut.springbear.ifamily.acl.mapper.AdminRoleMapper;
 import cn.edu.whut.springbear.ifamily.acl.pojo.po.AdminRoleDO;
-import cn.edu.whut.springbear.ifamily.acl.pojo.po.RoleDO;
 import cn.edu.whut.springbear.ifamily.acl.service.AdminRoleService;
-import cn.edu.whut.springbear.ifamily.acl.service.RoleService;
-import cn.edu.whut.springbear.ifamily.common.enumerate.AssertEnum;
+import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,30 +21,42 @@ import java.util.stream.Collectors;
 @Service
 public class AdminRoleServiceImpl extends ServiceImpl<AdminRoleMapper, AdminRoleDO> implements AdminRoleService {
 
-    private final RoleService roleService;
-
     @Override
-    public List<String> listRoleNamesOfAdmin(Long adminId) {
-        // 查询出管理员对应的所有角色 ID，注意去重
+    public List<Long> listRoleIdsOfAdmin(Long userId) {
+        // 查询用户对应的所有角色关系
         QueryWrapper<AdminRoleDO> queryWrapper = new QueryWrapper<>();
-        queryWrapper.select("distinct role_id").eq("admin_id", adminId);
-        List<AdminRoleDO> adminRoleRelations = this.baseMapper.selectList(queryWrapper);
-        if (adminRoleRelations == null || adminRoleRelations.isEmpty()) {
+        queryWrapper.eq("admin_id", userId);
+        List<AdminRoleDO> userRoleRelations = this.list(queryWrapper);
+        if (CollUtil.isEmpty(userRoleRelations)) {
             return null;
         }
 
-        // 过滤出管理员对应的角色 ID 集合
-        List<Long> adminRoleIds = adminRoleRelations.stream()
+        // 过滤出用户对应的角色 ID 集合
+        return userRoleRelations.stream()
                 .map(AdminRoleDO::getRoleId)
                 .collect(Collectors.toList());
-        // 查询出管理员对应的所有未禁用角色，并过滤出角色名称集合返回
-        List<RoleDO> adminRoles = this.roleService.listByStatusInBatchIds(adminRoleIds, AssertEnum.NO.getCode());
-        if (adminRoles == null || adminRoles.isEmpty()) {
+    }
+
+    @Override
+    public void removeByRoleId(Long roleId) {
+        UpdateWrapper<AdminRoleDO> updateWrapper = new UpdateWrapper<>();
+        updateWrapper.eq("role_id", roleId);
+        this.remove(updateWrapper);
+    }
+
+    @Override
+    public List<Long> listAdminIdsOfRole(Long roleId) {
+        // 查询角色对应的所有管理员关系
+        QueryWrapper<AdminRoleDO> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("role_id", roleId);
+        List<AdminRoleDO> adminRoleRelations = this.list(queryWrapper);
+        if (CollUtil.isEmpty(adminRoleRelations)) {
             return null;
         }
 
-        return adminRoles.stream()
-                .map(RoleDO::getName)
+        // 过滤出角色对应的管理员 ID 集合
+        return adminRoleRelations.stream()
+                .map(AdminRoleDO::getAdminId)
                 .collect(Collectors.toList());
     }
 

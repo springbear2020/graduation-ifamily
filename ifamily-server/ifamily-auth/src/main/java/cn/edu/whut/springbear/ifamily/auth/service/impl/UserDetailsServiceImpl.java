@@ -7,10 +7,10 @@ import cn.edu.whut.springbear.ifamily.common.constant.AuthConstants;
 import cn.edu.whut.springbear.ifamily.common.constant.GlobalMessageConstants;
 import cn.edu.whut.springbear.ifamily.common.pojo.dto.UserDTO;
 import lombok.AllArgsConstructor;
-import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.oauth2.common.exceptions.OAuth2Exception;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -32,7 +32,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         String clientId = this.httpServletRequest.getParameter("client_id");
         if (!StringUtils.hasLength(clientId)) {
-            return null;
+            throw new OAuth2Exception(GlobalMessageConstants.INCORRECT_CLIENT_ID);
         }
 
         UserDTO userDTO;
@@ -42,17 +42,17 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         } else if (AuthConstants.CLIENT_MOBILE_ID.equals(clientId)) {
             userDTO = this.userFeignService.loadUserByUsername(username);
         } else {
-            return null;
+            throw new OAuth2Exception(GlobalMessageConstants.INCORRECT_CLIENT_ID);
         }
 
-        if (userDTO == null) {
-            throw new UsernameNotFoundException(GlobalMessageConstants.USERNAME_NOT_EXISTS);
+        if (userDTO.getId() == null) {
+            throw new OAuth2Exception(GlobalMessageConstants.USERNAME_NOT_EXISTS);
         }
 
         userDTO.setClientId(clientId);
         SecurityUser securityUser = new SecurityUser(userDTO);
         if (!securityUser.isEnabled()) {
-            throw new DisabledException(GlobalMessageConstants.ACCOUNT_WAS_DISABLED);
+            throw new OAuth2Exception(GlobalMessageConstants.ACCOUNT_WAS_DISABLED);
         }
 
         return securityUser;

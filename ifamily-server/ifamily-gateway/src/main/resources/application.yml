@@ -26,26 +26,38 @@ spring:
           uri: lb://ifamily-acl
           predicates:
             - Path=/acl/**
+          filters:
+            - ApiDocsPrefixFilter=1
         - id: ifamily-user
           uri: lb://ifamily-user
           predicates:
             - Path=/user/**
+          filters:
+            - ApiDocsPrefixFilter=1
         - id: ifamily-backend
           uri: lb://ifamily-backend
           predicates:
             - Path=/backend/**
+          filters:
+            - ApiDocsPrefixFilter=1
         - id: ifamily-manager
           uri: lb://ifamily-manager
           predicates:
             - Path=/manager/**
+          filters:
+            - ApiDocsPrefixFilter=1
         - id: ifamily-genealogy
           uri: lb://ifamily-genealogy
           predicates:
             - Path=/genealogy/**
+          filters:
+            - ApiDocsPrefixFilter=1
         - id: ifamily-social
           uri: lb://ifamily-social
           predicates:
             - Path=/social/**
+          filters:
+            - ApiDocsPrefixFilter=1
   security:
     oauth2:
       resourceserver:

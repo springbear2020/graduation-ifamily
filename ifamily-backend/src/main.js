@@ -3,15 +3,24 @@ import App from './App.vue'
 import router from '@/router'
 import store from '@/store'
 
-import Cookies from 'js-cookie'
 import Element from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
-import 'normalize.css/normalize.css'
 
+// a modern alternative to CSS resets
+import 'normalize.css/normalize.css'
+// cookie operation utils
+import Cookies from 'js-cookie'
+// solution for [Violation] Added non-passive event listener...
+import 'default-passive-events'
+
+// global css
 import '@/styles/index.scss'
-import '@/assets/icons'
-import './permission'
-import './utils/error-log'
+
+// customize js
+import '@/assets/icons/index.js'
+import './permission.js'
+import './utils/error-log.js'
+import api from '@/api/index.js'
 
 Vue.use(Element, {size: Cookies.get('size') || 'medium'});
 
@@ -21,5 +30,8 @@ new Vue({
     el: '#app',
     router,
     store,
+    beforeCreate() {
+        Vue.prototype.$api = api
+    },
     render: h => h(App)
 })

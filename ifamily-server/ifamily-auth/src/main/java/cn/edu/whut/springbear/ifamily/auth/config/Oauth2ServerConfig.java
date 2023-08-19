@@ -47,17 +47,17 @@ public class Oauth2ServerConfig extends AuthorizationServerConfigurerAdapter {
                 .secret(this.passwordEncoder.encode(AuthConstants.COMMON_AUTH_PASSWORD))
                 .scopes("all")
                 .authorizedGrantTypes("password", "refresh_token")
-                // 管理员令牌有效期 1 天，刷新令牌有效期 7 天
+                // 管理员令牌有效期 1 天，刷新令牌有效期 3 天
                 .accessTokenValiditySeconds(3600 * 24)
-                .refreshTokenValiditySeconds(3600 * 24 * 7)
+                .refreshTokenValiditySeconds(3600 * 24 * 3)
                 .and()
                 // 移动应用
                 .withClient(AuthConstants.CLIENT_MOBILE_ID)
                 .secret(this.passwordEncoder.encode(AuthConstants.COMMON_AUTH_PASSWORD))
                 .scopes("all")
                 .authorizedGrantTypes("password", "refresh_token")
-                // 用户令牌有效期 1 天，刷新令牌有效期 7 天
-                .accessTokenValiditySeconds(3600 * 24)
+                // 用户令牌有效期 3 天，刷新令牌有效期 7 天
+                .accessTokenValiditySeconds(3600 * 24 * 3)
                 .refreshTokenValiditySeconds(3600 * 24 * 7);
     }
 

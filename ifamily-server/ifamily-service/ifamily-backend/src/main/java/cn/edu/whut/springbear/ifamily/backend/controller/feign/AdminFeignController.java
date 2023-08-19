@@ -2,6 +2,7 @@ package cn.edu.whut.springbear.ifamily.backend.controller.feign;
 
 import cn.edu.whut.springbear.ifamily.backend.service.AdminService;
 import cn.edu.whut.springbear.ifamily.common.pojo.dto.UserDTO;
+import cn.edu.whut.springbear.ifamily.common.pojo.vo.RoleUserVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -10,6 +11,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 /**
  * @author Spring-_-Bear
@@ -27,6 +30,12 @@ public class AdminFeignController {
     @GetMapping
     public UserDTO loadAdminByUsername(@ApiParam("用户名") @RequestParam String username) {
         return this.adminService.loadAdminByUsername(username);
+    }
+
+    @ApiOperation("批量查询管理员信息")
+    @GetMapping("/admin/list")
+    public List<RoleUserVO> listInBatchIds(@ApiParam("管理员 ID 集合") @RequestParam List<Long> adminIds) {
+        return this.adminService.listInBatchIds(adminIds);
     }
 
 }

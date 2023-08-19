@@ -1,3 +1,4 @@
+export const TOKEN_PREFIX = "Bearer "
 export const TOKEN_KEY = 'Authorization'
 export const REFRESH_TOKEN_KEY = 'RefreshToken'
 

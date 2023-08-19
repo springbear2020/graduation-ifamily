@@ -14,13 +14,13 @@ import org.springframework.stereotype.Repository;
 public interface UserMapper extends BaseMapper<UserDO> {
 
     /**
-     * 根据列名查询用户信息（含已逻辑删除的用户信息）
+     * FIXME 根据列名查询单元格值，含已逻辑删除的记录
      *
      * @param column 列名
      * @param value  列值
-     * @return 用户信息
+     * @return 单元格值
      */
-    @Select("select * from user where ${column} = #{value}")
-    UserDO selectByColumn(@Param("column") String column, @Param("value") String value);
+    @Select("select ${column} from user where ${column} = #{value}")
+    Object getCellValueByColumn(@Param("column") String column, @Param("value") String value);
 
 }

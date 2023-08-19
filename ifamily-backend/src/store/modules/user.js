@@ -1,83 +1,98 @@
-import {getToken, setToken, removeToken} from '@/utils/auth'
-import router, {resetRouter} from '@/router'
+import {getToken, setToken, removeToken, setRefreshToken, getRefreshToken, removeRefreshToken} from '@/utils/auth'
+import {login, getCurrentAdminInfo, refreshUserToken} from "@/api/user"
+import {resetRouter} from "@/router";
 
 const state = {
     token: getToken(),
-    name: '',
-    avatar: '',
-    introduction: '',
-    roles: []
+    userInfo: {
+        uid: '',
+        username: '',
+        nickname: '',
+        avatar: '',
+        signature: ''
+    },
+    menus: []
 }
 
 const mutations = {
     SET_TOKEN: (state, token) => {
         state.token = token
     },
-    SET_INTRODUCTION: (state, introduction) => {
-        state.introduction = introduction
+    SET_USER_INFO: (state, userInfo) => {
+        Object.assign(state.userInfo, userInfo)
     },
-    SET_NAME: (state, name) => {
-        state.name = name
-    },
-    SET_AVATAR: (state, avatar) => {
-        state.avatar = avatar
-    },
-    SET_ROLES: (state, roles) => {
-        state.roles = roles
+    SET_MENUS: (state, menus) => {
+        state.menus = menus
     }
 }
 
 const actions = {
     // user login
-    login({commit}, userInfo) {
-        const {username, password} = userInfo
+    login({commit}, formData) {
         return new Promise((resolve, reject) => {
-            resolve()
+            login(formData).then(res => {
+                const {accessToken, refreshToken} = res
+                commit('SET_TOKEN', accessToken)
+                setToken(accessToken)
+                setRefreshToken(refreshToken)
+                resolve()
+            }).catch(err => {
+                reject(err)
+            })
         })
     },
 
     // get user info
-    getInfo({commit, state}) {
+    getInfo({commit}) {
         return new Promise((resolve, reject) => {
-            resolve()
+            getCurrentAdminInfo().then(res => {
+                const {id, username, avatar, nickname, signature, menus} = res
+                commit('SET_USER_INFO', {uid: id, username, avatar, nickname, signature})
+                commit('SET_MENUS', menus)
+                resolve(res)
+            }).catch(err => {
+                // invalid user token, remove it
+                commit('SET_TOKEN', '')
+                removeToken()
+                reject(err)
+            })
         })
     },
 
     // user logout
-    logout({commit, state, dispatch}) {
-        return new Promise((resolve, reject) => {
-            resolve()
-        })
-    },
-
-    // remove token
-    resetToken({commit}) {
-        return new Promise(resolve => {
+    logout({commit, dispatch}) {
+        return new Promise((resolve) => {
             commit('SET_TOKEN', '')
-            commit('SET_ROLES', [])
             removeToken()
+            removeRefreshToken()
+            // reset the routes exists
+            resetRouter()
+            // reset visited views and cached views
+            dispatch('tagsView/delAllViews', null, {root: true})
             resolve()
         })
     },
 
-    // dynamically modify permissions
-    async changeRoles({commit, dispatch}, role) {
-        const token = role + '-token'
-
-        commit('SET_TOKEN', token)
-        setToken(token)
-
-        const {roles} = await dispatch('getInfo')
-
-        resetRouter()
-
-        // generate accessible routes map based on roles
-        const accessRoutes = await dispatch('permission/generateRoutes', roles, {root: true})
-        // dynamically add accessible routes
-        router.addRoutes(accessRoutes)
-
-        // reset visited views and cached views
-        dispatch('tagsView/delAllViews', null, {root: true})
+    // refresh the user token though the `refreshToken` saved in the local storage
+    refreshUserToken({commit}) {
+        return new Promise((resolve, reject) => {
+            const refreshToken = getRefreshToken()
+            if (refreshToken) {
+                refreshUserToken(refreshToken).then(res => {
+                    const {accessToken, refreshToken} = res
+                    commit('SET_TOKEN', accessToken)
+                    setToken(accessToken)
+                    setRefreshToken(refreshToken)
+                    resolve()
+                }).catch(err => {
+                    // invalid refresh token, remove it
+                    removeRefreshToken()
+                    reject(err)
+                })
+            } else {
+                reject('empty refresh token')
+            }
+        })
     }
 }
 

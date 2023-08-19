@@ -1,6 +1,5 @@
 package cn.edu.whut.springbear.ifamily.acl.pojo.po;
 
-import cn.edu.whut.springbear.ifamily.common.pojo.po.AbstractBaseDO;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -12,19 +11,19 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @TableName("menu")
-public class MenuDO extends AbstractBaseDO {
+public class MenuDO extends AbstractCommonDO {
 
     private static final long serialVersionUID = 1765774877595258661L;
 
     /**
-     * 菜单路径
+     * 路由路径
      */
     private String path;
 
     /**
      * 菜单名称
      */
-    private String name;
+    private String title;
 
     /**
      * 菜单描述
@@ -32,28 +31,8 @@ public class MenuDO extends AbstractBaseDO {
     private String description;
 
     /**
-     * 菜单值：模块:控制器:操作[user:login:create]
-     */
-    private String value;
-
-    /**
-     * 菜单图标
-     */
-    private String icon;
-
-    /**
-     * 菜单类型：[1]目录 [2]菜单 [3]按钮
-     */
-    private Integer type;
-
-    /**
-     * 菜单禁用状态：[0]启用 [1]禁用
+     * 是否已禁用：[0]否 [1]是
      */
     private Integer status;
-
-    /**
-     * 父级菜单 ID
-     */
-    private Long parentId;
 
 }

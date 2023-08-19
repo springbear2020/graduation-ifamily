@@ -1,13 +1,16 @@
 package cn.edu.whut.springbear.ifamily.user.service;
 
 import cn.edu.whut.springbear.ifamily.common.api.CommonResult;
-import cn.edu.whut.springbear.ifamily.common.pojo.vo.CommonUserVO;
 import cn.edu.whut.springbear.ifamily.common.pojo.dto.UserDTO;
+import cn.edu.whut.springbear.ifamily.common.pojo.vo.CommonUserVO;
+import cn.edu.whut.springbear.ifamily.common.pojo.vo.RoleUserVO;
 import cn.edu.whut.springbear.ifamily.user.pojo.po.UserDO;
 import cn.edu.whut.springbear.ifamily.user.pojo.query.LoginQuery;
 import cn.edu.whut.springbear.ifamily.user.pojo.query.ResetQuery;
 import cn.edu.whut.springbear.ifamily.user.pojo.vo.UserVO;
 import com.baomidou.mybatisplus.extension.service.IService;
+
+import java.util.List;
 
 /**
  * @author Spring-_-Bear
@@ -95,5 +98,13 @@ public interface UserService extends IService<UserDO> {
      * @return 用户信息
      */
     CommonUserVO getUserById(Long userId);
+
+    /**
+     * 批量查询用户信息
+     *
+     * @param userIds 用户 ID 集合
+     * @return 用户信息集合
+     */
+    List<RoleUserVO> listInBatchIds(List<Long> userIds);
 
 }

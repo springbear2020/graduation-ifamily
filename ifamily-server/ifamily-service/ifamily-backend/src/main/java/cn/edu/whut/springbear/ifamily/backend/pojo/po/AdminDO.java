@@ -13,7 +13,7 @@ import java.util.Date;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-@TableName("backend")
+@TableName("admin")
 public class AdminDO extends AbstractBaseDO {
 
     private static final long serialVersionUID = 6809861721356316654L;
@@ -37,6 +37,11 @@ public class AdminDO extends AbstractBaseDO {
      * 管理员头像图片地址
      */
     private String avatar;
+
+    /**
+     * 管理员个性签名
+     */
+    private String signature;
 
     /**
      * 账号禁用状态：[0]启用 [1]禁用

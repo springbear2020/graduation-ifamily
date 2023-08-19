@@ -19,24 +19,29 @@ public class AuthConstants {
      */
     public static final String JWT_TOKEN_HEADER = "Authorization";
     /**
-     * 用户信息 Http 请求头
-     */
-    public static final String GENERAL_USER_HEADER = "General-User";
-    /**
      * JWT 存储权限前缀
      */
     public static final String AUTHORITY_PREFIX = "ROLE_";
+    /**
+     * JWT 令牌前缀
+     */
+    public static final String JWT_TOKEN_PREFIX = "Bearer ";
+    /**
+     * 用户信息 Http 请求头
+     */
+    public static final String GENERAL_USER_HEADER = "General-User";
     /**
      * Redis 缓存权限规则 key
      */
     public static final String PERMISSION_ROLES_MAP_KEY = "auth:permissionRoleNamesMap";
     /**
-     * 后台管理路径模式匹配
-     */
-    public static final String ADMIN_URL_PATTERN = "/**/backend/**";
-    /**
      * 权限校验通用密码
      */
     public static final String COMMON_AUTH_PASSWORD = "ifamily";
+    /**
+     * 网关文档路径
+     */
+    public static final String API_DOCS_PATH = "v2/api-docs";
+
 
 }

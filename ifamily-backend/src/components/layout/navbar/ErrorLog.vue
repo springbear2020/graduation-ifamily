@@ -14,31 +14,31 @@
         </el-button>
       </div>
       <el-table :data="errorLogs" border>
-        <el-table-column label="Message">
+        <el-table-column label="错误消息">
           <template slot-scope="{row}">
             <div>
-              <span class="message-title">Msg:</span>
+              <span class="message-title">消息:</span>
               <el-tag type="danger">
                 {{ row.err.message }}
               </el-tag>
             </div>
             <br>
             <div>
-              <span class="message-title" style="padding-right: 10px;">Info: </span>
+              <span class="message-title" style="padding-right: 10px;">信息: </span>
               <el-tag type="warning">
                 {{ row.vm.$vnode.tag }} error in {{ row.info }}
               </el-tag>
             </div>
             <br>
             <div>
-              <span class="message-title" style="padding-right: 16px;">Url: </span>
+              <span class="message-title" style="padding-right: 16px;">路径: </span>
               <el-tag type="success">
                 {{ row.url }}
               </el-tag>
             </div>
           </template>
         </el-table-column>
-        <el-table-column label="Stack">
+        <el-table-column label="堆栈信息">
           <template slot-scope="scope">
             {{ scope.row.err.stack }}
           </template>

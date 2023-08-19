@@ -25,9 +25,9 @@
         </div>
         <el-dropdown-menu slot="dropdown">
           <router-link to="/">
-            <el-dropdown-item>主页</el-dropdown-item>
+            <el-dropdown-item>首页</el-dropdown-item>
           </router-link>
-          <router-link to="/">
+          <router-link to="/mine">
             <el-dropdown-item>我的</el-dropdown-item>
           </router-link>
           <el-dropdown-item divided @click.native="logout">
@@ -52,9 +52,9 @@ export default {
   name: "TheNavbar",
   components: {Breadcrumb, Hamburger, ErrorLog, ScreenFull, SizeSelect, HeaderSearch},
   computed: {
-    ...mapGetters(['sidebar', 'avatar', 'device']),
+    ...mapGetters(['sidebar', 'userInfo', 'device']),
     userAvatar() {
-      return this.avatar ? `${this.avatar}?imageView2/1/w/80/h/80` : '/img/avatar.gif?imageView2/1/w/80/h/80'
+      return this.userInfo.avatar ? `${this.userInfo.avatar}?imageView2/1/w/80/h/80` : '/img/avatar.gif?imageView2/1/w/80/h/80'
     }
   },
   methods: {

@@ -1,6 +1,5 @@
 package cn.edu.whut.springbear.ifamily.acl.pojo.po;
 
-import cn.edu.whut.springbear.ifamily.common.pojo.po.AbstractBaseDO;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -12,7 +11,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @TableName("role")
-public class RoleDO extends AbstractBaseDO {
+public class RoleDO extends AbstractCommonDO {
 
     private static final long serialVersionUID = 5491593211477785302L;
 

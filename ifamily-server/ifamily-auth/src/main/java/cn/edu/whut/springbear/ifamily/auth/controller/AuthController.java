@@ -1,6 +1,7 @@
 package cn.edu.whut.springbear.ifamily.auth.controller;
 
 import cn.edu.whut.springbear.ifamily.common.api.CommonResult;
+import cn.edu.whut.springbear.ifamily.common.constant.AuthConstants;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
 import io.swagger.annotations.Api;
@@ -62,7 +63,7 @@ public class AuthController {
         Map<String, Object> resultMap = new HashMap<>(3);
         resultMap.put("accessToken", token.getValue());
         resultMap.put("refreshToken", token.getRefreshToken().getValue());
-        resultMap.put("expires", token.getExpiresIn());
+        resultMap.put("tokenPrefix", AuthConstants.JWT_TOKEN_PREFIX);
         return CommonResult.success(resultMap);
     }
 

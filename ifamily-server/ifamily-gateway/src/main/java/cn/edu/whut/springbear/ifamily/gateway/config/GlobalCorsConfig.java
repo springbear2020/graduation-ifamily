@@ -20,7 +20,7 @@ public class GlobalCorsConfig {
     public CorsWebFilter corsWebFilter() {
         CorsConfiguration config = new CorsConfiguration();
         // 配置允许访问的域名
-        config.setAllowedOriginPatterns(Arrays.asList("http://localhost:8080", "http://10.128.184.117:8080"));
+        config.setAllowedOriginPatterns(Arrays.asList("http://localhost:8080", "http://10.129.190.209:8080"));
         // 允许所有请求方法跨域调用
         config.addAllowedMethod("*");
         // 放行全部原始头信息

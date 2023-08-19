@@ -1,6 +1,7 @@
 package cn.edu.whut.springbear.ifamily.acl.service;
 
 import cn.edu.whut.springbear.ifamily.acl.pojo.po.PermissionDO;
+import cn.edu.whut.springbear.ifamily.acl.pojo.query.PermissionQuery;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 /**
@@ -17,5 +18,21 @@ public interface PermissionService extends IService<PermissionDO> {
      * @return 权限
      */
     PermissionDO getByStatusAndId(Long permissionId, Integer status);
+
+    /**
+     * 保存系统权限资源
+     *
+     * @param permissionQuery 权限数据
+     * @return [true]保存成功
+     */
+    boolean create(PermissionQuery permissionQuery);
+
+    /**
+     * 更新系统权限资源
+     *
+     * @param permissionQuery 新权限数据
+     * @return [true]更新成功
+     */
+    boolean edit(PermissionQuery permissionQuery);
 
 }

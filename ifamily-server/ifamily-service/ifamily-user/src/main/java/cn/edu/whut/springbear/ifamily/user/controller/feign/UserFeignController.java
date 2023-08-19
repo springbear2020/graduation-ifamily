@@ -1,13 +1,16 @@
 package cn.edu.whut.springbear.ifamily.user.controller.feign;
 
-import cn.edu.whut.springbear.ifamily.common.pojo.vo.CommonUserVO;
 import cn.edu.whut.springbear.ifamily.common.pojo.dto.UserDTO;
+import cn.edu.whut.springbear.ifamily.common.pojo.vo.CommonUserVO;
+import cn.edu.whut.springbear.ifamily.common.pojo.vo.RoleUserVO;
 import cn.edu.whut.springbear.ifamily.user.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * @author Spring-_-Bear
@@ -31,6 +34,12 @@ public class UserFeignController {
     @GetMapping("/{userId}")
     public CommonUserVO getById(@ApiParam("用户 ID") @PathVariable("userId") Long userId) {
         return this.userService.getUserById(userId);
+    }
+
+    @ApiOperation("批量查询用户信息")
+    @GetMapping("/list")
+    public List<RoleUserVO> listInBatchIds(@ApiParam("用户 ID 集合") @RequestParam List<Long> userIds) {
+        return this.userService.listInBatchIds(userIds);
     }
 
 }

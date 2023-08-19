@@ -18,4 +18,6 @@ public class GlobalMessageConstants {
 
     public static final String ACCOUNT_WAS_DISABLED = "账户已被禁用";
 
+    public static final String INCORRECT_CLIENT_ID = "客户端类型不正确";
+
 }

@@ -1,6 +1,6 @@
 package cn.edu.whut.springbear.ifamily.acl.component;
 
-import cn.edu.whut.springbear.ifamily.acl.service.RolePermissionService;
+import cn.edu.whut.springbear.ifamily.acl.service.RoleService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -14,7 +14,7 @@ import javax.annotation.PostConstruct;
 @Component
 public class PermissionRolesHolder {
 
-    private final RolePermissionService rolePermissionService;
+    private final RoleService roleService;
 
     /**
      * 初始化权限路径 path 与角色名称集合 Map，并存入 Redis 以提供给 ifamily-gateway 鉴权使用，
@@ -22,7 +22,7 @@ public class PermissionRolesHolder {
      */
     @PostConstruct
     public void initPermissionRoleNamesMap() {
-        this.rolePermissionService.initPermissionRoleNamesMap();
+        this.roleService.initPermissionRoleNamesMap();
     }
 
 }
