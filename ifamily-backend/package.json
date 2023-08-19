@@ -1,0 +1,57 @@
+{
+  "name": "ifamily-backend",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "lint": "vue-cli-service lint"
+  },
+  "dependencies": {
+    "core-js": "^3.8.3",
+    "element-ui": "^2.13.2",
+    "fuse.js": "^3.4.4",
+    "js-cookie": "^2.2.0",
+    "normalize.css": "^8.0.1",
+    "nprogress": "^0.2.0",
+    "path-to-regexp": "^2.4.0",
+    "screenfull": "^4.2.0",
+    "vue": "^2.6.14",
+    "vue-router": "^3.0.2",
+    "vuex": "^3.1.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.12.16",
+    "@babel/eslint-parser": "^7.12.16",
+    "@vue/cli-plugin-babel": "~5.0.0",
+    "@vue/cli-plugin-eslint": "~5.0.0",
+    "@vue/cli-service": "~5.0.0",
+    "eslint": "^7.32.0",
+    "eslint-plugin-vue": "^8.0.3",
+    "node-polyfill-webpack-plugin": "^2.0.1",
+    "path-browserify": "^1.0.1",
+    "sass": "^1.26.2",
+    "sass-loader": "^8.0.2",
+    "svg-sprite-loader": "^4.1.3",
+    "vue-template-compiler": "^2.6.14"
+  },
+  "eslintConfig": {
+    "root": true,
+    "env": {
+      "node": true
+    },
+    "extends": [
+      "plugin:vue/essential",
+      "eslint:recommended"
+    ],
+    "parserOptions": {
+      "parser": "@babel/eslint-parser"
+    },
+    "rules": {}
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead"
+  ]
+}
