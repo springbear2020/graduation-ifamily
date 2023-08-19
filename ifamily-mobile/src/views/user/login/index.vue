@@ -1,20 +1,21 @@
 <template>
   <div>
     <van-nav-bar title="用户登录" :right-text="rightText"
-                 @click-right="formData.loginType = formData.loginType === '0' ? '1' : '0'"/>
+                 @click-right="formData.loginType = formData.loginType === '0' ? '1' : '0'"
+    />
 
     <logo-pattern/>
 
     <van-form @submit="handleLogin">
       <div v-if="formData.loginType === '0'">
-        <van-field size="large" type="text" label="账号"
+        <van-field size="large" type="text" label="账号" autofocus
                    :rules="[{ required: true }]"
-                   :border="false" placeholder="用户名 / 手机 / 邮箱" v-model.trim="formData.account"
+                   :border="false" placeholder="UID / 手机 / 邮箱" v-model.trim="formData.account"
         />
       </div>
       <div v-else-if="formData.loginType === '1'">
-        <van-field size="large" type="text" label="账号"
-                   :rules="[{ required: true, validator: validatePhoneOrEmail, message: '请输入正确的手机或邮箱' }]"
+        <van-field size="large" type="text" label="账号" autofocus
+                   :rules="[{ required: true, validator: validatePhoneOrEmail, message: '请输入正确的手机或邮箱', trigger: 'onChange' }]"
                    :border="false" placeholder="手机 / 邮箱" v-model.trim="formData.account"
         />
       </div>
@@ -26,7 +27,8 @@
                    v-model.trim="formData.code"
         >
           <template #button>
-            <van-button size="small" type="primary" @click.prevent="handleSendCode" :disabled="countdown > 0">
+            <van-button size="small" type="primary" @click.prevent="handleSendCode"
+                        :disabled="countdown > 0 || !accountType">
               {{ buttonText }}
             </van-button>
           </template>
@@ -48,7 +50,9 @@
         </template>
       </van-field>
 
-      <div class="login-btn-container">
+      <div class="block-button-container">
+        <div class="van-field__error-message">{{ error }}</div>
+
         <van-button block type="info">登录</van-button>
       </div>
     </van-form>
@@ -62,37 +66,18 @@
 </template>
 
 <script>
+import {user} from '@/mixin/user'
+
 export default {
   name: "index",
-  data() {
-    return {
-      formData: {
-        account: '',
-        password: '',
-        code: '',
-        // [0]密码登录 [1]验证码登录
-        loginType: '0',
-      },
-      agree: false,
-      passwordFieldType: 'password',
-      buttonText: '获取验证码',
-      countdown: 0,
-      // [0]邮箱账号 [1]手机账号
-      accountType: undefined
-    };
-  },
+  mixins: [user],
   computed: {
     rightText() {
       return this.formData.loginType === '0' ? '验证码登录' : (this.formData.loginType === '1' ? '密码登录' : '');
-    },
-    rightIcon() {
-      return this.passwordFieldType === 'password' ? 'closed-eye' : 'eye-o';
     }
   },
   methods: {
-    /*
-     * 用户登录请求
-     */
+    // 用户登录请求
     handleLogin() {
       if (this.accountType === '1') {
         this.$toast.fail('手机验证码服务暂不可用')
@@ -102,75 +87,20 @@ export default {
       this.$store.dispatch('user/login', this.formData).then(() => {
         const dstRoute = this.$route.query.redirect ? this.$route.query.redirect : '/home'
         this.$router.replace(dstRoute)
-      }).catch(error => {
-        this.$notify({
-          type: 'warning',
-          message: error.data || error.desc
-        });
+      }).catch(err => {
+        this.error = err.data || err.desc
       });
     },
-    /*
-     * 发送验证码请求
-     */
-    handleSendCode() {
-      if (this.countdown > 0) {
-        return;
-      }
-
-      // 请求服务器发送验证码 accountType: [0]发送邮箱验证码 [1]发送手机验证码
-      if (this.accountType === '0') {
-        this.sendEmailVerifyCode();
-      } else if (this.accountType === '1') {
-        this.sendPhoneVerifyCode();
-      }
-    },
-    // 验证手机号和邮箱格式
-    validatePhoneOrEmail() {
-      const account = this.formData.account
-      const phoneRegExp = /^1[3456789]\d{9}$/
-      const emailRegExp = /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/
-      if (emailRegExp.test(account)) {
-        this.accountType = '0'
-      } else if (phoneRegExp.test(account)) {
-        this.accountType = '1'
-      } else {
-        this.accountType = undefined
-      }
-      return phoneRegExp.test(account) || emailRegExp.test(account);
-    },
-    // 发送邮箱验证码
-    sendEmailVerifyCode() {
-      this.$api.manager.sendEmailCode({email: this.formData.account}).then(res => {
-        this.$toast.success('发送成功');
-        this.lockButton();
-      }).catch(err => {
-        this.$notify(err.data || err.desc)
-      })
-    },
-    // 发送手机验证码
-    sendPhoneVerifyCode() {
-      this.$toast.fail('手机验证码服务暂不可用')
-    },
-    // 锁定获取验证码按钮
-    lockButton() {
-      this.countdown = 60;
-      const timer = setInterval(() => {
-        if (this.countdown <= 1) {
-          clearInterval(timer);
-          this.countdown = 0;
-          this.buttonText = "获取验证码";
-        } else {
-          this.countdown--;
-          this.buttonText = `${this.countdown}s 后重试`;
-        }
-      }, 1000);
-    }
   }
 }
 </script>
 
 <style scoped>
-.login-btn-container {
-  margin: 16px;
+.block-button-container {
+  margin: 8px 16px;
+}
+
+.van-field__error-message {
+  margin-bottom: 8px;
 }
 </style>

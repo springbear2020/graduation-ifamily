@@ -6,6 +6,7 @@ import cn.edu.whut.springbear.ifamily.manager.service.CodeService;
 import cn.hutool.core.util.ReUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,7 +27,7 @@ public class ApiCodeController {
 
     @ApiOperation("邮箱验证码发送")
     @PostMapping("/email")
-    public CommonResult<String> sendEmailCode(@RequestParam("email") String email) {
+    public CommonResult<String> sendEmailCode(@ApiParam("邮箱地址") @RequestParam("email") String email) {
         String emailRegExp = "^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\\.[a-zA-Z0-9_-]+)+$";
         if (!ReUtil.isMatch(emailRegExp, email)) {
             return CommonResult.failed("请输入正确格式的邮箱地址");
@@ -36,7 +37,7 @@ public class ApiCodeController {
 
     @ApiOperation("手机验证码发送")
     @PostMapping("/phone")
-    public CommonResult<String> sendPhoneCode(@RequestParam("phone") String phone) {
+    public CommonResult<String> sendPhoneCode(@ApiParam("手机号") @RequestParam("phone") String phone) {
         String phoneRegExp = "^1[3456789]\\d{9}$";
         if (!ReUtil.isMatch(phoneRegExp, phone)) {
             return CommonResult.failed("请输入正确格式的手机号");

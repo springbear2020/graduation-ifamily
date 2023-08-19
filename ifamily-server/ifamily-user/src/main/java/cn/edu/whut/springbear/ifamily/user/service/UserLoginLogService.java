@@ -1,7 +1,11 @@
 package cn.edu.whut.springbear.ifamily.user.service;
 
 import cn.edu.whut.springbear.ifamily.user.pojo.po.UserLoginLogDO;
+import cn.edu.whut.springbear.ifamily.user.pojo.query.PageQuery;
+import cn.edu.whut.springbear.ifamily.user.pojo.vo.LoginLogVO;
 import com.baomidou.mybatisplus.extension.service.IService;
+
+import java.util.List;
 
 /**
  * @author Spring-_-Bear
@@ -11,10 +15,12 @@ public interface UserLoginLogService extends IService<UserLoginLogDO> {
 
     /**
      * 新增用户登录记录
-     *
-     * @param userLoginLogDO 用户登录记录
-     * @return [true]新增成功
      */
-    Boolean create(UserLoginLogDO userLoginLogDO);
+    boolean create(Long userId);
+
+    /**
+     * 查询用户登录记录分页数据
+     */
+    List<LoginLogVO> loginLogPageData(PageQuery pageQuery);
 
 }

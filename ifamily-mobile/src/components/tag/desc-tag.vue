@@ -1,6 +1,6 @@
 <template>
   <!-- 内容描述标签如：[男 234] 或 [年龄 23] 等 -->
-  <van-tag :class="{'right': right}" :color="color">
+  <van-tag :color="color">
     {{ title }} {{ content }}
   </van-tag>
 </template>
@@ -20,10 +20,6 @@ export default {
     color: {
       type: String,
       required: true
-    },
-    right: {
-      type: Boolean,
-      default: true
     }
   }
 }

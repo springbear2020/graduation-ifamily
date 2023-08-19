@@ -5,20 +5,27 @@ import cn.edu.whut.springbear.ifamily.common.enumerate.DeleteStatusEnum;
 import cn.edu.whut.springbear.ifamily.common.enumerate.EnableStatusEnum;
 import cn.edu.whut.springbear.ifamily.common.exception.IllegalConditionException;
 import cn.edu.whut.springbear.ifamily.common.exception.IllegalStatusException;
-import cn.edu.whut.springbear.ifamily.common.util.WebUtils;
 import cn.edu.whut.springbear.ifamily.security.util.JwtUtils;
 import cn.edu.whut.springbear.ifamily.user.constant.UserMessageConstants;
+import cn.edu.whut.springbear.ifamily.user.enumetate.AccountLoginEnum;
 import cn.edu.whut.springbear.ifamily.user.mapper.UserMapper;
 import cn.edu.whut.springbear.ifamily.user.pojo.dto.SecurityUserDetailsDTO;
 import cn.edu.whut.springbear.ifamily.user.pojo.po.PermissionDO;
 import cn.edu.whut.springbear.ifamily.user.pojo.po.UserDO;
-import cn.edu.whut.springbear.ifamily.user.pojo.po.UserLoginLogDO;
+import cn.edu.whut.springbear.ifamily.user.pojo.po.UsernameUpdateLogDO;
 import cn.edu.whut.springbear.ifamily.user.pojo.query.UserLoginQuery;
 import cn.edu.whut.springbear.ifamily.user.pojo.query.UserQuery;
+import cn.edu.whut.springbear.ifamily.user.pojo.query.UserResetQuery;
 import cn.edu.whut.springbear.ifamily.user.pojo.vo.UserVO;
 import cn.edu.whut.springbear.ifamily.user.service.PermissionService;
 import cn.edu.whut.springbear.ifamily.user.service.UserLoginLogService;
 import cn.edu.whut.springbear.ifamily.user.service.UserService;
+import cn.edu.whut.springbear.ifamily.user.service.UsernameUpdateLogService;
+import cn.hutool.core.date.DateUnit;
+import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.DesensitizedUtil;
+import cn.hutool.core.util.IdUtil;
+import cn.hutool.core.util.ReUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.BeanUtils;
@@ -32,7 +39,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -45,13 +51,13 @@ import java.util.List;
 public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements UserService, UserDetailsService {
 
     @Autowired
-    private HttpServletRequest request;
-    @Autowired
     private PasswordEncoder passwordEncoder;
     @Autowired
     private PermissionService permissionService;
     @Autowired
     private UserLoginLogService userLoginLogService;
+    @Autowired
+    private UsernameUpdateLogService usernameUpdateLogService;
     @Autowired
     private RedisTemplate<String, String> redisTemplate;
 
@@ -66,6 +72,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
             throw new UsernameNotFoundException(UserMessageConstants.USER_NOT_EXISTS);
         }
 
+        // 检查用户账号状态
+        if (EnableStatusEnum.DISABLE.getCode().equals(user.getStatus())) {
+            // [401] RestfulUnauthorizedEntryPoint
+            throw new IllegalStatusException(UserMessageConstants.ILLEGAL_USER_STATUS);
+        }
+
         // 查询当前用户下拥有的权限列表，提供给安全框架鉴权使用
         List<PermissionDO> permissions = this.permissionService.listPermissionsOfUser(user.getId());
         permissions = permissions == null ? new ArrayList<>() : permissions;
@@ -74,6 +86,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
 
     @Override
     public String login(UserLoginQuery userLoginQuery) {
+        // 根据用户名、手机、邮箱查询用户，验证用户是否存在
         String account = userLoginQuery.getAccount();
         QueryWrapper<UserDO> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("phone", account).or().eq("email", account).or().eq("username", account);
@@ -83,28 +96,20 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
         }
 
         // 客户端请求的登录类型：[0]密码登录 [1]验证码登录
-        String loginType = userLoginQuery.getLoginType();
-        if (UserLoginQuery.LOGIN_TYPE_CODE.equals(loginType)) {
-            String key = RedisConstants.VERIFY_CODE_PREFIX + account;
-            String codeFromRedis = redisTemplate.opsForValue().get(key);
-            if (codeFromRedis == null) {
-                throw new IllegalConditionException("验证码不存在，请先获取验证码");
-            }
-            if (!codeFromRedis.equals(userLoginQuery.getCode())) {
-                throw new IllegalConditionException("验证码不正确");
-            }
-            // 从 Redis 中移除验证码
-            redisTemplate.delete(key);
-        } else {
+        Integer loginType = userLoginQuery.getLoginType();
+        if (AccountLoginEnum.PASSWORD.getCode().equals(loginType)) {
             // 验证密码正确性
             if (!this.passwordEncoder.matches(userLoginQuery.getPassword(), user.getPassword())) {
-                throw new IllegalConditionException("账号密码错误");
+                throw new IllegalConditionException(UserMessageConstants.ERROR_PASSWORD);
             }
+        } else {
+            // 检验当前验证码的正确性
+            this.validateVerifyCode(account, userLoginQuery.getCode());
         }
 
         // 检查用户账号状态
         if (EnableStatusEnum.DISABLE.getCode().equals(user.getStatus())) {
-            throw new IllegalStatusException("禁止登录，用户状态异常");
+            throw new IllegalStatusException(UserMessageConstants.ILLEGAL_USER_STATUS);
         }
 
         // 查询当前用户的系统权限，将当前用户信息注入到安全框架中
@@ -114,112 +119,229 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        /// FIXME 保存用户登录记录
-        // this.createUserLoginLog(user.getId());
+        // 保存用户登录记录
+        this.userLoginLogService.create(user.getId());
         // 更新上次登录时间
-        this.updateLastLogin(user.getId());
+        UserDO userDO = new UserDO();
+        userDO.setId(user.getId());
+        userDO.setLastLogin(new Date());
+        this.baseMapper.updateById(userDO);
 
         return JwtUtils.create("username", user.getUsername());
     }
 
     @Override
-    public Boolean create(UserQuery userQuery) {
+    public String register(UserResetQuery userResetQuery) {
         UserDO userDO = new UserDO();
-        BeanUtils.copyProperties(userQuery, userDO);
-        // 新增用户时将 id 置空，由服务器生成
-        userDO.setId(null);
-        // 用户密码加密
-        userDO.setPassword(passwordEncoder.encode(userDO.getPassword()));
-        userDO.setCreated(new Date());
-        userDO.setModified(new Date());
-        userDO.setLastLogin(new Date());
+        String account = userResetQuery.getAccount();
+
+        // 正则表达式匹配客户端的注册方式是手机注册还是邮箱注册
+        String phoneRegexp = "^1[3456789]\\d{9}$";
+        String emailRegexp = "^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\\.[a-zA-Z0-9_-]+)+$";
+        if (ReUtil.isMatch(phoneRegexp, account)) {
+            // 手机方式注册，验证手机号是否已被占用
+            userDO.setPhone(account);
+            this.verifyPhoneOrEmailExistence("phone", account);
+        } else if (ReUtil.isMatch(emailRegexp, account)) {
+            // 邮箱方式注册，验证邮箱是否已被占用
+            userDO.setEmail(account);
+            this.verifyPhoneOrEmailExistence("email", account);
+        } else {
+            throw new IllegalConditionException("账号格式不正确，请重新输入");
+        }
+
+        // 验证用户输入的验证码是否正确
+        this.validateVerifyCode(account, userResetQuery.getCode());
+
+        // 设置用户注册所需的必要信息，用户名唯一、密码加密存储
+        Date date = new Date();
+        userDO.setUsername(IdUtil.simpleUUID());
+        userDO.setPassword(this.passwordEncoder.encode(userResetQuery.getPassword()));
+        userDO.setCreated(date);
+        userDO.setModified(date);
+        userDO.setLastLogin(date);
         userDO.setStatus(EnableStatusEnum.ENABLE.getCode());
         userDO.setDeleted(DeleteStatusEnum.UNDELETED.getCode());
-        return this.baseMapper.insert(userDO) == 1;
+        this.baseMapper.insert(userDO);
+
+        return JwtUtils.create("username", userDO.getUsername());
     }
 
     @Override
-    public UserVO query(Long id) {
-        UserDO userDO = this.baseMapper.selectById(id);
-        if (userDO == null) {
-            return null;
+    public boolean reset(UserResetQuery userResetQuery) {
+        // 根据手机号或邮箱查询用户信息是否存在
+        String account = userResetQuery.getAccount();
+        QueryWrapper<UserDO> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("phone", account).or().eq("email", account);
+        UserDO user = this.baseMapper.selectOne(queryWrapper);
+        if (user == null) {
+            throw new IllegalConditionException(UserMessageConstants.USER_NOT_EXISTS);
         }
+
+        // 判断新旧密码是否一致
+        if (this.passwordEncoder.matches(userResetQuery.getPassword(), user.getPassword())) {
+            throw new IllegalConditionException("新旧密码相同，请重新输入");
+        }
+
+        // 检验验证码是否正确
+        this.validateVerifyCode(account, userResetQuery.getCode());
+
+        // 更新用户登录密码
+        String encodedNewPassword = this.passwordEncoder.encode(userResetQuery.getPassword());
+        UserDO userDO = new UserDO();
+        userDO.setId(user.getId());
+        userDO.setPassword(encodedNewPassword);
+        return this.baseMapper.updateById(userDO) == 1;
+    }
+
+    @Override
+    public UserVO currentUser() {
+        UserDO userDO = this.getCurrentUser();
+        // 手机号脱敏，隐藏中间四位为 *
+        userDO.setPhone(DesensitizedUtil.mobilePhone(userDO.getPhone()));
         UserVO userVO = new UserVO();
         BeanUtils.copyProperties(userDO, userVO);
         return userVO;
     }
 
     @Override
-    public Boolean remove(Long id) {
-        return this.baseMapper.deleteById(id) == 1;
-    }
-
-    @Override
-    public Boolean edit(UserQuery userQuery) {
+    public boolean updateSimpleProfile(UserQuery userQuery) {
+        UserDO user = this.getCurrentUser();
         UserDO userDO = new UserDO();
+        // 更新头像地址 || 用户昵称 || 个性签名
         BeanUtils.copyProperties(userQuery, userDO);
+        userDO.setId(user.getId());
         return this.baseMapper.updateById(userDO) == 1;
     }
 
     @Override
-    public String verify(Integer type, String content) {
-        // [1]验证用户名 [2]验证手机 [3]验证邮箱
-        QueryWrapper<UserDO> queryWrapper = new QueryWrapper<>();
-        switch (type) {
-            case 1:
-                queryWrapper.eq("username", content);
-                break;
-            case 2:
-                queryWrapper.eq("phone", content);
-                break;
-            case 3:
-                queryWrapper.eq("email", content);
-                break;
-            default:
-                return null;
+    public boolean updateUsername(String username, String password) {
+        UserDO user = this.getCurrentUser();
+
+        // 新用户名与旧用户名一致，不允许修改
+        if (user.getUsername().equals(username)) {
+            throw new IllegalConditionException("新旧 UID 一致，请重新输入");
         }
 
-        // 查询用户信息
+        // 验证密码是否正确
+        if (!passwordEncoder.matches(password, user.getPassword())) {
+            throw new IllegalConditionException(UserMessageConstants.ERROR_PASSWORD);
+        }
+
+        // 查询当前用户用户名的上次更新时间，一年内只允许更新一次
+        UsernameUpdateLogDO latest = this.usernameUpdateLogService.getLatest(user.getId());
+        if (latest != null) {
+            Date lastUpdate = latest.getCreated();
+            long days = DateUtil.between(lastUpdate, new Date(), DateUnit.DAY);
+            final int yearDays = 365;
+            if (days < yearDays) {
+                throw new IllegalConditionException("UID 一年内只能修改一次，上次修改时间：" + DateUtil.formatDate(lastUpdate));
+            }
+        }
+
+        // 保存用户最新的用户名修改记录
+        this.usernameUpdateLogService.create(user.getUsername(), username, user.getId());
+        // 更新用户名
+        UserDO userDO = new UserDO();
+        userDO.setUsername(username);
+        userDO.setId(user.getId());
+
+        return this.baseMapper.updateById(userDO) == 1;
+    }
+
+    @Override
+    public boolean updateEmail(String email, String code) {
+        // 验证新旧邮箱是否一致，注意旧邮箱为 null
+        UserDO user = this.getCurrentUser();
+        if (user.getEmail() != null && email.equals(user.getEmail())) {
+            throw new IllegalConditionException("新旧邮箱一致，请重新输入");
+        }
+
+        // 验证邮箱是否已被占用
+        this.verifyPhoneOrEmailExistence("email", email);
+        // 验证用户输入的验证码是否正确
+        this.validateVerifyCode(email, code);
+
+        // 更新用户邮箱地址
+        UserDO userDO = new UserDO();
+        userDO.setEmail(email);
+        userDO.setId(user.getId());
+        return this.baseMapper.updateById(userDO) == 1;
+    }
+
+    @Override
+    public boolean updatePhone(String phone, String code) {
+        // 验证新旧手机号是否一致，注意旧手机号为 null
+        UserDO user = this.getCurrentUser();
+        if (user.getPhone() != null && phone.equals(user.getPhone())) {
+            throw new IllegalConditionException("新旧手机号一致，请重新输入");
+        }
+
+        // 验证手机号是否已被占用
+        this.verifyPhoneOrEmailExistence("phone", phone);
+        // 验证用户输入的验证码是否正确
+        this.validateVerifyCode(phone, code);
+
+        // 更新用户手机号
+        UserDO userDO = new UserDO();
+        userDO.setPhone(phone);
+        userDO.setId(user.getId());
+        return this.baseMapper.updateById(userDO) == 1;
+    }
+
+    /**
+     * 获取当前请求登录系统的用户信息
+     */
+    UserDO getCurrentUser() {
+        SecurityUserDetailsDTO userDetailsDTO = (SecurityUserDetailsDTO) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (userDetailsDTO == null) {
+            throw new IllegalStatusException(UserMessageConstants.UNAUTHORIZED);
+        }
+
+        // 根据用户查询用户信息
+        String username = userDetailsDTO.getUsername();
+        QueryWrapper<UserDO> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("username", username);
         UserDO userDO = this.baseMapper.selectOne(queryWrapper);
         if (userDO == null) {
-            return null;
+            throw new IllegalStatusException(UserMessageConstants.USER_NOT_EXISTS);
         }
-
-        return type == 1 ? userDO.getUsername() : (type == 2 ? userDO.getPhone() : userDO.getEmail());
+        return userDO;
     }
 
     /**
-     * 保存用户登录记录
+     * 验证手机号或邮箱在用户表中的存在性
+     *
+     * @param column  email | phone
+     * @param content 需要验证的内容
      */
-    private void createUserLoginLog(Long userId) {
-        UserLoginLogDO userLoginLogDO = new UserLoginLogDO();
-        // 从请求头中解析 IP 地址
-        String ipAddress = WebUtils.getRequestIp(request);
-        userLoginLogDO.setIp(ipAddress);
-        // 解析 IP 归属地，先使用百度地图 API，解析失败使用淘宝公共 API
-        String location = WebUtils.baiduParseIpLocation(ipAddress);
-        location = "未知地点".equals(location) ? WebUtils.taobaoParseIpLocation(ipAddress) : location;
-        userLoginLogDO.setLocation(location);
-        // 从请求头中获取用户设备信息
-        String device = WebUtils.userAgent(request);
-        userLoginLogDO.setDevice(device);
-        Date date = new Date();
-        userLoginLogDO.setLoginDatetime(date);
-        userLoginLogDO.setCreated(date);
-        userLoginLogDO.setModified(date);
-        userLoginLogDO.setDeleted(DeleteStatusEnum.UNDELETED.getCode());
-        userLoginLogDO.setUserId(userId);
-        this.userLoginLogService.create(userLoginLogDO);
+    private void verifyPhoneOrEmailExistence(String column, String content) {
+        QueryWrapper<UserDO> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq(column, content);
+        UserDO userDO = this.baseMapper.selectOne(queryWrapper);
+        String chinese = "email".equals(column) ? "邮箱地址" : "手机号";
+        if (userDO != null) {
+            throw new IllegalConditionException(chinese + "已被占用，请重新输入");
+        }
     }
 
     /**
-     * 更新用户上次登录时间
+     * 校验验证码正确性，将传入的验证码与 Redis 中存储的验证码进行比对
+     *
+     * @param account 需要验证的邮箱 | 手机
+     * @param code    需要检验的验证码
      */
-    private void updateLastLogin(Long userId) {
-        UserDO userDO = new UserDO();
-        userDO.setId(userId);
-        userDO.setLastLogin(new Date());
-        this.baseMapper.updateById(userDO);
+    private void validateVerifyCode(String account, String code) {
+        String key = RedisConstants.VERIFY_CODE_PREFIX + account;
+        String codeFromRedis = redisTemplate.opsForValue().get(key);
+        if (codeFromRedis == null) {
+            throw new IllegalConditionException("验证码不存在，请先获取验证码");
+        }
+        if (!codeFromRedis.equals(code)) {
+            throw new IllegalConditionException("验证码不正确，请重新输入");
+        }
+        // 从 Redis 中移除验证码
+        redisTemplate.delete(key);
     }
 
 }

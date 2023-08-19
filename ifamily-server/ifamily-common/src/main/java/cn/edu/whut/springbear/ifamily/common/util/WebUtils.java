@@ -25,6 +25,8 @@ public final class WebUtils {
      */
     private static final String TAOBAO_URL = "https://ip.taobao.com/outGetIpInfo?accessKey=alibaba-inc&ip=";
 
+    private static final String DEFAULT_LOCATION = "未知地点";
+
     /**
      * 从请求头中获取 IP 地址
      */
@@ -83,7 +85,7 @@ public final class WebUtils {
         // 从响应的 json 对象中获取含有地址信息的 json 对象
         JSONObject addressJson = JSONUtil.parseObj(responseJson.getObj("content"));
         // 获取 IP 地址，默认为 “未知地点”
-        return addressJson.getStr("address", "未知地点");
+        return addressJson.getStr("address", DEFAULT_LOCATION);
     }
 
     /**
@@ -91,7 +93,7 @@ public final class WebUtils {
      */
     public static String taobaoParseIpLocation(String ip) {
         if (invalidIp(ip)) {
-            return "未知地点";
+            return DEFAULT_LOCATION;
         }
 
         String url = TAOBAO_URL + ip;

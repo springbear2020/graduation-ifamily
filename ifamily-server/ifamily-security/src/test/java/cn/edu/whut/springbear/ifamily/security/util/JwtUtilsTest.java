@@ -11,10 +11,9 @@ class JwtUtilsTest {
 
     @Test
     void create() {
-        String token = JwtUtils.create("username", "Spring-_-Bear");
+        String token = JwtUtils.create("username", "admin");
         System.out.println(token);
         System.out.println(JwtUtils.get(token, "username"));
-        System.out.println(JwtUtils.isNonExpired(token));
     }
 
 }

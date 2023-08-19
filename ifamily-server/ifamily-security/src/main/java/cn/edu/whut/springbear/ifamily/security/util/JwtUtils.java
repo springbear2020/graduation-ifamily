@@ -21,6 +21,10 @@ public class JwtUtils {
      * 有限期 3 天
      */
     private static final Long EXPIRE = 259200000L;
+    /**
+     * 令牌键
+     */
+    public static final String TOKEN_KEY = "Authentication";
 
     /**
      * 创建 token 字符串
@@ -29,7 +33,7 @@ public class JwtUtils {
         JwtBuilder builder = Jwts.builder();
         Date expiration = new Date(System.currentTimeMillis() + JwtUtils.EXPIRE);
 
-        builder.setSubject("Authentication")
+        builder.setSubject(TOKEN_KEY)
                 .setExpiration(expiration)
                 .signWith(SignatureAlgorithm.HS512, JwtUtils.SECRET);
 
@@ -44,26 +48,17 @@ public class JwtUtils {
             return null;
         }
 
-        Claims claims = Jwts.parser()
-                .setSigningKey(JwtUtils.SECRET)
-                .parseClaimsJws(token)
-                .getBody();
+        Claims claims;
+        try {
+            claims = Jwts.parser()
+                    .setSigningKey(JwtUtils.SECRET)
+                    .parseClaimsJws(token)
+                    .getBody();
+        } catch (Exception e) {
+            return null;
+        }
 
         return (String) claims.get(key);
-    }
-
-    /**
-     * 验证 token 是否过期
-     *
-     * @return [true]未过期
-     */
-    public static boolean isNonExpired(String token) {
-        Jws<Claims> claims = Jwts.parser().setSigningKey(JwtUtils.SECRET).parseClaimsJws(token);
-        // 过期时间
-        long expirationTime = claims.getBody().getExpiration().getTime();
-        // 当前时间
-        long currentTime = System.currentTimeMillis();
-        return expirationTime > currentTime;
     }
 
 }

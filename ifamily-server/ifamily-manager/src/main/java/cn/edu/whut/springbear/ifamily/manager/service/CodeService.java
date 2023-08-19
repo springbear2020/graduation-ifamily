@@ -7,7 +7,7 @@ package cn.edu.whut.springbear.ifamily.manager.service;
 public interface CodeService {
 
     /**
-     * 发送邮件
+     * 发送邮件验证码
      *
      * @param email 收件人邮件地址
      * @return [true]投递成功
@@ -15,7 +15,7 @@ public interface CodeService {
     boolean sendEmailCode(String email);
 
     /**
-     * 发送短信
+     * 发送短信验证码
      *
      * @param phone 手机号
      * @return [true]发送成功

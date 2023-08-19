@@ -29,3 +29,9 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+/deep/ .van-tag {
+  margin-right: 2px;
+}
+</style>

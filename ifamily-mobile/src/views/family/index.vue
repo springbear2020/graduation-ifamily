@@ -10,13 +10,16 @@
     <family-info-card @click.native="$router.push('/family/info')"/>
 
     <!-- 家族操作宫格 -->
-    <van-grid :column-num="3">
-      <van-grid-item icon="friends-o" text="家族成员" to="/family/members"/>
-      <van-grid-item icon="records" text="修谱记录" to="/family/records"/>
+    <van-grid :column-num="3" square>
       <van-grid-item icon="cluster-o" text="家族树谱" to="/family/tree/0"/>
+      <van-grid-item icon="friends-o" text="家族成员" to="/family/members"/>
+      <van-grid-item icon="setting-o" text="家族管理" to="/family/manage"/>
       <van-grid-item icon="volume-o" text="家族公告" to="/family/notice"/>
       <van-grid-item icon="photo-o" text="家族相册" to="/family/album"/>
-      <van-grid-item icon="setting-o" text="家族管理" to="/family/manage"/>
+      <van-grid-item icon="video-o" text="家族视频"/>
+      <van-grid-item icon="clock-o" text="家族历史"/>
+      <van-grid-item icon="notes-o" text="家族大事"/>
+      <van-grid-item icon="label-o" text="修谱记录"/>
     </van-grid>
   </div>
 </template>
@@ -29,3 +32,13 @@ export default {
   components: {FamilyInfoCard},
 }
 </script>
+
+<style scoped>
+.van-grid {
+  margin-top: 8px;
+}
+
+/deep/ .van-tag {
+  margin-right: 2px;
+}
+</style>

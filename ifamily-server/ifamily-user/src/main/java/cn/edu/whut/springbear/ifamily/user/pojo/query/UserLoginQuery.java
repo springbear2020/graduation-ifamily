@@ -2,9 +2,9 @@ package cn.edu.whut.springbear.ifamily.user.pojo.query;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import org.hibernate.validator.constraints.Range;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Pattern;
 
 /**
  * @author Spring-_-Bear
@@ -12,15 +12,6 @@ import javax.validation.constraints.Pattern;
  */
 @Data
 public class UserLoginQuery {
-
-    /**
-     * 密码登录
-     */
-    public static final String LOGIN_TYPE_PASSWORD = "0";
-    /**
-     * 验证码登录
-     */
-    public static final String LOGIN_TYPE_CODE = "1";
 
     @ApiModelProperty("账户：用户名 | 手机 | 邮箱")
     @NotBlank(message = "账户名不能为空")
@@ -33,7 +24,7 @@ public class UserLoginQuery {
     private String code;
 
     @ApiModelProperty("登录方式：[0]密码登录 [1]验证码登录")
-    @Pattern(regexp = "[0-1]", message = "登录方式：[0]密码登录 [1]验证码登录")
-    private String loginType;
+    @Range(max = 1L, message = "登录方式：[0]密码登录 [1]验证码登录")
+    private Integer loginType;
 
 }

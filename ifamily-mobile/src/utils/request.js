@@ -1,6 +1,6 @@
 import axios from 'axios'
 import responseCode from '@/api/response-code'
-import {getToken} from '@/utils/auth'
+import {getToken, TOKEN_KEY} from '@/utils/auth'
 import nprogress from 'nprogress'
 import 'nprogress/nprogress.css'
 import {Notify} from 'vant';
@@ -20,13 +20,13 @@ service.interceptors.request.use(
         // 将 token 信息携带在请求头中
         const token = getToken()
         if (token) {
-            config.headers['Authentication'] = token
+            config.headers[TOKEN_KEY] = token
         }
 
         return config
     },
-    error => {
-        return Promise.reject(error)
+    err => {
+        return Promise.reject(err)
     }
 )
 
@@ -34,14 +34,14 @@ service.interceptors.request.use(
  * 响应拦截器
  */
 service.interceptors.response.use(
-    response => {
+    res => {
         nprogress.done()
+        const jsonData = res.data
+        const {code} = jsonData
 
-        const restData = response.data
-        const { code } = restData
         // [200]成功，直接返回数据
         if (code === responseCode.SUCCESS) {
-            return restData.data
+            return jsonData.data
         } else {
             if (code === responseCode.SERVER_INTERNAL_ERROR || code === responseCode.SERVICE_UNAVAILABLE) {
                 // [500]内部异常 [503]服务不可用
@@ -53,16 +53,16 @@ service.interceptors.response.use(
                 // [401]身份认证 [403]拒绝访问
                 Notify({
                     type: 'danger',
-                    message: `[${restData.desc}]${restData.data}`
+                    message: `[${jsonData.desc}]${jsonData.data}`
                 })
             } else {
-                return Promise.reject(restData)
+                return Promise.reject(jsonData)
             }
         }
     },
-    error => {
+    err => {
         nprogress.done()
-        return Promise.reject(error)
+        return Promise.reject(err)
     }
 )
 

@@ -1,7 +1,6 @@
 package cn.edu.whut.springbear.ifamily.security.access.intercept;
 
 import cn.edu.whut.springbear.ifamily.security.util.JwtUtils;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -24,7 +23,6 @@ import java.io.IOException;
  * @author Spring-_-Bear
  * @since 23/03/19 11:09
  */
-@Slf4j
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
@@ -34,23 +32,23 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws ServletException, IOException {
         // 从请求头中获取 token，若 token 内容为空则直接放行
-        String token = request.getHeader("Authentication");
+        String token = request.getHeader(JwtUtils.TOKEN_KEY);
         if (!StringUtils.hasLength(token)) {
             chain.doFilter(request, response);
             return;
         }
 
-        // 解析 token 获取到用户名，验证 token 有效期以及合法性，验证通过后注入用户到安全框架上下文中，从而实现免鉴权认证
+        // 从 token 中解析用户名，而后验证当前用户名信息是否已在系统登录，若未登录且用户信息合法则将其注入到安全上下文框架中，从而实现用户免鉴权登录
         String username = JwtUtils.get(token, "username");
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
-            if (JwtUtils.isNonExpired(token) && username.equals(userDetails.getUsername())) {
+            if (username.equals(userDetails.getUsername())) {
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                log.info("Authenticated username: {}", username);
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
         }
+
         chain.doFilter(request, response);
     }
 

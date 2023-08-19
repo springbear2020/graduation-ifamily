@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import store from '@/store'
 import {getToken} from "@/utils/auth";
+import {Notify} from "vant";
 
 Vue.use(VueRouter)
 
@@ -10,12 +11,7 @@ export const constantRoutes = [
         path: '/',
         redirect: '/home'
     },
-    // 404
-    {
-        path: '/404',
-        component: () => import('@/views/404')
-    },
-    // user
+    /// user ===========================================================================================================
     {
         path: '/user/login',
         component: () => import('@/views/user/login'),
@@ -24,30 +20,42 @@ export const constantRoutes = [
         path: '/user/reset/:type',
         component: () => import('@/views/user/reset'),
     },
-    // home
-    {
-        path: '/home',
-        component: () => import('@/views/home'),
-        meta: {footerShow: true}
-    },
-    {
-        path: '/home/message',
-        component: () => import('@/views/home/message'),
-    },
-    {
-        path: '/home/message/chat',
-        component: () => import('@/views/home/message/chat'),
-    },
-    // mine
+    /// mine ===========================================================================================================
     {
         path: '/mine',
         component: () => import('@/views/mine'),
         meta: {footerShow: true},
     },
     {
-        path: '/mine/about',
-        component: () => import('@/views/mine/about'),
+        path: '/mine/info',
+        component: () => import('@/views/mine/info'),
     },
+    {
+        path: '/mine/info/form/:type',
+        component: () => import('@/views/mine/info/form'),
+    },
+    {
+        path: '/mine/settings',
+        component: () => import('@/views/mine/settings'),
+    },
+    {
+        path: '/mine/settings/security',
+        component: () => import('@/views/mine/settings/security'),
+    },
+    {
+        path: '/mine/settings/security/uid',
+        component: () => import('@/views/mine/settings/security/uid'),
+    },
+    {
+        path: '/mine/settings/security/form/:type',
+        component: () => import('@/views/mine/settings/security/form'),
+    },
+    {
+        path: '/mine/settings/security/devices',
+        component: () => import('@/views/mine/settings/security/devices'),
+    },
+
+
     {
         path: '/mine/family',
         component: () => import('@/views/mine/family'),
@@ -68,23 +76,12 @@ export const constantRoutes = [
         path: '/mine/memorial',
         component: () => import('@/views/mine/memorial'),
     },
-    {
-        path: '/mine/security',
-        component: () => import('@/views/mine/security'),
-    },
-    {
-        path: '/mine/security/form/:type',
-        component: () => import('@/views/mine/security/form'),
-    },
-    {
-        path: '/mine/security/devices',
-        component: () => import('@/views/mine/security/devices'),
-    },
+
     {
         path: '/mine/contact',
         component: () => import('@/views/mine/contact'),
     },
-    // family
+    /// family =========================================================================================================
     {
         path: '/family',
         component: () => import('@/views/family'),
@@ -154,7 +151,25 @@ export const constantRoutes = [
         path: '/family/manage/permission',
         component: () => import('@/views/family/manage/permission'),
     },
-    // 404 page must be placed at the end
+    /// home ===========================================================================================================
+    {
+        path: '/home',
+        component: () => import('@/views/home'),
+        meta: {footerShow: true}
+    },
+    {
+        path: '/home/message',
+        component: () => import('@/views/home/message'),
+    },
+    {
+        path: '/home/message/chat',
+        component: () => import('@/views/home/message/chat'),
+    },
+    /// 404 page must be placed at the end =============================================================================
+    {
+        path: '/404',
+        component: () => import('@/views/404')
+    },
     {
         path: '*',
         redirect: '/404'
@@ -178,7 +193,7 @@ export function resetRouter() {
  */
 router.beforeEach((to, from, next) => {
     let token = store.state.user.token
-    // 基于本地存储的 token 实现用户免登录
+    // 基于本地存储的 token 实现用户免密登录
     if (!token) {
         token = getToken()
         if (token) {
@@ -187,11 +202,33 @@ router.beforeEach((to, from, next) => {
     }
 
     if (token) {
+        const toPath = to.path;
+
         // 已登录且前往用户登录、注册、找回密码页面，跳转到首页
-        const toPath = to.path
         if (toPath === '/user/login' || toPath === '/user/reset/0' || toPath === '/user/reset/1') {
-            next('/home')
+            next('/')
         }
+
+        // 是否存在用户信息，不存在则派发 action 查询用户信息
+        let uid = store.state.user.user.id
+        if (!uid) {
+            // 派发 action 获取用户信息，而后放行
+            store.dispatch('user/getUser').then(() => {
+                next()
+            }).catch(() => {
+                // token 已过期，退出登录，跳转到登录页面
+                store.dispatch('user/logout').then(() => {
+                    Notify({
+                        type: 'danger',
+                        message: '身份令牌已失效，即将前往登录页',
+                        duration: 3000,
+                        onClose: () => next('/user/login')
+                    })
+                })
+            })
+        }
+
+        // 已登录，其它情况一律放行
         next();
     } else {
         // 未登录且前往用户登录、注册页面则直接放行，否则跳转到登录页面

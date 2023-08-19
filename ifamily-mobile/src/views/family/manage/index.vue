@@ -34,3 +34,9 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+/deep/ .van-cell {
+  padding: 20px 16px;
+}
+</style>

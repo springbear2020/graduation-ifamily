@@ -6,6 +6,6 @@ package cn.edu.whut.springbear.ifamily.manager.constant;
  */
 public class CodeMessageConstants {
 
-    public static final String CODE_SEND_FAILED = "验证码发送失败，服务器繁忙，请稍后重试";
+    public static final String CODE_SEND_FAILED = "验证码发送失败，请稍后重试";
 
 }

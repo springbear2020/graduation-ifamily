@@ -63,17 +63,17 @@ public final class CommonResult<T> {
     /// ================================================================================================================
 
     /**
-     * 内部异常
+     * 服务器异常
      */
-    public static <T> CommonResult<T> serverInternalError() {
-        return new CommonResult<>(ResultCodeEnum.SERVER_INTERNAL_ERROR.getCode(), ResultCodeEnum.SERVER_INTERNAL_ERROR.getMessage(), null);
+    public static <T> CommonResult<T> serverInternalError(T data) {
+        return new CommonResult<>(ResultCodeEnum.SERVER_INTERNAL_ERROR.getCode(), ResultCodeEnum.SERVER_INTERNAL_ERROR.getMessage(), data);
     }
 
     /**
      * 服务不可用
      */
-    public static <T> CommonResult<T> serviceUnavailable() {
-        return new CommonResult<>(ResultCodeEnum.SERVICE_UNAVAILABLE.getCode(), ResultCodeEnum.SERVICE_UNAVAILABLE.getMessage(), null);
+    public static <T> CommonResult<T> serviceUnavailable(T data) {
+        return new CommonResult<>(ResultCodeEnum.SERVICE_UNAVAILABLE.getCode(), ResultCodeEnum.SERVICE_UNAVAILABLE.getMessage(), data);
     }
 
     /// ===============================================================================================================
