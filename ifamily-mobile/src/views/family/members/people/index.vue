@@ -1,9 +1,6 @@
 <template>
   <div>
-    <van-nav-bar title="人员信息" left-arrow
-                 @click-left="back"
-                 @click-right="$toast.fail('家族树定位')"
-    >
+    <van-nav-bar title="人员信息" left-arrow @click-left="$router.replace(dstRoute)" @click-right="$toast('家族树定位')">
       <template #right>
         <van-icon name="aim" size="20"/>
       </template>
@@ -45,11 +42,7 @@
 
     <!-- 手机、常住地 -->
     <van-cell-group>
-      <van-cell :border="false" center title="手机" label="13898564256" is-link @click="$toast.success('添加联系人')">
-        <template #right-icon>
-          <van-icon name="like-o" size="20"/>
-        </template>
-      </van-cell>
+      <van-cell :border="false" center title="手机" label="13898564256" @click="$toast('添加联系人')"/>
       <van-cell :border="false" title="常住地" label="湖北省/武汉市/洪山区/洪山街道武汉理工大学南湖校区智园"/>
     </van-cell-group>
     <!-- 生于、出生地 -->
@@ -68,14 +61,14 @@
       <van-cell title="家庭关系" :border="false" class="family-relationships">
         <template #label>
           <p>父亲：
-            <people-tag :name="'冯世元'" @click.native="$toast.success('查看人员信息')"/>
+            <people-tag :name="'冯世元'" @click.native="$toast('查看人员信息')"/>
           </p>
           <p>母亲：</p>
           <p>配偶：</p>
           <p>子女：
-            <people-tag :name="'冯学慧'" :sex="3" @click.native="$toast.success('查看人员信息')"/>
-            <people-tag :name="'刘纯洲'" :sex="1" @click.native="$toast.success('查看人员信息')"/>
-            <people-tag :name="'冯学良'" @click.native="$toast.success('查看人员信息')"/>
+            <people-tag :name="'冯学慧'" :sex="3" @click.native="$toast('查看人员信息')"/>
+            <people-tag :name="'刘纯洲'" :sex="1" @click.native="$toast('查看人员信息')"/>
+            <people-tag :name="'冯学良'" @click.native="$toast('查看人员信息')"/>
           </p>
           <p>同胞：</p>
         </template>
@@ -99,28 +92,32 @@ export default {
   name: "index",
   data() {
     return {
+      url: 'https://img01.yzcdn.cn/vant/cat.jpeg',
       // [0]成员列表 [1]家族树 [2]家族人员管理
       type: '0',
-      url: 'https://img01.yzcdn.cn/vant/cat.jpeg',
     }
   },
   mounted() {
     this.type = this.$route.params.type
+  },
+  computed: {
+    dstRoute() {
+      let dst = '/'
+      if (this.type === '0') {
+        dst = '/family/members'
+      } else if (this.type === '1') {
+        dst = '/family/tree'
+      } else if (this.type === '2') {
+        dst = '/family/manage/members'
+      }
+      return dst
+    }
   },
   methods: {
     previewImage() {
       let images = []
       images.push(this.url)
       ImagePreview({images})
-    },
-    back() {
-      if (this.type === '0') {
-        this.$router.replace('/family/members')
-      } else if (this.type === '1') {
-        this.$router.replace('/family/tree')
-      } else if (this.type === '3') {
-        this.$router.replace('/family/manage/members')
-      }
     }
   }
 }

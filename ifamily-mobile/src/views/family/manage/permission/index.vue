@@ -11,6 +11,7 @@
     </van-radio-group>
 
     <!-- 权限列表 -->
+    <!-- TODO Add the access control list -->
     <van-collapse v-model="activeName" accordion>
       <!-- 家族管理 -->
       <van-collapse-item title="家族管理" name="1">

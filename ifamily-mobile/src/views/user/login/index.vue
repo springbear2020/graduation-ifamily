@@ -60,7 +60,7 @@ export default {
   },
   methods: {
     handleUserLogin(data) {
-      console.log(data)
+      this.$toast('登录成功')
       this.$router.replace('/mine')
     }
   }

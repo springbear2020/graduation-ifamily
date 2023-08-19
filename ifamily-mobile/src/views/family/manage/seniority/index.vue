@@ -13,7 +13,7 @@
     <!-- 字辈管理动作面板 -->
     <van-action-sheet v-model="showActionSheet" :title="sheetTitle">
       <van-field label="字辈" placeholder="字辈" v-model="seniority"/>
-      <van-button type="primary" block @click="confirmSeniority">确定</van-button>
+      <van-button type="info" block @click="confirmSeniority">确定</van-button>
     </van-action-sheet>
   </div>
 </template>

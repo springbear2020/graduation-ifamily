@@ -3,9 +3,9 @@
     <van-nav-bar title="家族成员" left-arrow @click-left="$router.replace('/family')"/>
 
     <!-- 搜索框 -->
-    <van-search show-action v-model="memberName" placeholder="家族成员姓名" @search="$toast.success(memberName)">
+    <van-search show-action v-model="memberName" placeholder="家族成员姓名" @search="$toast(memberName)">
       <template #action>
-        <div @click="$toast.success(memberName)">搜索</div>
+        <div @click="$toast(memberName)">搜索</div>
       </template>
     </van-search>
 
@@ -15,7 +15,7 @@
         <van-index-anchor :index="number">第 {{ number }} 世</van-index-anchor>
 
         <!-- 家族成员男 -->
-        <van-cell is-link center @click="$router.push('/family/members/people/0')">
+        <van-cell is-link center @click="$router.push('/family/members/people/0')" class="flex-cell-title">
           <template #title>
             <van-image round width="50" height="50" src="https://img01.yzcdn.cn/vant/cat.jpeg"/>
             <p class="name-container">
@@ -28,7 +28,7 @@
           </template>
         </van-cell>
         <!-- 家族成员女 -->
-        <van-cell is-link center @click="$router.push('/family/members/people/0')">
+        <van-cell is-link center @click="$router.push('/family/members/people/0')" class="flex-cell-title">
           <template #title>
             <van-image round width="50" height="50" src="https://img01.yzcdn.cn/vant/cat.jpeg"/>
             <p class="name-container">
@@ -58,10 +58,6 @@ export default {
 </script>
 
 <style scoped>
-.van-cell__title {
-  display: flex;
-}
-
 .name-container {
   margin-left: 10px;
 }

@@ -1,7 +1,7 @@
 <template>
   <div class="img-wrap">
     <!-- 图片列表展示，支持图片点击预览 -->
-    <van-image width="100" height="100"
+    <van-image width="100" height="100" class="right bottom"
                v-for="(img, index) in dataList" :key="img.id" :src="img.url" @click="previewImage(index)"
     />
   </div>
@@ -31,11 +31,6 @@ export default {
 </script>
 
 <style scoped>
-.van-image {
-  margin-right: 1px;
-  margin-bottom: 1px;
-}
-
 .img-wrap {
   font-size: 0;
   line-height: normal;

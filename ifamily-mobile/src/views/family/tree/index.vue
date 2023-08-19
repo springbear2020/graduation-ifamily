@@ -2,7 +2,7 @@
   <div>
     <van-nav-bar title="家族树谱" left-arrow @click-left="$router.replace('/family')" @click-right="showPopover = true">
       <template #right>
-        <!-- 家族树右上角操作气泡弹出框 -->
+        <!-- 右上角操作气泡弹出框 -->
         <van-popover placement="bottom-end" trigger="click"
                      v-model="showPopover" :actions="actions" @select="onSelect">
           <template #reference>
@@ -13,9 +13,9 @@
     </van-nav-bar>
 
     <!-- 家族系谱图 -->
-    <FamilyTree :tree="tree" @click-node="clickPeopleCard" ref="familyTree"/>
+    <FamilyTree :tree="tree" @click-node="clickPeopleNode" ref="familyTree"/>
 
-    <!-- 家族成员搜索动作面板 -->
+    <!-- 成员搜索动作面板 -->
     <van-action-sheet v-model="showSearchSheet" title="搜索成员">
       <van-search v-model="memberName" show-action placeholder="家族成员姓名" @search="locateMemberNode(memberName)">
         <template #action>
@@ -24,10 +24,10 @@
       </van-search>
       <van-empty description="无内容"/>
     </van-action-sheet>
-    <!-- 查看人员信息操作面板 -->
+    <!-- 树节点点击操作面板 -->
     <van-action-sheet v-model="showPeopleSheet" cancel-text="取消" description="光头勇">
       <van-grid :column-num="3" :gutter="8" square :border="false">
-        <van-grid-item icon="cluster-o" text="ta 的关系" @click="$toast.success('树状关系')"/>
+        <van-grid-item icon="cluster-o" text="ta 的关系" @click="$toast('树状关系')"/>
         <van-grid-item icon="manager-o" text="ta 的主页" @click="$router.push('/family/members/people/1')"/>
         <van-grid-item icon="add-o" text="添加亲人" @click="$router.push('/family/manage/members/add/0')"/>
       </van-grid>
@@ -83,8 +83,7 @@ export default {
     }
   },
   methods: {
-    clickPeopleCard(node) {
-      console.log(node)
+    clickPeopleNode(node) {
       this.showPeopleSheet = true
     },
     onSelect(action, index) {
@@ -114,7 +113,7 @@ export default {
         const personElement = document.getElementsByClassName(`pid-${pid}`)[0]
         // 调用子组件的树节点居中定位方法
         this.$refs.familyTree.centerNode(personElement)
-        // 聚焦节点旋转动画
+        // 定位节点旋转动画
         this.$nextTick(() => {
           personElement.style.transform = `rotate(${this.rotate += 360}deg)`;
           this.rotate = this.rotate > 360 ? 0 : this.rotate;

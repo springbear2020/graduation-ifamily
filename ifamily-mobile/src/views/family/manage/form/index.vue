@@ -1,7 +1,7 @@
 <template>
   <div>
-    <van-nav-bar :title="type === '0' ? '创建家族' : '编辑家族'" left-arrow
-                 @click-left="back" @click-right="handleCreateOrEdit"
+    <van-nav-bar :title="title" left-arrow
+                 @click-left="$router.replace(dstRoute)" @click-right="handleCreateOrEdit"
     >
       <template #right>
         <van-icon name="passed" size="20"/>
@@ -80,6 +80,14 @@ export default {
     this.areaList = areaList
     this.type = this.$route.params.type
   },
+  computed: {
+    title() {
+      return this.type === '0' ? '创建家族' : (this.type === '1' ? '编辑家族' : '家族')
+    },
+    dstRoute() {
+      return this.type === '0' ? '/family/list' : (this.type === '1' ? '/family/manage' : '/')
+    }
+  },
   methods: {
     confirmArea(area) {
       area = area.filter((item) => !!item).map((item) => item.name).join('/')
@@ -92,16 +100,8 @@ export default {
       this.showAreaPopup = false;
     },
     handleCreateOrEdit() {
-      console.log(this.formData)
       this.formData.cover = this.imgList[0].url
-      this.$toast.success('操作成功')
-    },
-    back() {
-      if (this.type === '0') {
-        this.$router.replace('/family/list')
-      } else if (this.type === '1') {
-        this.$router.replace('/family/manage')
-      }
+      this.$toast('操作成功')
     }
   }
 }

@@ -6,7 +6,7 @@
 </template>
 
 <script>
-import footerTab from "@/components/footer-tab";
+import footerTab from "@/components/layout/footer-tab";
 
 export default {
   name: 'App',
@@ -15,6 +15,7 @@ export default {
 </script>
 
 <style>
+/* 封面图片居中显示 */
 .flex-container {
   display: flex;
 }
@@ -24,35 +25,54 @@ export default {
   padding: 30px
 }
 
+/* 块级按钮 */
 .block-btn-container {
   margin: 16px;
 }
 
+/* 详细地址文本域背景色 */
 .full-address-container .van-field {
   background-color: #f7f8fa;
 }
 
-.title-container {
+/* 头像右侧文本间距和字体 */
+.portrait-title-container {
   margin-left: 10px;
 }
 
-.title-container p {
+.portrait-title-container p {
   margin: 0 0;
 }
 
-.title-container .title {
+.portrait-title-container .title {
   font-weight: bold;
+}
+
+/* 步骤条文字间距 */
+.van-step__title h3 {
+  margin: 5px 0;
 }
 
 .van-step__title p {
   margin: 1px 0;
 }
 
-.van-step__title h3 {
-  margin: 5px 0;
-}
-
+/* 滑动单元格按钮 */
 .van-swipe-cell button {
   height: 100%;
+}
+
+/* 右侧、底部间距 */
+.right {
+  margin-right: 1px;
+}
+
+.bottom {
+  margin-bottom: 1px;
+}
+
+/* 弹性单元格标题 */
+.flex-cell-title .van-cell__title {
+  display: flex;
 }
 </style>

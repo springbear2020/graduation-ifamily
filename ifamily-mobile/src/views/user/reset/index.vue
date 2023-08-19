@@ -1,6 +1,6 @@
 <template>
   <div>
-    <van-nav-bar left-arrow :title="title" @click-left="back"/>
+    <van-nav-bar left-arrow :title="title" @click-left="$router.replace(dstRoute)"/>
 
     <!-- echarts 绘制 LOGO 图标文字：百家谱 -->
     <logo-pattern/>
@@ -45,7 +45,7 @@ export default {
       rePassword: '',
       agree: false,
       // [0]用户注册 [1]忘记密码 [2]修改密码
-      type: '0'
+      type: '0',
     };
   },
   mounted() {
@@ -54,6 +54,9 @@ export default {
   computed: {
     title() {
       return this.type === '0' ? '用户注册' : (this.type === '1' ? '忘记密码' : '修改密码')
+    },
+    dstRoute() {
+      return this.type === '2' ? '/mine/settings/security' : '/user/login'
     }
   },
   methods: {
@@ -61,15 +64,6 @@ export default {
     handleRegisterOrReset(data) {
       console.log(data)
       this.$router.replace('/user/login')
-    },
-    back() {
-      // 修改密码，返回个人账号安全界面
-      if (this.type === '2') {
-        this.$router.replace('/mine/settings/security')
-      } else {
-        // 返回密码登录页面
-        this.$router.replace('/user/login')
-      }
     }
   }
 }

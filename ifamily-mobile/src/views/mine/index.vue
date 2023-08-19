@@ -10,13 +10,6 @@
     <van-card centered title="你不懂我&我不怪你" desc="长相思兮长相忆，短相思兮无穷极。"
               thumb="https://img01.yzcdn.cn/vant/leaf.jpg"/>
 
-    <!-- 个人中心宫格 -->
-    <van-grid :column-num="3">
-      <van-grid-item icon="contact" text="好友"/>
-      <van-grid-item icon="star-o" text="收藏"/>
-      <van-grid-item icon="clock-o" text="历史"/>
-    </van-grid>
-
     <van-cell-group>
       <van-cell title="个人资料" icon="user-circle-o" is-link/>
       <van-cell title="我的家庭" icon="wap-home-o" is-link/>

@@ -7,7 +7,7 @@ let router = new VueRouter({
     routes: [
         {
             path: '/',
-            redirect: '/home'
+            redirect: '/family'
         },
         // 404
         {
@@ -23,15 +23,11 @@ let router = new VueRouter({
             path: '/user/reset/:type',
             component: () => import('@/views/user/reset'),
         },
-        // home
+        // message
         {
-            path: '/home',
-            component: () => import('@/views/home'),
+            path: '/message',
+            component: () => import('@/views/message'),
             meta: {footerShow: true}
-        },
-        {
-            path: '/home/message',
-            component: () => import('@/views/home/message'),
         },
         // mine
         {
@@ -76,6 +72,14 @@ let router = new VueRouter({
         {
             path: '/family/tree',
             component: () => import('@/views/family/tree'),
+        },
+        {
+            path: '/family/notice',
+            component: () => import('@/views/family/notice'),
+        },
+        {
+            path: '/family/records',
+            component: () => import('@/views/family/records'),
         },
         {
             path: '/family/manage',

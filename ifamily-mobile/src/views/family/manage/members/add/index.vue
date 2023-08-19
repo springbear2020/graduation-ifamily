@@ -1,6 +1,6 @@
 <template>
   <div>
-    <van-nav-bar title="添加亲人" left-arrow @click-left="back"/>
+    <van-nav-bar title="添加亲人" left-arrow @click-left="$router.replace(dstRoute)"/>
 
     <!-- 头像、姓名 -->
     <van-grid :border="false" :column-num="1">
@@ -66,6 +66,11 @@ export default {
   mounted() {
     this.type = this.$route.params.type
   },
+  computed: {
+    dstRoute() {
+      return this.type === '0' ? '/family/tree' : (this.type === '1' ? '/family/manage/members' : '/')
+    }
+  },
   methods: {
     addRelatives(type) {
       // [1]父亲 [2]母亲 [3]配偶 [4]子女 [5]同胞
@@ -99,13 +104,6 @@ export default {
       console.log(formData)
       this.$toast.success('添加成功')
       this.showForm = false
-    },
-    back() {
-      if (this.type === '0') {
-        this.$router.replace('/family/tree')
-      } else if (this.type === '1') {
-        this.$router.replace('/family/manage/members')
-      }
     }
   }
 }

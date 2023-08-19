@@ -2,7 +2,7 @@
   <div>
     <van-nav-bar title="访问控制" left-arrow
                  @click-left="$router.replace('/family/manage')"
-                 @click-right="$toast.success('修改成功')"
+                 @click-right="$toast('修改成功')"
     >
       <template #right>
         <van-icon name="passed" size="20"/>
@@ -28,34 +28,36 @@
       </van-cell>
     </van-radio-group>
 
-    <!-- 额外人员、不给谁看 -->
+    <!-- 额外人员、 -->
     <van-collapse v-model="activeName" accordion>
       <van-collapse-item title="额外人员" name="1">
-        <van-search show-action v-model="uid" placeholder="UID" @search="$toast.success('额外人员')">
+        <!-- 搜索框 -->
+        <van-search show-action v-model="uid" placeholder="UID" @search="$toast('额外人员')">
           <template #action>
-            <div @click="$toast.success('额外人员')">搜索</div>
+            <div @click="$toast('额外人员')">搜索</div>
           </template>
         </van-search>
-        <van-swipe-cell v-for="i in 3">
-          <portrait-desc :person="person" class="van-hairline--top-bottom"/>
-          <!-- 左滑删除 -->
+        <!-- 人员列表 -->
+        <van-swipe-cell v-for="i in 3" :key="i">
+          <portrait-desc :person="person"/>
           <template #right>
-            <van-button square type="danger" text="删除" @click="$toast.fail('移除')"/>
+            <van-button square type="danger" text="删除" @click="$toast('移除')"/>
           </template>
         </van-swipe-cell>
       </van-collapse-item>
-
+      <!-- 不给谁看 -->
       <van-collapse-item title="不给谁看" name="2">
-        <van-search show-action v-model="uid" placeholder="UID" @search="$toast.success('不给谁看')">
+        <!-- 搜索框 -->
+        <van-search show-action v-model="uid" placeholder="UID" @search="$toast('不给谁看')">
           <template #action>
-            <div @click="$toast.success('不给谁看')">搜索</div>
+            <div @click="$toast('不给谁看')">搜索</div>
           </template>
         </van-search>
-        <van-swipe-cell v-for="i in 5">
-          <portrait-desc :person="person" class="van-hairline--top-bottom"/>
-          <!-- 左滑删除 -->
+        <!-- 人员列表 -->
+        <van-swipe-cell v-for="i in 5" :key="i">
+          <portrait-desc :person="person"/>
           <template #right>
-            <van-button square type="danger" text="删除" @click="$toast.fail('移除')"/>
+            <van-button square type="danger" text="删除" @click="$toast('移除')"/>
           </template>
         </van-swipe-cell>
       </van-collapse-item>

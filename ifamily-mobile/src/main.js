@@ -4,19 +4,23 @@ import router from '@/router'
 import Vant from 'vant'
 import 'vant/lib/index.css'
 import './assets/iconfont/iconfont.css'
+import logoPattern from '@/components/layout/logo-pattern'
+import sexTag from '@/components/tag/sex-tag'
+import descTag from '@/components/tag/desc-tag'
+import peopleTag from '@/components/tag/people-tag'
+import imageList from '@/components/image-list'
+import portraitDesc from '@/components/portrait-desc'
+import socialMoments from '@/components/social-moments'
+
+Vue.component('logo-pattern', logoPattern)
+Vue.component('sex-tag', sexTag)
+Vue.component('desc-tag', descTag)
+Vue.component('people-tag', peopleTag)
+Vue.component('image-list', imageList)
+Vue.component('portrait-desc', portraitDesc)
+Vue.component('social-moments', socialMoments)
 
 Vue.use(Vant)
-
-import logoPattern from '@/components/logo-pattern'
-
-Vue.component('logo-pattern',logoPattern)
-Vue.component('people-tag', () => import('@/components/people-tag'))
-Vue.component('desc-tag', () => import('@/components/desc-tag'))
-Vue.component('social-moments', () => import('@/components/social-moments'))
-Vue.component('image-list', () => import('@/components/image-list'))
-Vue.component('message-box', () => import('@/components/message-box'))
-Vue.component('portrait-desc', () => import('@/components/portrait-desc'))
-Vue.component('sex-tag', () => import('@/components/sex-tag'))
 
 Vue.config.productionTip = false
 

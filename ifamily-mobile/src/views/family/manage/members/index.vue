@@ -11,7 +11,7 @@
 
     <!-- 家族成员 -->
     <van-cell-group>
-      <van-cell is-link center @click="memberManageSheet = true">
+      <van-cell is-link center @click="memberManageSheet = true" class="flex-cell-title">
         <template #title>
           <van-image round width="50" height="50" src="https://img01.yzcdn.cn/vant/cat.jpeg"/>
           <p class="name-container">
@@ -63,15 +63,11 @@ export default {
 </script>
 
 <style scoped>
-.van-cell__title {
-  display: flex;
-}
-
 .name-container {
   margin-left: 10px;
 }
 
 .iconfont {
-  margin-left: 5px;
+  margin-left: 2px;
 }
 </style>
