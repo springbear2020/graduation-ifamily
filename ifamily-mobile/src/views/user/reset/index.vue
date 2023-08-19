@@ -37,8 +37,6 @@
       </van-field>
 
       <div class="block-button-container">
-        <div class="van-field__error-message">{{ error }}</div>
-
         <van-button block type="info" native-type="submit">确认</van-button>
       </div>
     </van-form>
@@ -46,17 +44,23 @@
 </template>
 
 <script>
-import {user} from '@/mixin/user'
 import {code} from '@/mixin/code'
 import {setToken} from "@/utils/auth";
 
 export default {
   name: "index",
-  mixins: [user, code],
+  mixins: [code],
   data() {
     return {
       // [0]用户注册 [1]忘记密码 [2]修改密码
       type: '0',
+      formData: {
+        account: undefined,
+        password: undefined,
+        code: undefined,
+      },
+      agree: false,
+      passwordFieldType: 'password'
     };
   },
   mounted() {
@@ -75,6 +79,9 @@ export default {
     },
     label() {
       return this.type === '0' ? '密码' : '新密码';
+    },
+    rightIcon() {
+      return this.passwordFieldType === 'password' ? 'closed-eye' : 'eye-o';
     }
   },
   methods: {
@@ -93,7 +100,7 @@ export default {
         setToken(token);
         this.$router.replace('/home')
       }).catch(err => {
-        this.error = err.data || err.desc
+        this.$toast({message: err.data || err.desc, position: 'bottom'})
       })
     },
     resetPassword() {
@@ -107,7 +114,7 @@ export default {
           this.$router.replace('/user/login')
         }, 2000)
       }).catch(err => {
-        this.error = err.data || err.desc
+        this.$toast({message: err.data || err.desc, position: 'bottom'})
       })
     }
   }
@@ -117,9 +124,5 @@ export default {
 <style scoped>
 .block-button-container {
   margin: 8px 16px;
-}
-
-.van-field__error-message {
-  margin-bottom: 8px;
 }
 </style>

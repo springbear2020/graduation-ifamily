@@ -7,8 +7,8 @@ import cn.edu.whut.springbear.ifamily.genealogy.pojo.po.GenealogyDO;
 import cn.edu.whut.springbear.ifamily.genealogy.pojo.po.GenealogyProfileDO;
 import cn.edu.whut.springbear.ifamily.genealogy.pojo.po.GenealogyUserDO;
 import cn.edu.whut.springbear.ifamily.genealogy.pojo.query.GenealogyQuery;
-import cn.edu.whut.springbear.ifamily.genealogy.pojo.vo.GenealogyAdminVO;
 import cn.edu.whut.springbear.ifamily.genealogy.pojo.vo.GenealogyVO;
+import cn.edu.whut.springbear.ifamily.genealogy.pojo.vo.PeopleCardVO;
 import cn.edu.whut.springbear.ifamily.genealogy.pojo.vo.PeopleVO;
 import cn.edu.whut.springbear.ifamily.genealogy.service.*;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -86,11 +86,11 @@ public class GenealogyServiceImpl extends ServiceImpl<GenealogyMapper, Genealogy
             BeanUtils.copyProperties(genealogyDO, genealogyVO);
             // 查询家族创建者信息
             PeopleVO genealogyCreator = this.peopleService.getByUserGenealogyId(genealogyDO.getCreatorUserId(), item.getGenealogyId());
-            GenealogyAdminVO genealogyCreatorVO = new GenealogyAdminVO();
+            PeopleCardVO genealogyCreatorVO = new PeopleCardVO();
             BeanUtils.copyProperties(genealogyCreator, genealogyCreatorVO);
             genealogyVO.setCreator(genealogyCreatorVO);
             // 查询家族管理员列表信息
-            List<GenealogyAdminVO> genealogyAdmins = this.genealogyAdminService.listAdminsOfGenealogy(item.getGenealogyId());
+            List<PeopleCardVO> genealogyAdmins = this.genealogyAdminService.listAdminsOfGenealogy(item.getGenealogyId());
             genealogyVO.setAdmins(genealogyAdmins);
             // 设置当前用户家族的默认状态
             genealogyVO.setDefaultGenealogy(item.getDefaultGenealogy());

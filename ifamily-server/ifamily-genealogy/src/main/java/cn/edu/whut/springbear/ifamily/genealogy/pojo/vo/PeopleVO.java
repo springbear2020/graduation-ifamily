@@ -14,6 +14,8 @@ public class PeopleVO implements Serializable {
 
     private static final long serialVersionUID = 2234229965237156379L;
 
+    private Long id;
+
     private String portrait;
 
     private String surname;
@@ -46,12 +48,6 @@ public class PeopleVO implements Serializable {
 
     private String familyRelationRemark;
 
-    private Long userId;
-
-    private Long fatherId;
-
-    private Long motherId;
-
-    private Long genealogyId;
+    private Long husbandId;
 
 }

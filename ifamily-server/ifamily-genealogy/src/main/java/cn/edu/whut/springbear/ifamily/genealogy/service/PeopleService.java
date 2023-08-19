@@ -1,11 +1,10 @@
 package cn.edu.whut.springbear.ifamily.genealogy.service;
 
-import cn.edu.whut.springbear.ifamily.genealogy.pojo.bo.GenealogyMemberTreeBO;
+import cn.edu.whut.springbear.ifamily.genealogy.pojo.bo.PeopleDetailsBO;
 import cn.edu.whut.springbear.ifamily.genealogy.pojo.po.PeopleDO;
+import cn.edu.whut.springbear.ifamily.genealogy.pojo.query.PeopleQuery;
 import cn.edu.whut.springbear.ifamily.genealogy.pojo.vo.PeopleVO;
 import com.baomidou.mybatisplus.extension.service.IService;
-
-import java.util.List;
 
 /**
  * @author Spring-_-Bear
@@ -14,41 +13,63 @@ import java.util.List;
 public interface PeopleService extends IService<PeopleDO> {
 
     /**
-     * 查询家族人员世代分组列表
-     *
-     * @param genealogyId 家族 ID
-     * @return 返回 Map 中包含了家族世代列表和每个列表下的家族人员
-     */
-    Object listGenerationMembersOfGenealogy(Long genealogyId);
-
-    /**
-     * 查询家族下的世代集合，升序排列
-     *
-     * @param genealogyId 家族 ID
-     * @return 家族世代集合
-     */
-    List<Integer> listGenerationNumsOfGenealogy(Long genealogyId);
-
-    /**
-     * 查询家族世代下的所有人员
-     *
-     * @param genealogyId 家族 ID
-     * @param generation  家族世代
-     * @return 家族人员列表
-     */
-    List<PeopleDO> listPeopleOfGeneration(Long genealogyId, Integer generation);
-
-    /**
-     * 查询家族成员树谱人员列表
-     *
-     * @param genealogyId 家族 ID
-     * @return 家族人员树谱结构数据
-     */
-    GenealogyMemberTreeBO listMemberTree(Long genealogyId);
-
-    /**
      * 根据用户 ID 和家族 ID 查询家族人员信息
      */
     PeopleVO getByUserGenealogyId(Long userId, Long genealogyId);
+
+    /**
+     * 查询家族人员详细信息，包括个人详细信息以及家庭关系
+     */
+    PeopleDetailsBO getGenealogyPeopleProfileDetails(Long peopleId);
+
+    /**
+     * 根据人员 ID 查询家族人员信息
+     */
+    PeopleVO getPeopleById(Long peopleId);
+
+    /**
+     * 根据 ID 更新家族人员信息
+     */
+    boolean updatePeopleById(PeopleQuery peopleQuery);
+
+    /**
+     * 添加父亲
+     *
+     * @param mePeopleId “我” 的家族 ID
+     * @param fatherInfo 父亲的家族信息
+     */
+    boolean savePeopleFather(Long mePeopleId, PeopleQuery fatherInfo);
+
+    /**
+     * 添加母亲
+     *
+     * @param mePeopleId “我” 的家族 ID
+     * @param motherInfo 母亲的家族信息
+     */
+    boolean savePeopleMother(Long mePeopleId, PeopleQuery motherInfo);
+
+    /**
+     * 添加妻子
+     *
+     * @param mePeopleId “我” 的家族 ID
+     * @param wifeInfo   妻子的家族信息
+     */
+    boolean savePeopleWife(Long mePeopleId, PeopleQuery wifeInfo);
+
+    /**
+     * 添加孩子
+     *
+     * @param mePeopleId “我” 的家族 ID
+     * @param childInfo  孩子的家族信息
+     */
+    boolean savePeopleChild(Long mePeopleId, PeopleQuery childInfo);
+
+    /**
+     * 添加同胞
+     *
+     * @param mePeopleId     “我” 的家族 ID
+     * @param compatriotInfo 同胞的家族信息
+     */
+    boolean savePeopleCompatriot(Long mePeopleId, PeopleQuery compatriotInfo);
 
 }

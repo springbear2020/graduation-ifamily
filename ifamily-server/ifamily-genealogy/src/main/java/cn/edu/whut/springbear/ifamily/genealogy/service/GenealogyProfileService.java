@@ -19,4 +19,14 @@ public interface GenealogyProfileService extends IService<GenealogyProfileDO> {
      */
     GenealogyProfileDO getByGenealogyId(Long genealogyId);
 
+    /**
+     * 将家族总人数 +1，根据性别男性或女性人数 +1，根据生逝状态健在或已逝人数 +1
+     *
+     * @param genealogyId 家族 ID
+     * @param gender      性别：[0]男 [1]女
+     * @param alive       生逝状态：[true]健在 [false]已逝
+     * @return [1]更新成功
+     */
+    Integer genealogyPeopleProfileIncreaseOne(Long genealogyId, Integer gender, Boolean alive);
+
 }

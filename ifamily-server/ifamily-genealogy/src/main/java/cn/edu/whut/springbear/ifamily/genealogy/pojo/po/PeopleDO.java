@@ -101,11 +101,6 @@ public class PeopleDO extends AbstractBaseDO {
     private String familyRelationRemark;
 
     /**
-     * 用户 ID
-     */
-    private Long userId;
-
-    /**
      * 父亲 ID
      */
     private Long fatherId;
@@ -116,8 +111,18 @@ public class PeopleDO extends AbstractBaseDO {
     private Long motherId;
 
     /**
+     * 丈夫 ID
+     */
+    private Long husbandId;
+
+    /**
      * 家族 ID
      */
     private Long genealogyId;
+
+    /**
+     * 用户 ID
+     */
+    private Long userId;
 
 }

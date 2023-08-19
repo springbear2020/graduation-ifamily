@@ -5,7 +5,6 @@ export const code = {
             buttonText: '获取验证码',
             // [0]邮箱账号 [1]手机账号
             accountType: undefined,
-            error: ''
         }
     },
     methods: {
@@ -27,11 +26,11 @@ export const code = {
         handleSendCode() {
             // 验证手机号或邮箱格式
             const result = this.validatePhoneOrEmail();
-            if (result) {
-                this.error = ''
+            if (!result) {
+                const msg = this.type === '0' ? '邮箱地址格式不正确，请重新输入' : '手机号格式不正确，请重新输入'
+                this.$toast({message: msg, position: 'bottom'})
             } else {
-                this.error = this.type === '0' ? '邮箱地址格式不正确，请重新输入' : '手机号格式不正确，请重新输入'
-                return
+                this.return
             }
 
             if (this.countdown > 0) {
@@ -51,12 +50,12 @@ export const code = {
             this.$api.manager.sendEmailCode({email: this.formData.account}).then(() => {
                 this.$toast.success('发送成功');
             }).catch(err => {
-                this.error = err.data || err.desc
+                this.$toast({message: err.data || err.desc, position: 'bottom'})
             })
         },
         // TODO 发送手机验证码
         sendPhoneVerifyCode() {
-            this.$toast('手机验证码服务暂不可用，请使用邮箱验证码')
+            this.$toast({message: '手机验证码服务暂不可用\n请使用邮箱验证码', position: 'bottom'})
         },
         // 锁定获取验证码按钮
         lockButton() {

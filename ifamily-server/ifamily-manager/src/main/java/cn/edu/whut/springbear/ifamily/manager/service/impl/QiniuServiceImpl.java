@@ -62,11 +62,11 @@ public class QiniuServiceImpl implements QiniuService {
             qiniuTokenLogDO.setToken(token);
             qiniuTokenLogDO.setStatus(SuccessStatusEnum.SUCCESS.getCode());
         } catch (Exception e) {
+            qiniuTokenLogDO.setToken("");
             log.error(e.getMessage());
             return null;
         } finally {
             // 保存 token 获取记录
-            qiniuTokenLogDO.setToken("");
             qiniuTokenLogService.save(qiniuTokenLogDO);
         }
 

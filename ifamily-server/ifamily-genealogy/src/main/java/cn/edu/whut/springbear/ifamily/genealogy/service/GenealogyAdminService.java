@@ -1,7 +1,7 @@
 package cn.edu.whut.springbear.ifamily.genealogy.service;
 
 import cn.edu.whut.springbear.ifamily.genealogy.pojo.po.GenealogyAdminDO;
-import cn.edu.whut.springbear.ifamily.genealogy.pojo.vo.GenealogyAdminVO;
+import cn.edu.whut.springbear.ifamily.genealogy.pojo.vo.PeopleCardVO;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 import java.util.List;
@@ -15,11 +15,6 @@ public interface GenealogyAdminService extends IService<GenealogyAdminDO> {
     /**
      * 查询家族管理员列表
      */
-    List<GenealogyAdminVO> listAdminsOfGenealogy(Long genealogyId);
-
-    /**
-     * 查询家族管理员的 ID 集合
-     */
-    List<Long> listAdminUserIdsOfGenealogy(Long genealogyId);
+    List<PeopleCardVO> listAdminsOfGenealogy(Long genealogyId);
 
 }

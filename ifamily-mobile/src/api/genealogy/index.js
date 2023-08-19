@@ -12,7 +12,7 @@ export function createGenealogy(data) {
 
 export function listGenealogiesOfUser() {
     return request({
-        url: `${superviseBaseUrl}/list`,
+        url: `${superviseBaseUrl}`,
         method: 'get',
     })
 }
@@ -29,19 +29,5 @@ export function updateDefaultGenealogy(data) {
         url: `${superviseBaseUrl}`,
         method: 'put',
         data
-    })
-}
-
-export function memberTreeOfGenealogy() {
-    return request({
-        url: `${superviseBaseUrl}/people/tree`,
-        method: 'get'
-    })
-}
-
-export function generationPeopleListOfGenealogy() {
-    return request({
-        url: `${superviseBaseUrl}/people/generation`,
-        method: 'get'
     })
 }

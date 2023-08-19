@@ -51,8 +51,6 @@
       </van-field>
 
       <div class="block-button-container">
-        <div class="van-field__error-message">{{ error }}</div>
-
         <van-button block type="info">登录</van-button>
       </div>
     </van-form>
@@ -66,15 +64,30 @@
 </template>
 
 <script>
-import {user} from '@/mixin/user'
 import {code} from '@/mixin/code'
 
 export default {
   name: "index",
-  mixins: [user, code],
+  mixins: [code],
+  data() {
+    return {
+      formData: {
+        account: undefined,
+        password: undefined,
+        code: undefined,
+        // [0]密码登录 [1]验证码登录
+        loginType: '0',
+      },
+      agree: false,
+      passwordFieldType: 'password'
+    }
+  },
   computed: {
     rightText() {
       return this.formData.loginType === '0' ? '验证码登录' : (this.formData.loginType === '1' ? '密码登录' : '');
+    },
+    rightIcon() {
+      return this.passwordFieldType === 'password' ? 'closed-eye' : 'eye-o';
     }
   },
   methods: {
@@ -84,7 +97,7 @@ export default {
         const dstRoute = this.$route.query.redirect ? this.$route.query.redirect : '/home'
         this.$router.replace(dstRoute)
       }).catch(err => {
-        this.error = err.data || err.desc
+        this.$toast({message: err.data || err.desc, position: 'bottom'})
       });
     },
   }
@@ -94,9 +107,5 @@ export default {
 <style scoped>
 .block-button-container {
   margin: 8px 16px;
-}
-
-.van-field__error-message {
-  margin-bottom: 8px;
 }
 </style>

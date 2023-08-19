@@ -41,8 +41,8 @@ public class GenealogySuperviseController {
         return saveResult ? CommonResult.success() : CommonResult.failed(SystemMessageConstants.SYSTEM_EXCEPTION);
     }
 
-    @ApiOperation("查询用户所有家族和概况")
-    @GetMapping("/list")
+    @ApiOperation("查询用户所有家族和信息概况")
+    @GetMapping
     public CommonResult<Object> listGenealogiesOfUser() {
         UserDO currentUser = securityUserService.getCurrentUser();
         List<GenealogyVO> genealogiesOfUser = this.genealogyService.listGenealogiesWithProfileOfUser(currentUser.getId());
@@ -57,7 +57,7 @@ public class GenealogySuperviseController {
         return result ? CommonResult.success() : CommonResult.failed("设置默认家族失败");
     }
 
-    @ApiOperation("更新用户默认家族")
+    @ApiOperation("更新用户默认家族资料")
     @PutMapping
     public CommonResult<String> editDefaultGenealogy(@Validated @RequestBody GenealogyQuery genealogyQuery) {
         UserDO currentUser = securityUserService.getCurrentUser();

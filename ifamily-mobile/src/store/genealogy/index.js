@@ -1,10 +1,13 @@
-import {listGenealogiesOfUser, memberTreeOfGenealogy} from "@/api/genealogy";
+import {listGenealogiesOfUser} from "@/api/genealogy";
+import {memberTreeOfGenealogy} from "@/api/genealogy/member";
+import {currentUserPeople} from "@/api/genealogy/people";
 
 export default {
     namespaced: true,
     state: {
         genealogyList: [],
-        tree: {}
+        tree: {},
+        userPeople: {}
     },
     getters: {
         defaultGenealogy(state) {
@@ -19,9 +22,16 @@ export default {
         CLEAR_STATE(state) {
             state.genealogyList = []
             state.tree = {}
+            state.userPeople = {}
         },
         SET_GENEALOGY_TREE(state, tree) {
             state.tree = tree
+        },
+        SET_USER_PEOPLE(state, people) {
+            state.userPeople = people
+        },
+        REMOVE_TREE(state) {
+            state.tree = {}
         }
     },
     actions: {
@@ -44,6 +54,16 @@ export default {
                     // 为祖先节点添加 root-node 样式名称使得其居中展示
                     tree.class = ['root-node']
                     commit('SET_GENEALOGY_TREE', tree)
+                    resolve()
+                }).catch(err => {
+                    reject(err)
+                })
+            })
+        },
+        getPeopleOfUser({commit}) {
+            return new Promise((resolve, reject) => {
+                currentUserPeople().then(people => {
+                    commit('SET_USER_PEOPLE', people)
                     resolve()
                 }).catch(err => {
                     reject(err)

@@ -36,11 +36,11 @@ export default {
       const defaultGenealogyId = this.$store.getters["genealogy/defaultGenealogy"].id
       if (genealogyId !== defaultGenealogyId) {
         this.$api.genealogy.setDefaultGenealogyOfUser(genealogyId).then(() => {
-          // 查询最新的家族信息
-          this.$store.dispatch('genealogy/listGenealogyList')
+          // 切换家族，移除已有的所有家族信息
+          this.$store.commit('genealogy/CLEAR_STATE')
           this.$router.replace('/family')
         }).catch(err => {
-          this.$toast.fail(err.data || err.desc)
+          this.$toast({message: err.data || err.desc, position: 'bottom'})
         })
       } else {
         this.$router.replace('/family')

@@ -11,7 +11,7 @@ export function sendEmailCode(params) {
     })
 }
 
-export function getAvatarToken(params) {
+export function getImageToken(params) {
     return request({
         url: `${superviseBaseUrl}/uploader/qiniu/img/token`,
         method: 'get',

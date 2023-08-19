@@ -14,8 +14,6 @@
                    @click-right-icon="passwordFieldType = (passwordFieldType === 'password' ? 'text' : 'password')"
         />
         <div class="block-button-container">
-          <div class="van-field__error-message">{{ error }}</div>
-
           <van-button block type="info" :disabled="username === user.username || !username">
             立即修改
           </van-button>
@@ -32,9 +30,8 @@ export default {
   name: "index",
   data() {
     return {
-      username: '',
-      password: '',
-      error: '',
+      username: undefined,
+      password: undefined,
       passwordFieldType: 'password'
     }
   },
@@ -55,13 +52,13 @@ export default {
     handleUpdate() {
       // [1]用户名 [2]邮箱 [3]手机
       this.$api.user.updateUserPrivacy(this.username, this.password, 1).then(() => {
-        // 退出登录，移除仓库信息
+        // 退出登录，移除仓库信息，前往登录页
         this.$store.dispatch('user/logout')
         this.$store.dispatch('genealogy/logout')
         this.$router.replace('/user/login')
         this.$toast('UID 修改成功，请重新登录')
       }).catch(err => {
-        this.error = err.data || err.desc
+        this.$toast({message: err.data || err.desc, position: 'bottom'})
       })
     }
   }
@@ -80,9 +77,5 @@ export default {
   top: 0;
   bottom: 0;
   margin: auto;
-}
-
-.van-field__error-message {
-  margin-bottom: 8px;
 }
 </style>

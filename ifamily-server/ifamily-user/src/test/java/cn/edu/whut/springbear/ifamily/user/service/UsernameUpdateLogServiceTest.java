@@ -16,7 +16,7 @@ class UsernameUpdateLogServiceTest {
 
     @Test
     void getLatest() {
-        System.out.println(usernameUpdateLogService.getLatestOfUser(1L));
+        System.out.println(usernameUpdateLogService.getLatestOfUser(20L));
     }
 
 }

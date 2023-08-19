@@ -47,9 +47,7 @@
       <!-- 简介、字辈歌 -->
       <van-collapse v-model="activeNames">
         <van-collapse-item title="家族简介" name="1" :border="false">{{ defaultGenealogy.introduction }}</van-collapse-item>
-        <van-collapse-item :border="false" title="字辈歌" name="2">{{
-            defaultGenealogy.generationSong
-          }}
+        <van-collapse-item :border="false" title="字辈歌" name="2">{{ defaultGenealogy.generationSong }}
         </van-collapse-item>
       </van-collapse>
 
@@ -124,6 +122,6 @@ export default {
 }
 
 /deep/ .van-tag {
-  margin: 2px;
+  margin-right: 2px;
 }
 </style>

@@ -9,10 +9,8 @@
     <van-form>
       <van-field
           rows="1" autosize type="textarea" maxlength="30" show-word-limit
-          @blur="error = content.length > 0 ? '' : `${title}不能为空，请重新输入`"
           v-model="content" :label="title" :placeholder="title"
       />
-      <div class="van-field__error-message">{{ error }}</div>
     </van-form>
   </div>
 </template>
@@ -24,10 +22,9 @@ export default {
   name: "index",
   data() {
     return {
-      content: '',
+      content: undefined,
       // [0]编辑昵称 [1]编辑签名
       type: undefined,
-      error: ''
     }
   },
   mounted() {
@@ -36,6 +33,7 @@ export default {
       type = '0'
     }
     this.type = type
+    // 初始化原始昵称或签名
     this.content = type === '0' ? this.user.nickname : this.user.signature
   },
   computed: {
@@ -52,47 +50,37 @@ export default {
     handleUpdate() {
       // 空内容
       if (this.content.length <= 0) {
-        this.error = `${this.title}不能为空，请重新输入`
-        return;
-      } else {
-        this.error = ''
+        this.$toast({message: `${this.title}不能为空，请重新输入`, position: 'bottom'})
+        return
       }
 
       // [1]用户昵称 [2]个性签名 [3]头像地址
-      let content = ''
+      let oldContent = ''
       let type = 0;
       if (this.type === '0') {
         type = 1
-        content = this.user.nickname
+        oldContent = this.user.nickname
       } else if (this.type === '1') {
         type = 2
-        content = this.user.signature
+        oldContent = this.user.signature
       } else {
         return
       }
 
       // 内容是否发生修改
-      if (this.content === content) {
-        this.error = `${this.title}未修改`
-        return;
-      } else {
-        this.error = ''
+      if (this.content === oldContent) {
+        this.$toast({message: `${this.title}未修改`, position: 'bottom'})
+        return
       }
 
       this.$api.user.updateUserProfile(this.content, type).then(() => {
-        this.$toast.success('更新成功')
         // 移除用户信息，查询最新的用户信息
+        this.$toast.success('更新成功')
         this.$store.dispatch('user/getUser')
       }).catch((err) => {
-        this.error = err.data || err.desc
+        this.$toast({message: err.data || err.desc, position: 'bottom'})
       });
     },
   }
 }
 </script>
-
-<style scoped>
-.van-field__error-message {
-  padding: 10px 16px;
-}
-</style>

@@ -53,11 +53,11 @@ public class GenealogyVO implements Serializable {
     /**
      * 家族创建者
      */
-    private GenealogyAdminVO creator;
+    private PeopleCardVO creator;
 
     /**
      * 家族管理员列表
      */
-    private List<GenealogyAdminVO> admins;
+    private List<PeopleCardVO> admins;
 
 }

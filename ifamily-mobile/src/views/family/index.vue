@@ -35,15 +35,34 @@
 
 <script>
 import FamilyInfoCard from "@/components/business/family-info-card";
-import {genealogyList} from "@/mixin/genealogy-list";
 
 export default {
   name: "index",
   components: {FamilyInfoCard},
-  mixins: [genealogyList],
+  data() {
+    return {
+      emptyShow: false
+    }
+  },
   computed: {
     defaultGenealogy() {
       return this.$store.getters["genealogy/defaultGenealogy"]
+    }
+  },
+  mounted() {
+    // 初始化家族列表数据
+    this.initGenealogies()
+  },
+  methods: {
+    initGenealogies() {
+      // 未查询过家族列表信息则进行查询
+      const list = this.$store.state.genealogy.genealogyList
+      if (!list || list.length <= 0) {
+        this.$store.dispatch('genealogy/listGenealogyList').then(() => {
+        }).catch(() => {
+          this.emptyShow = true
+        })
+      }
     }
   }
 }

@@ -39,6 +39,6 @@ public abstract class AbstractBaseDO implements Serializable {
      */
     @TableLogic
     @TableField("is_deleted")
-    private Integer deleted;
+    protected Integer deleted;
 
 }

@@ -2,8 +2,7 @@ package cn.edu.whut.springbear.ifamily.genealogy.service.impl;
 
 import cn.edu.whut.springbear.ifamily.genealogy.mapper.GenealogyAdminMapper;
 import cn.edu.whut.springbear.ifamily.genealogy.pojo.po.GenealogyAdminDO;
-import cn.edu.whut.springbear.ifamily.genealogy.pojo.po.PeopleDO;
-import cn.edu.whut.springbear.ifamily.genealogy.pojo.vo.GenealogyAdminVO;
+import cn.edu.whut.springbear.ifamily.genealogy.pojo.vo.PeopleCardVO;
 import cn.edu.whut.springbear.ifamily.genealogy.pojo.vo.PeopleVO;
 import cn.edu.whut.springbear.ifamily.genealogy.service.GenealogyAdminService;
 import cn.edu.whut.springbear.ifamily.genealogy.service.PeopleService;
@@ -28,7 +27,7 @@ public class GenealogyAdminServiceImpl extends ServiceImpl<GenealogyAdminMapper,
     private PeopleService peopleService;
 
     @Override
-    public List<GenealogyAdminVO> listAdminsOfGenealogy(Long genealogyId) {
+    public List<PeopleCardVO> listAdminsOfGenealogy(Long genealogyId) {
         // 查询出所有的家族管理员 ID 集合
         List<Long> adminUserIds = this.listAdminUserIdsOfGenealogy(genealogyId);
         if (adminUserIds == null || adminUserIds.isEmpty()) {
@@ -36,11 +35,11 @@ public class GenealogyAdminServiceImpl extends ServiceImpl<GenealogyAdminMapper,
         }
 
         // 遍历所有的管理员用户 ID，查询其家族用户信息
-        List<GenealogyAdminVO> resultList = new ArrayList<>();
+        List<PeopleCardVO> resultList = new ArrayList<>();
         adminUserIds.forEach(userId -> {
             PeopleVO peopleVO = peopleService.getByUserGenealogyId(userId, genealogyId);
             if (peopleVO != null) {
-                GenealogyAdminVO genealogyAdminVO = new GenealogyAdminVO();
+                PeopleCardVO genealogyAdminVO = new PeopleCardVO();
                 BeanUtils.copyProperties(peopleVO, genealogyAdminVO);
                 resultList.add(genealogyAdminVO);
             }
@@ -48,8 +47,7 @@ public class GenealogyAdminServiceImpl extends ServiceImpl<GenealogyAdminMapper,
         return resultList;
     }
 
-    @Override
-    public List<Long> listAdminUserIdsOfGenealogy(Long genealogyId) {
+    private List<Long> listAdminUserIdsOfGenealogy(Long genealogyId) {
         QueryWrapper<GenealogyAdminDO> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("genealogy_id", genealogyId);
         List<GenealogyAdminDO> genealogyAdminList = this.baseMapper.selectList(queryWrapper);

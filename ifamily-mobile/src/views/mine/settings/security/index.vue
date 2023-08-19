@@ -11,7 +11,7 @@
 
     <!-- 账户注销弹出确认框 -->
     <van-dialog v-model="logoutShow" title="注销账号" show-cancel-button
-                :before-close="handleLogout" @closed="password = ''; error = ''">
+                :before-close="handleLogout" @closed="password = '';">
       <div class="van-dialog__message van-dialog__message--has-title">
         <p>尊敬的用户，您正在进行账号注销操作，在您决定注销账号之前，请注意以下提示：</p>
         <p>1. 如果您确定要注销账户，请注意这将删除您的所有数据和信息，包括您的个人和家族信息。</p>
@@ -25,7 +25,6 @@
                      v-model.trim="password" :right-icon="rightIcon" :type="passwordFieldType"
                      @click-right-icon="passwordFieldType = (passwordFieldType === 'password' ? 'text' : 'password')"
           />
-          <div class="van-field__error-message">{{ error }}</div>
         </van-form>
       </div>
     </van-dialog>
@@ -41,7 +40,6 @@ export default {
     return {
       logoutShow: false,
       password: '',
-      error: '',
       passwordFieldType: 'password'
     }
   },
@@ -60,10 +58,8 @@ export default {
       // 点击确认按钮，执行注销账号业务逻辑
       if ('confirm' === action) {
         if (this.password.length <= 0) {
-          this.error = '请输入您的密码'
+          this.$toast({message: '请输入您的密码', position: 'bottom'})
           return done(false)
-        } else {
-          this.error = ''
         }
 
         // 请求服务器注销账号，携带用户密码
@@ -76,7 +72,7 @@ export default {
           this.$toast.success('注销成功')
           return done(true)
         }).catch(err => {
-          this.error = err.data || err.desc
+          this.$toast({message: err.data || err.desc, position: 'bottom'})
         })
         return done(false)
       }
@@ -98,9 +94,5 @@ export default {
 
 .van-dialog__message p {
   margin: 8px 0;
-}
-
-.van-field__error-message {
-  margin: 0 16px;
 }
 </style>

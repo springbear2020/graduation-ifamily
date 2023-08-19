@@ -5,7 +5,9 @@
     <van-cell title="头像" center class="user-avatar-cell">
       <template #default>
         <van-uploader max-count="1" :after-read="afterRead" v-model="fileList"
-                      :max-size="5 * 1024 * 1024" @oversize="$toast('文件大小不能超过 5MB')" :before-read="beforeRead"/>
+                      :max-size="5 * 1024 * 1024" :before-read="beforeRead"
+                      @oversize="$toast({message: '文件大小不能超过 5MB', position: 'bottom'})"
+        />
       </template>
     </van-cell>
     <van-cell title="昵称" is-link to="/mine/info/form/0" center :value="user.nickname"/>
@@ -55,7 +57,7 @@ export default {
         this.$store.dispatch('user/getUser')
         this.$toast.success('更新成功')
       }).catch(() => {
-        this.$toast.fail('更新失败')
+        this.$toast({message: '更新失败', position: 'bottom'})
       });
     }
   }

@@ -9,7 +9,6 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
-import java.util.List;
 
 /**
  * @author Spring-_-Bear
@@ -22,13 +21,8 @@ public class UsernameUpdateLogServiceImpl extends ServiceImpl<UsernameUpdateLogM
     public UsernameUpdateLogDO getLatestOfUser(Long userId) {
         QueryWrapper<UsernameUpdateLogDO> queryWrapper = new QueryWrapper<>();
         // 根据 ID 查询用户用户名修改记录，而后根据创建时间逆序排序，取第一条修改记录返回
-        queryWrapper.eq("user_id", userId).orderByDesc("created");
-        List<UsernameUpdateLogDO> list = this.baseMapper.selectList(queryWrapper);
-        if (list == null || list.isEmpty()) {
-            return null;
-        }
-
-        return list.get(0);
+        queryWrapper.eq("user_id", userId).orderByDesc("created").last("limit 1");
+        return this.baseMapper.selectOne(queryWrapper);
     }
 
     @Override

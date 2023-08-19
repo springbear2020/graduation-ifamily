@@ -211,7 +211,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
         // 验证用户输入的用户名是否已被占用
         UserDO otherUser = this.getUserByUsername(username);
         if (otherUser != null) {
-            throw new IllegalConditionException("用户名已被占用，请重新输入");
+            throw new IllegalConditionException("UID 已被占用，请重新输入");
         }
 
         // 查询当前用户用户名的上次更新时间，一年内只允许更新一次

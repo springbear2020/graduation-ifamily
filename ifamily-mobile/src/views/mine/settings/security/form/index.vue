@@ -16,8 +16,6 @@
         </van-button>
       </template>
     </van-field>
-
-    <div class="van-field__error-message">{{ error }}</div>
   </div>
 </template>
 
@@ -31,8 +29,8 @@ export default {
   data() {
     return {
       formData: {
-        account: '',
-        code: ''
+        account: undefined,
+        code: undefined
       },
       // [0]邮箱 [1]手机
       type: '0',
@@ -58,53 +56,42 @@ export default {
   methods: {
     handleUpdate() {
       // 验证手机号或邮箱格式
-      const result = this.validatePhoneOrEmail();
-      if (result) {
-        this.error = ''
-      } else {
-        this.error = this.type === '0' ? '邮箱地址格式不正确，请重新输入' : '手机号格式不正确，请重新输入'
+      if (!this.validatePhoneOrEmail()) {
+        const msg = this.type === '0' ? '邮箱地址格式不正确，请重新输入' : '手机号格式不正确，请重新输入'
+        this.$toast({message: msg, position: 'bottom'})
         return
       }
 
       // 信息内容是否未更改
       if (this.type === '0') {
-        // 校验邮箱是否发生修改
         if (this.formData.account === this.user.email) {
-          this.error = '新旧邮箱一致，请重新输入'
-          return;
+          this.$toast({message: '新旧邮箱一致，请重新输入', position: 'bottom'})
+          return
         }
       } else {
         if (this.formData.account === this.user.phone) {
-          this.error = '新旧手机号一致，请重新输入'
-          return;
+          this.$toast({message: '新旧手机号一致，请重新输入', position: 'bottom'})
+          return
         }
       }
-      this.error = ''
 
       // 验证验证码格式
       if (!/^\d{6}$/.test(this.formData.code)) {
-        this.error = '验证码为 6 位长度数字';
-        return;
+        this.$toast({message: '验证码为 6 位长度数字', position: 'bottom'})
+        return
       }
 
       // 处理更新用户邮箱或手机号请求：[1]用户名 [2]邮箱 [3]手机
       const type = this.type === '0' ? 2 : 3
       this.$api.user.updateUserPrivacy(this.formData.account, this.formData.code, type).then(() => {
         this.$toast.success('更新成功')
-        this.error = ''
         this.formData.code = ''
         // 重新查询最新信息
         this.$store.dispatch('user/getUser')
       }).catch(err => {
-        this.error = err.data || err.desc
+        this.$toast({message: err.data || err.desc, position: 'bottom'})
       })
     }
   }
 }
 </script>
-
-<style scoped>
-.van-field__error-message {
-  padding: 10px 16px;
-}
-</style>

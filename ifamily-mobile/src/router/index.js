@@ -55,6 +55,7 @@ export const constantRoutes = [
         component: () => import('@/views/mine/settings/security/devices'),
     },
 
+    // *****************************************************************************************************************
 
     {
         path: '/mine/family',
@@ -99,11 +100,24 @@ export const constantRoutes = [
         component: () => import('@/views/family/info'),
     },
     {
+        path: '/family/member/people/:type',
+        component: () => import('@/views/family/member/people'),
+    },
+    {
+        path: '/family/member/people/edit/:type',
+        component: () => import('@/views/family/member/people/edit'),
+    },
+    {
+        path: '/family/member/add/:type',
+        component: () => import('@/views/family/member/add'),
+    },
+
+    // *****************************************************************************************************************
+
+    {
         path: '/family/manage/member/init',
         component: () => import('@/views/family/manage/member/init'),
     },
-
-
     {
         path: '/family/album',
         component: () => import('@/views/family/album'),
@@ -111,10 +125,6 @@ export const constantRoutes = [
     {
         path: '/family/member',
         component: () => import('@/views/family/member'),
-    },
-    {
-        path: '/family/member/people/:type',
-        component: () => import('@/views/family/member/people'),
     },
     {
         path: '/family/tree/:type',
@@ -136,14 +146,8 @@ export const constantRoutes = [
         path: '/family/manage/member',
         component: () => import('@/views/family/manage/member'),
     },
-    {
-        path: '/family/manage/member/add/:type',
-        component: () => import('@/views/family/manage/member/add'),
-    },
-    {
-        path: '/family/manage/member/edit/:type',
-        component: () => import('@/views/family/manage/member/edit'),
-    },
+
+
     {
         path: '/family/manage/seniority',
         component: () => import('@/views/family/manage/seniority'),
