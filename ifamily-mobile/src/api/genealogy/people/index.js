@@ -9,10 +9,11 @@ export function currentUserPeople() {
     })
 }
 
-export function getGenealogyPeopleDetails(peopleId) {
+export function getGenealogyPeopleDetails(params) {
     return request({
-        url: `${superviseBaseUrl}/details/${peopleId}`,
+        url: `${superviseBaseUrl}/details`,
         method: 'get',
+        params
     })
 }
 
@@ -43,6 +44,14 @@ export function removePeople(params) {
 export function addRelatives(data) {
     return request({
         url: `${superviseBaseUrl}`,
+        method: 'post',
+        data
+    })
+}
+
+export function saveUserPeople(data) {
+    return request({
+        url: `${superviseBaseUrl}/current`,
         method: 'post',
         data
     })

@@ -2,7 +2,7 @@
   <div>
     <van-nav-bar title="家族成员" left-arrow @click-left="$router.replace('/family')" @click-right="showPopover = true">
       <template #right>
-        <van-popover v-if="generations.length > 0" placement="bottom-end" trigger="click"
+        <van-popover v-if="generations" placement="bottom-end" trigger="click"
                      v-model="showPopover" :actions="actions" @select="onSelect">
           <template #reference>
             <van-icon name="filter-o" size="20"/>
@@ -12,8 +12,8 @@
     </van-nav-bar>
 
     <!-- 搜索框与搜索条件面包屑 -->
-    <form>
-      <van-search shape="round"  placeholder="请输入家族人员姓名" clearable
+    <form v-if="generations">
+      <van-search shape="round" placeholder="请输入家族人员姓名" clearable
                   @cancel="formData.name = undefined" v-model.trim="formData.name"
       />
       <div class="tags-container">
@@ -38,7 +38,7 @@
         <van-index-anchor :index="generation">{{ chineseGeneration(generation) }}</van-index-anchor>
         <!-- 世代成员列表 -->
         <van-cell is-link center v-for="people in memberMap[generation]" :key="people.id"
-                  @click="$router.push(`/family/member/people/1?pid=${people.id}`)"
+                  @click="$router.push(`/family/member/info/1?pid=${people.id}`)"
         >
           <template #title>
             <van-image round width="52" height="52" :src="people.portrait || defaultPortrait(people.gender)"/>
@@ -54,6 +54,8 @@
         </van-cell>
       </div>
     </van-index-bar>
+
+    <van-empty class="empty" v-if="!generations" description="空空如也~"/>
   </div>
 </template>
 
@@ -154,11 +156,21 @@ export default {
 }
 
 .tags-container {
-  padding: 0 16px;
   text-align: center;
+  background-color: #ffffff;
+  padding: 0 16px 8px 16px;
 }
 
 .tags-container .van-tag {
   margin-right: 8px;
+}
+
+.empty {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  margin: auto;
 }
 </style>

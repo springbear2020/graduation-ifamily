@@ -68,3 +68,62 @@ export function numToChinese(num) {
     return chineseStr;
 }
 
+/**
+ * 获取对象中的非空属性值，并将所有的非空属性值合并为一个新对象
+ * @param obj 对象
+ * @returns {{}} 目标对象
+ */
+export function mergeNonNullValues(obj) {
+    return Object.keys(obj).reduce((acc, key) => {
+        if (obj[key]) {
+            acc[key] = obj[key];
+        }
+        return acc;
+    }, {});
+}
+
+/**
+ * 计算传入日期与当前日期的差异，根据差异返回不同的字符串
+ * @param dateStr 日期字符串
+ * @returns {string} 计算后的字符串
+ */
+export function computedDate(dateStr) {
+    const date = new Date(dateStr)
+    const now = new Date();
+    const diff = (now - date) / (1000 * 60 * 60 * 24);
+
+    if (diff < 1) {
+        return '今天';
+    } else if (diff < 2) {
+        return '昨天';
+    } else if (diff < 7) {
+        const days = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
+        return days[date.getDay()];
+    } else {
+        return dateStr
+    }
+}
+
+
+/*
+ * 移除 params、data 中的 ''、null、undefined
+ */
+// function clearEmptyParam(config) {
+//     ['data', 'params'].forEach(item => {
+//         if (config[item]) {
+//             const keys = Object.keys(config[item])
+//             if (keys.length) {
+//                 keys.forEach(key => {
+//                     // 获取数据原始类型字符串，如 'String', 'Object', 'Null', 'Boolean', 'Number', 'Array'
+//                     const rawType = Object.prototype.toString.call(config[item]).slice(8, -1)
+//                     if (['', undefined, null].includes(config[item][key]) && ['Object'].includes(rawType)) {
+//                         // 移除属性之前，进行深拷贝断开引用，避免影响页面
+//                         // const _cloneDeep = require('lodash/cloneDeep')
+//                         config[item] = _cloneDeep(config[item])
+//                         delete config[item][key]
+//                     }
+//                 })
+//             }
+//         }
+//     })
+// }

@@ -8,7 +8,7 @@
                    v-model.trim="username"
                    :rules="[{required: true, pattern: /^[a-zA-Z]([-_a-zA-Z0-9]{4,19})+$/, message: 'UID 以字母开头，可包含字母、数字、下划线和连字符，长度为 5-20 位'}]"
         />
-        <van-field label="密码" placeholder="密码" autocomplete
+        <van-field label="密码" placeholder="密码" autocomplete="on"
                    v-model.trim="password" :rules="[{required: true, message: '请输入您的账号登录密码'}]"
                    :right-icon="rightIcon" :type="passwordFieldType"
                    @click-right-icon="passwordFieldType = (passwordFieldType === 'password' ? 'text' : 'password')"
@@ -67,7 +67,7 @@ export default {
 
 <style scoped>
 .block-button-container {
-  margin: 8px 16px;
+  margin: 8px 0;
 }
 
 .van-empty {

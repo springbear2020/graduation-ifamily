@@ -37,7 +37,7 @@ export default {
       if (genealogyId !== defaultGenealogyId) {
         this.$api.genealogy.setDefaultGenealogyOfUser(genealogyId).then(() => {
           // 切换家族，移除已有的所有家族信息
-          this.$store.commit('genealogy/CLEAR_STATE')
+          this.$store.dispatch('genealogy/logout')
           this.$router.replace('/family')
         }).catch(err => {
           this.$toast({message: err.data || err.desc, position: 'bottom'})
@@ -62,5 +62,9 @@ export default {
   top: 0;
   bottom: 0;
   margin: auto;
+}
+
+/deep/ .van-card {
+  background-color: #ffffff;
 }
 </style>

@@ -45,7 +45,7 @@ export const peopleInfo = {
         },
         getPeople(pid) {
             // 根据 peopleId 查询人员信息
-            this.$api.people.getGenealogyPeopleDetails(pid).then(people => {
+            this.$api.people.getGenealogyPeopleDetails({peopleId: pid}).then(people => {
                 this.people = people
                 this.emptyShow = false
             }).catch(err => {

@@ -6,7 +6,7 @@ import 'nprogress/nprogress.css'
 import {Notify} from 'vant';
 
 // 隐藏 nprogress 进度环
-nprogress.configure({showSpinner: false})
+// nprogress.configure({showSpinner: false})
 
 const service = axios.create({
     baseURL: 'http://10.128.184.117:8888',

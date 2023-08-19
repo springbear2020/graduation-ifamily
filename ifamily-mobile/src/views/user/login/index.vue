@@ -7,41 +7,35 @@
     <logo-pattern/>
 
     <van-form @submit="handleLogin">
-      <div v-if="formData.loginType === '0'">
-        <van-field size="large" type="text" label="账号" autofocus
-                   :rules="[{ required: true }]"
-                   :border="false" placeholder="UID / 手机 / 邮箱" v-model.trim="formData.account"
-        />
-      </div>
-      <div v-else-if="formData.loginType === '1'">
-        <van-field size="large" type="text" label="账号" autofocus
-                   :rules="[{ required: true, validator: validatePhoneOrEmail, message: '请输入正确的手机或邮箱', trigger: 'onChange' }]"
-                   :border="false" placeholder="手机 / 邮箱" v-model.trim="formData.account"
-        />
-      </div>
+      <van-field size="large" type="text" label="账号" autofocus
+                 :rules="[{ required: true }]" v-if="formData.loginType === '0'"
+                 placeholder="UID / 手机 / 邮箱" v-model.trim="formData.account"
+      />
+
+      <van-field size="large" type="text" label="账号" autofocus v-else
+                 :rules="[{ required: true, validator: validatePhoneOrEmail, message: '请输入正确的手机或邮箱', trigger: 'onChange' }]"
+                 placeholder="手机 / 邮箱" v-model.trim="formData.account"
+      />
 
       <!-- 验证码框 -->
-      <div v-if="formData.loginType === '1'">
-        <van-field size="large" type="number" name="code" label="验证码" placeholder="验证码" maxlength="6"
-                   :rules="[{ required: true, pattern: /^\d{6}$/, message: '验证码为 6 位长度数字' }]" :border="false"
-                   v-model.trim="formData.code"
-        >
-          <template #button>
-            <van-button size="small" type="primary" @click.prevent="handleSendCode"
-                        :disabled="countdown > 0 || !accountType">
-              {{ buttonText }}
-            </van-button>
-          </template>
-        </van-field>
-      </div>
+      <van-field size="large" type="number" name="code" label="验证码" placeholder="验证码" maxlength="6"
+                 :rules="[{ required: true, pattern: /^\d{6}$/, message: '验证码为 6 位长度数字' }]"
+                 v-model.trim="formData.code" v-if="formData.loginType === '1'"
+      >
+        <template #button>
+          <van-button size="small" type="primary" @click.prevent="handleSendCode"
+                      :disabled="countdown > 0 || !accountType">
+            {{ buttonText }}
+          </van-button>
+        </template>
+      </van-field>
+
       <!-- 密码框 -->
-      <div v-else-if="formData.loginType === '0'">
-        <van-field size="large" label="密码" placeholder="密码" autocomplete="on"
-                   :type="passwordFieldType" :right-icon="rightIcon" :border="false"
-                   :rules="[{ required: true }]" v-model.trim="formData.password"
-                   @click-right-icon="passwordFieldType = passwordFieldType === 'password' ? 'text' : 'password'"
-        />
-      </div>
+      <van-field size="large" label="密码" placeholder="密码" autocomplete="on"
+                 :type="passwordFieldType" :right-icon="rightIcon" v-else
+                 :rules="[{ required: true }]" v-model.trim="formData.password"
+                 @click-right-icon="passwordFieldType = passwordFieldType === 'password' ? 'text' : 'password'"
+      />
 
       <van-field name="agree" :border="false" :rules="[{ required: true }]">
         <template #input>
@@ -56,7 +50,7 @@
     </van-form>
 
     <van-nav-bar left-text="忘记密码" right-text="用户注册"
-                 :border="false"
+                 :border="false" class="bottom-nav"
                  @click-left="$router.push('/user/reset/1')"
                  @click-right="$router.push('/user/reset/0')"
     />
@@ -107,5 +101,9 @@ export default {
 <style scoped>
 .block-button-container {
   margin: 8px 16px;
+}
+
+.bottom-nav {
+  background-color: #f7f8fa;
 }
 </style>

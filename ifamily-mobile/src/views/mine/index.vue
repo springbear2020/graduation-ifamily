@@ -22,12 +22,12 @@
       <van-grid-item icon="star-o" text="收藏夹"/>
     </van-grid>
 
-    <van-cell title="我的动态" icon="flag-o" is-link/>
     <van-cell title="我的资料" icon="user-circle-o" is-link/>
-    <van-cell title="我的家族" icon="cluster-o" is-link/>
-    <van-cell title="我的亲人" icon="friends-o" is-link/>
+    <van-cell title="我的动态" icon="flag-o" is-link/>
     <van-cell title="我的相册" icon="photo-o" is-link/>
-    <van-cell title="联系客服" icon="service-o" is-link/>
+    <van-cell title="家族列表" icon="cluster-o" is-link class="top"/>
+    <van-cell title="亲人列表" icon="friends-o" is-link/>
+    <van-cell title="联系客服" icon="service-o" is-link class="top"/>
   </div>
 </template>
 
@@ -68,5 +68,17 @@ export default {
 .van-card__content .van-cell {
   padding: 0;
   background-color: inherit;
+}
+
+/deep/ .van-card {
+  background-color: #ffffff;
+}
+
+.van-grid {
+  margin-bottom: 8px;
+}
+
+.top {
+  margin-top: 8px;
 }
 </style>

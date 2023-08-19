@@ -46,5 +46,9 @@ export default {
                 })
             })
         },
+        signIn({commit}, token) {
+            setToken(token)
+            commit('SET_TOKEN', token)
+        }
     }
 }

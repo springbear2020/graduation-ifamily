@@ -54,6 +54,84 @@ export const constantRoutes = [
         path: '/mine/settings/security/devices',
         component: () => import('@/views/mine/settings/security/devices'),
     },
+    /// family =========================================================================================================
+    {
+        path: '/family',
+        component: () => import('@/views/family'),
+        meta: {footerShow: true}
+    },
+    {
+        path: '/family/list',
+        component: () => import('@/views/family/list'),
+    },
+    {
+        path: '/family/info',
+        component: () => import('@/views/family/info'),
+    },
+    {
+        path: '/family/info/form/:type',
+        component: () => import('@/views/family/info/form'),
+    },
+    {
+        path: '/family/tree/:type',
+        component: () => import('@/views/family/tree'),
+    },
+    {
+        path: '/family/member',
+        component: () => import('@/views/family/member'),
+    },
+    {
+        path: '/family/member/info/:type',
+        component: () => import('@/views/family/member/info'),
+    },
+    {
+        path: '/family/member/edit/:type',
+        component: () => import('@/views/family/member/edit'),
+    },
+    {
+        path: '/family/member/add/:type',
+        component: () => import('@/views/family/member/add'),
+    },
+    {
+        path: '/family/revision',
+        component: () => import('@/views/family/revision'),
+    },
+
+    // *****************************************************************************************************************
+
+    {
+        path: '/family/manage/member/init',
+        component: () => import('@/views/family/manage/member/init'),
+    },
+    {
+        path: '/family/album',
+        component: () => import('@/views/family/album'),
+    },
+
+    {
+        path: '/family/notice',
+        component: () => import('@/views/family/notice'),
+    },
+    {
+        path: '/family/manage',
+        component: () => import('@/views/family/manage'),
+    },
+    {
+        path: '/family/manage/member',
+        component: () => import('@/views/family/manage/member'),
+    },
+    {
+        path: '/family/manage/seniority',
+        component: () => import('@/views/family/manage/seniority'),
+    },
+    {
+        path: '/family/manage/access',
+        component: () => import('@/views/family/manage/access'),
+    },
+    {
+        path: '/family/manage/permission',
+        component: () => import('@/views/family/manage/permission'),
+    },
 
     // *****************************************************************************************************************
 
@@ -81,86 +159,7 @@ export const constantRoutes = [
         path: '/mine/contact',
         component: () => import('@/views/mine/contact'),
     },
-    /// family =========================================================================================================
-    {
-        path: '/family',
-        component: () => import('@/views/family'),
-        meta: {footerShow: true}
-    },
-    {
-        path: '/family/form/:type',
-        component: () => import('@/views/family/form'),
-    },
-    {
-        path: '/family/list',
-        component: () => import('@/views/family/list'),
-    },
-    {
-        path: '/family/info',
-        component: () => import('@/views/family/info'),
-    },
-    {
-        path: '/family/member/people/:type',
-        component: () => import('@/views/family/member/people'),
-    },
-    {
-        path: '/family/member/people/edit/:type',
-        component: () => import('@/views/family/member/people/edit'),
-    },
-    {
-        path: '/family/member/add/:type',
-        component: () => import('@/views/family/member/add'),
-    },
-    {
-        path: '/family/member',
-        component: () => import('@/views/family/member'),
-    },
 
-    // *****************************************************************************************************************
-
-    {
-        path: '/family/manage/member/init',
-        component: () => import('@/views/family/manage/member/init'),
-    },
-    {
-        path: '/family/album',
-        component: () => import('@/views/family/album'),
-    },
-
-    {
-        path: '/family/tree/:type',
-        component: () => import('@/views/family/tree'),
-    },
-    {
-        path: '/family/notice',
-        component: () => import('@/views/family/notice'),
-    },
-    {
-        path: '/family/record',
-        component: () => import('@/views/family/record'),
-    },
-    {
-        path: '/family/manage',
-        component: () => import('@/views/family/manage'),
-    },
-    {
-        path: '/family/manage/member',
-        component: () => import('@/views/family/manage/member'),
-    },
-
-
-    {
-        path: '/family/manage/seniority',
-        component: () => import('@/views/family/manage/seniority'),
-    },
-    {
-        path: '/family/manage/access',
-        component: () => import('@/views/family/manage/access'),
-    },
-    {
-        path: '/family/manage/permission',
-        component: () => import('@/views/family/manage/permission'),
-    },
     /// home ===========================================================================================================
     {
         path: '/home',
@@ -207,7 +206,7 @@ router.beforeEach((to, from, next) => {
     if (!token) {
         token = getToken()
         if (token) {
-            store.commit('user/SET_TOKEN', token)
+            store.dispatch('user/signIn', token).then(() => {})
         }
     }
 

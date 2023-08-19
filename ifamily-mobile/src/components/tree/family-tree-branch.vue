@@ -20,7 +20,7 @@
                    :class="[Array.isArray(mate.class) ? mate.class : [],`pid-${mate.id}`]"
                    @click="$emit('click-node', mate)">
                 <div class="avatar">
-                  <img :src="mate.portrait || defaultPortrait(tree.gender)" alt="img"/>
+                  <img :src="mate.portrait || defaultPortrait(mate.gender)" alt="img"/>
                 </div>
                 <div class="name">{{ mate.name }}</div>
               </div>

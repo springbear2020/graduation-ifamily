@@ -1,7 +1,7 @@
 <template>
   <div>
     <van-nav-bar title="家族信息" left-arrow @click-left="$router.replace('/family')"
-                 @click-right="$router.push('/family/form/1')">
+                 @click-right="$router.push('/family/info/form/1')">
       <template #right>
         <van-icon v-if="defaultGenealogy.id" name="edit" size="20"/>
       </template>
@@ -34,40 +34,45 @@
       </van-grid>
 
       <!-- 名称、姓氏 -->
-      <van-cell-group>
-        <van-cell title="家族名称" :value="defaultGenealogy.title" :border="false"/>
-        <van-cell title="家族姓氏" :value="defaultGenealogy.surname"/>
-      </van-cell-group>
+      <van-cell title="家族名称" :value="defaultGenealogy.title"/>
+      <van-cell title="家族姓氏" :value="defaultGenealogy.surname"/>
       <!-- 地址、祖籍 -->
-      <van-cell-group>
-        <van-cell title="家族地址" :value="defaultGenealogy.address" :border="false"/>
-        <van-cell title="家族祖籍" :value="defaultGenealogy.ancestryAddress"/>
-      </van-cell-group>
+      <van-cell title="家族地址">
+        <template #label>
+          {{ defaultGenealogy.address }}
+        </template>
+      </van-cell>
+      <van-cell title="家族祖籍">
+        <template #label>
+          {{ defaultGenealogy.ancestryAddress }}
+        </template>
+      </van-cell>
 
       <!-- 简介、字辈歌 -->
-      <van-collapse v-model="activeNames">
-        <van-collapse-item title="家族简介" name="1" :border="false">{{ defaultGenealogy.introduction }}</van-collapse-item>
-        <van-collapse-item :border="false" title="字辈歌" name="2">{{ defaultGenealogy.generationSong }}
-        </van-collapse-item>
-      </van-collapse>
+      <van-cell title="家族简介" name="1">
+        <template #label>
+          {{ defaultGenealogy.introduction }}
+        </template>
+      </van-cell>
+      <van-cell title="字辈歌" name="2">
+        <template #label>
+          {{ defaultGenealogy.generationSong }}
+        </template>
+      </van-cell>
 
       <!-- 管理员、创建者 -->
-      <van-cell-group>
-        <van-cell title="管理员" name="3" :border="false" v-if="defaultGenealogy.admins">
-          <template #label>
-            <people-tag v-for="admin in defaultGenealogy.admins" :key="admin.id"
-                        :name="admin.name" :sex="admin.gender"/>
-          </template>
-        </van-cell>
-        <van-cell title="创建者" :border="false">
-          <people-tag :name="defaultGenealogy.creator.name" :sex="defaultGenealogy.creator.gender"/>
-        </van-cell>
-      </van-cell-group>
+      <van-cell title="管理员" name="3" v-if="defaultGenealogy.admins">
+        <template #label>
+          <people-tag v-for="admin in defaultGenealogy.admins" :key="admin.id"
+                      :name="admin.name" :sex="admin.gender"/>
+        </template>
+      </van-cell>
+      <van-cell title="创建者" v-if="defaultGenealogy.creator.id">
+        <people-tag :name="defaultGenealogy.creator.name" :sex="defaultGenealogy.creator.gender"/>
+      </van-cell>
 
       <!-- 创建时间 -->
-      <van-cell-group>
-        <van-cell title="创建时间" :value="defaultGenealogy.created"/>
-      </van-cell-group>
+      <van-cell title="创建时间" :value="defaultGenealogy.created"/>
     </div>
 
     <van-empty class="empty" v-else description="空空如也~"/>
@@ -85,11 +90,6 @@ export default {
   computed: {
     defaultGenealogy() {
       return this.$store.getters["genealogy/defaultGenealogy"]
-    }
-  },
-  data() {
-    return {
-      activeNames: ['1', '2']
     }
   },
   methods: {

@@ -39,9 +39,6 @@ export default {
         SET_USER_PEOPLE(state, people) {
             state.userPeople = people
         },
-        REMOVE_TREE(state) {
-            state.tree = {}
-        },
         SET_GENERATION_MEMBER(state, memberMap) {
             state.memberMap = memberMap
         },

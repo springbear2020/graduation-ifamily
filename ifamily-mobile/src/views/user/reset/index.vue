@@ -7,11 +7,11 @@
     <van-form @submit="handleRegisterOrReset">
       <van-field size="large" type="text" label="账号" autofocus
                  :rules="[{ required: true, validator: validatePhoneOrEmail, message: '请输入正确的手机或邮箱', trigger: 'onChange' }]"
-                 :border="false" placeholder="手机 / 邮箱" v-model.trim="formData.account"
+                 placeholder="手机 / 邮箱" v-model.trim="formData.account"
       />
 
       <van-field size="large" type="number" name="code" label="验证码" placeholder="验证码" maxlength="6"
-                 :rules="[{ required: true, pattern: /^\d{6}$/, message: '验证码为 6 位长度数字' }]" :border="false"
+                 :rules="[{ required: true, pattern: /^\d{6}$/, message: '验证码为 6 位长度数字' }]"
                  v-model.trim="formData.code"
       >
         <template #button>
@@ -24,7 +24,7 @@
       </van-field>
 
       <van-field size="large" :label="label" :placeholder="label" autocomplete="on"
-                 :type="passwordFieldType" :right-icon="rightIcon" :border="false"
+                 :type="passwordFieldType" :right-icon="rightIcon"
                  :rules="[{ required: true }]" v-model.trim="formData.password"
                  @click-right-icon="passwordFieldType = passwordFieldType === 'password' ? 'text' : 'password'"
       />
@@ -45,7 +45,6 @@
 
 <script>
 import {code} from '@/mixin/code'
-import {setToken} from "@/utils/auth";
 
 export default {
   name: "index",
@@ -95,9 +94,8 @@ export default {
     userRegister() {
       const {account, password, code} = this.formData
       this.$api.user.register({account, password, code}).then((token) => {
-        // 派发 mutation 设置用户登录信息，并将 token 信息存储到 localStorage 中
-        this.$store.commit('user/SET_TOKEN')
-        setToken(token);
+        // 注册成功，设置用户令牌信息
+        this.$store.dispatch('user/signIn', token)
         this.$router.replace('/home')
       }).catch(err => {
         this.$toast({message: err.data || err.desc, position: 'bottom'})

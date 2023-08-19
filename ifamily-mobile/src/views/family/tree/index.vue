@@ -34,9 +34,9 @@
         <van-grid-item icon="add-o" text="添加亲人" @click="$router.push(`/family/member/add/0?pid=${clickedNode.id}`)"/>
         <van-grid-item icon="delete-o" text="移除此人" @click="removeGenealogyPeople"/>
         <van-grid-item icon="edit" text="编辑信息"
-                       @click="$router.push(`/family/member/people/edit/0?pid=${clickedNode.id}`)"/>
+                       @click="$router.push(`/family/member/edit/0?pid=${clickedNode.id}`)"/>
         <van-grid-item icon="manager-o" :text="`${clickedNode.gender === 0 ? '他' : '她'}的主页`"
-                       @click="$router.push(`/family/member/people/0?pid=${clickedNode.id}`)"/>
+                       @click="$router.push(`/family/member/info/0?pid=${clickedNode.id}`)"/>
       </van-grid>
     </van-action-sheet>
   </div>
@@ -164,7 +164,8 @@ export default {
         case 2:
           // [2]定位到我
           this.isAllFold = false
-          this.locateMe()
+          // 取出仓库中的 “我” 用户-家族成员数据
+          this.locateMemberNode(this.$store.state.genealogy.userPeople.id)
           break;
         case 3:
           // [3]搜索成员
@@ -190,20 +191,6 @@ export default {
         })
       }
     },
-    locateMe() {
-      // 取出仓库中的 “我” 用户-家族成员数据，不存在则进行查询
-      let people = this.$store.state.genealogy.userPeople
-      if (!people.id) {
-        this.$store.dispatch('genealogy/getPeopleOfUser').then(() => {
-          people = this.$store.state.genealogy.userPeople
-          this.locateMemberNode(people.id)
-        }).catch(err => {
-          this.$toast({message: err.data || err.desc, position: 'bottom'})
-        })
-      } else {
-        this.locateMemberNode(people.id)
-      }
-    },
     searchPeople() {
       if (this.content.length === 0) {
         return
@@ -211,6 +198,7 @@ export default {
       this.$api.member.listMemberByName({name: this.content}).then(list => {
         this.searchList = list
       }).catch(() => {
+        this.$toast({message: "家族成员不存在", position: 'bottom'})
       });
     },
     removeGenealogyPeople() {
@@ -224,7 +212,7 @@ export default {
         this.$api.people.removePeople({peopleId: this.clickedNode.id}).then(() => {
           this.$toast.success('移除成功')
           // 重新查询家族树谱信息
-          this.$store.commit('genealogy/REMOVE_TREE');
+          this.$store.dispatch('genealogy/logout')
           this.initTree()
         }).catch(err => {
           this.$toast({message: err.data || err.desc, position: 'bottom'})

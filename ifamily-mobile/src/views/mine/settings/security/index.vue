@@ -5,9 +5,9 @@
     <van-cell title="UID" :value="user.username" is-link to="/mine/settings/security/uid"/>
     <van-cell title="手机号" :value="user.phone" is-link to="/mine/settings/security/form/1"/>
     <van-cell title="邮箱地址" :value="user.email" is-link to="/mine/settings/security/form/0"/>
-    <van-cell title="修改密码" is-link to="/user/reset/2"/>
-    <van-cell title="登录设备" is-link to="/mine/settings/security/devices"/>
-    <van-cell title="注销账号" is-link @click="logoutShow = true"/>
+    <van-cell title="修改密码" is-link to="/user/reset/2" class="top"/>
+    <van-cell title="登录设备" is-link to="/mine/settings/security/devices" class="top"/>
+    <van-cell title="注销账号" is-link @click="logoutShow = true" class="top"/>
 
     <!-- 账户注销弹出确认框 -->
     <van-dialog v-model="logoutShow" title="注销账号" show-cancel-button
@@ -85,7 +85,7 @@ export default {
 
 <style scoped>
 /deep/ .van-cell {
-  padding: 16px 16px;
+  padding: 20px 16px;
 }
 
 /deep/ .van-dialog__message {
@@ -94,5 +94,13 @@ export default {
 
 .van-dialog__message p {
   margin: 8px 0;
+}
+
+.top {
+  margin-top: 8px;
+}
+
+/deep/ .van-field {
+  background-color: #f7f8fa;
 }
 </style>

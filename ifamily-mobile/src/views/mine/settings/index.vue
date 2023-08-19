@@ -5,9 +5,9 @@
     <van-cell title="账号安全" icon="shield-o" is-link to="/mine/settings/security"/>
     <!-- 清空缓存、服务协议、隐私政策 -->
     <van-cell title="权限管理" icon="browsing-history-o" is-link/>
-    <van-cell title="投诉举报" icon="warn-o" is-link/>
+    <van-cell title="投诉举报" icon="warn-o" is-link class="top"/>
     <van-cell title="意见反馈" icon="smile-o" is-link/>
-    <van-cell title="使用帮助" icon="question-o" is-link/>
+    <van-cell title="使用帮助" icon="question-o" is-link class="top"/>
     <!-- 联系我们、版本信息 -->
     <van-cell title="关于我们" icon="info-o" is-link/>
     <div class="block-button-container">
@@ -44,5 +44,9 @@ export default {
 
 /deep/ .van-cell {
   padding: 20px 16px;
+}
+
+.top {
+  margin-top: 8px;
 }
 </style>

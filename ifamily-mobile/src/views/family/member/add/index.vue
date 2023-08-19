@@ -42,7 +42,7 @@
       <!-- 家庭关系 -->
       <family-relationship @add-type="addRelatives" :relation="{father: people.father, mother: people.mother, mates: people.mates,
                              children: people.children, compatriots: people.compatriots}" :hasHusband="!!me.gender"
-                           @view-family-member="viewFamilyMember"/>
+                           @view-family-member="viewFamilyMember" :border="false"/>
 
       <!-- 信息表单 -->
       <div v-show="showForm">
@@ -114,8 +114,8 @@ export default {
         this.$refs.memberForm.resetForm()
         // 重新查询人员信息
         this.initPeople()
-        // 清空仓库家族树谱数据
-        this.$store.commit('genealogy/REMOVE_TREE')
+        // 清空仓库家族数据
+        this.$store.dispatch('genealogy/logout')
       }).catch(err => {
         this.$toast({message: err.data || err.desc, position: 'bottom'})
       })
@@ -124,6 +124,7 @@ export default {
       let {id, gender, generation, generationName, residence, birthplace} = this.people.me
 
       // [1]父亲 [2]母亲 [3]配偶 [4]子女 [5]同胞
+      let target = {}
       switch (type) {
         case '1':
           /*
@@ -133,7 +134,7 @@ export default {
           this.subTitle = '添加生父';
           gender = 0
           generation -= 1
-          Object.assign(this.relativePeople, {id, gender, generation, residence, birthplace})
+          target = {id, gender, generation, residence, birthplace}
           this.relativeType = 1
           break;
         case '2':
@@ -144,7 +145,7 @@ export default {
           this.subTitle = '添加生母';
           gender = 1
           generation -= 1
-          Object.assign(this.relativePeople, {id, gender, generation, residence, birthplace})
+          target = {id, gender, generation, residence, birthplace}
           this.relativeType = 2
           break;
         case '3':
@@ -154,7 +155,7 @@ export default {
            */
           this.subTitle = '添加配偶';
           gender = this.people.me.gender === 0 ? 1 : 0
-          Object.assign(this.relativePeople, {id, gender, generation, generationName, residence, birthplace})
+          target = {id, gender, generation, generationName, residence, birthplace}
           this.relativeType = 3
           break;
         case '4':
@@ -169,7 +170,7 @@ export default {
           }
           this.subTitle = '添加子女';
           generation += 1;
-          Object.assign(this.relativePeople, {id, generation, residence, birthplace})
+          target = {id, generation, residence, birthplace}
           this.relativeType = 4;
           break;
         case '5':
@@ -178,7 +179,7 @@ export default {
            * 我的同胞世代、字辈、生父、生母与我一致
            */
           this.subTitle = '添加同胞';
-          Object.assign(this.relativePeople, {id, generation, generationName, residence, birthplace})
+          target = {id, generation, generationName, residence, birthplace}
           this.relativeType = 5
           break;
         default:
@@ -186,6 +187,9 @@ export default {
           this.subTitle = '添加亲人'
       }
 
+      // 将我的部分信息赋值给我的亲人表单数据，避免重复输入
+      this.$refs.memberForm.resetForm()
+      this.relativePeople = {...target}
       this.showForm = true
     },
   }
@@ -212,5 +216,10 @@ export default {
 
 /deep/ .van-tag {
   margin-right: 2px;
+}
+
+/deep/ .van-divider {
+  margin: 0;
+  background-color: #ffffff;
 }
 </style>
