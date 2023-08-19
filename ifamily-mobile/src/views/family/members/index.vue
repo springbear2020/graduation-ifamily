@@ -15,7 +15,7 @@
         <van-index-anchor :index="number">第 {{ number }} 世</van-index-anchor>
 
         <!-- 家族成员男 -->
-        <van-cell is-link center @click="$router.push('/family/members/people/0')" class="flex-cell-title">
+        <van-cell is-link center @click="$router.push('/family/members/people/1')" class="flex-cell-title">
           <template #title>
             <van-image round width="50" height="50" src="https://img01.yzcdn.cn/vant/cat.jpeg"/>
             <p class="name-container">
@@ -28,7 +28,7 @@
           </template>
         </van-cell>
         <!-- 家族成员女 -->
-        <van-cell is-link center @click="$router.push('/family/members/people/0')" class="flex-cell-title">
+        <van-cell is-link center @click="$router.push('/family/members/people/1')" class="flex-cell-title">
           <template #title>
             <van-image round width="50" height="50" src="https://img01.yzcdn.cn/vant/cat.jpeg"/>
             <p class="name-container">

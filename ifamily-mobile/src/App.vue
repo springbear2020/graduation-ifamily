@@ -75,4 +75,22 @@ export default {
 .flex-cell-title .van-cell__title {
   display: flex;
 }
+
+/* 人员信息 */
+.van-grid-item__content p {
+  margin: 0;
+}
+
+.cover-name {
+  color: #323233;
+  font-size: 14px;
+  line-height: 24px;
+  font-weight: bold;
+}
+
+.cover-signature {
+  color: #969799;
+  font-size: 12px;
+  line-height: 18px;
+}
 </style>

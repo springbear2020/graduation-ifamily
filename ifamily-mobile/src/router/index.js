@@ -43,6 +43,22 @@ let router = new VueRouter({
             path: '/mine/settings/security',
             component: () => import('@/views/mine/settings/security'),
         },
+        {
+            path: '/mine/relatives',
+            component: () => import('@/views/mine/relatives'),
+        },
+        {
+            path: '/mine/family/album',
+            component: () => import('@/views/mine/family/album'),
+        },
+        {
+            path: '/mine/moments',
+            component: () => import('@/views/mine/moments'),
+        },
+        {
+            path: '/mine/moments/post',
+            component: () => import('@/views/mine/moments/post'),
+        },
         // family
         {
             path: '/family',
@@ -70,7 +86,7 @@ let router = new VueRouter({
             component: () => import('@/views/family/members/people'),
         },
         {
-            path: '/family/tree',
+            path: '/family/tree/:type',
             component: () => import('@/views/family/tree'),
         },
         {
@@ -98,7 +114,7 @@ let router = new VueRouter({
             component: () => import('@/views/family/manage/members/add'),
         },
         {
-            path: '/family/manage/members/edit',
+            path: '/family/manage/members/edit/:type',
             component: () => import('@/views/family/manage/members/edit'),
         },
         {

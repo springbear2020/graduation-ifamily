@@ -34,10 +34,10 @@
         </van-field>
       </van-cell-group>
 
-      <!-- 手机、现居地 -->
+      <!-- 手机、常住地 -->
       <van-cell-group>
         <van-field name="mobile" type="tel" v-model="formData.mobile" label="手机" placeholder="手机" :border="false"/>
-        <van-field name="presentPlace" label="现居地" placeholder="点击选择省市区" readonly clickable
+        <van-field name="presentPlace" label="常住地" placeholder="点击选择省市区" readonly clickable
                    v-model="formData.presentPlace" @click="areaType = '1'; showAreaPopup = true"
                    :border="false"/>
       </van-cell-group>
@@ -67,6 +67,13 @@
                      @click="areaType = '3'; showAreaPopup = true" v-model="formData.burialPlace"
                      :border="false"/>
         </div>
+      </van-cell-group>
+
+      <van-cell-group>
+        <van-field rows="1" autosize type="textarea" maxlength="100" label="个性签名" placeholder="个性签名" show-word-limit
+                   v-model="formData.signature"/>
+        <van-field rows="1" autosize type="textarea" maxlength="100" label="备注" placeholder="备注" show-word-limit
+                   v-model="formData.remarks"/>
       </van-cell-group>
 
       <div class="flex-container">
@@ -119,7 +126,7 @@ export default {
       curDate: new Date(),
       selectedDate: new Date(),
       showDatetimePicker: false,
-      // [1]现居地 [2]出生地 [3]埋葬地
+      // [1]常住地 [2]出生地 [3]埋葬地
       areaType: '1',
       areaList: [],
       showAreaPopup: false,
@@ -139,7 +146,9 @@ export default {
         birthplace: '',
         alive: true,
         dieDate: '',
-        burialPlace: ''
+        burialPlace: '',
+        signature: '',
+        remarks: ''
       }
     }
   },

@@ -11,15 +11,15 @@
 
     <!-- 家族操作宫格 -->
     <van-grid :column-num="3">
-      <van-grid-item icon="cluster-o" text="家族树谱" to="/family/tree"/>
       <van-grid-item icon="friends-o" text="家族成员" to="/family/members"/>
-      <van-grid-item icon="photo-o" text="家族相册" to="/family/album"/>
-      <van-grid-item icon="volume-o" text="家族公告" to="/family/notice"/>
       <van-grid-item icon="records" text="修谱记录" to="/family/records"/>
+      <van-grid-item icon="cluster-o" text="家族树谱" to="/family/tree/0"/>
+      <van-grid-item icon="volume-o" text="家族公告" to="/family/notice"/>
+      <van-grid-item icon="photo-o" text="家族相册" to="/family/album"/>
       <van-grid-item icon="setting-o" text="家族管理" to="/family/manage"/>
     </van-grid>
 
-    <van-tabs >
+    <van-tabs>
       <!-- 成员动态 -->
       <van-tab title="成员动态">
         <van-pull-refresh success-text="刷新成功" v-model="isRefreshing" @refresh="onRefresh">

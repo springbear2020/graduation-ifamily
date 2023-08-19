@@ -1,6 +1,6 @@
 <template>
   <div>
-    <van-nav-bar title="家族树谱" left-arrow @click-left="$router.replace('/family')" @click-right="showPopover = true">
+    <van-nav-bar title="家族树谱" left-arrow @click-left="$router.replace(dstRoute)" @click-right="showPopover = true">
       <template #right>
         <!-- 右上角操作气泡弹出框 -->
         <van-popover placement="bottom-end" trigger="click"
@@ -26,10 +26,11 @@
     </van-action-sheet>
     <!-- 树节点点击操作面板 -->
     <van-action-sheet v-model="showPeopleSheet" cancel-text="取消" description="光头勇">
-      <van-grid :column-num="3" :gutter="8" square :border="false">
-        <van-grid-item icon="cluster-o" text="ta 的关系" @click="$toast('树状关系')"/>
-        <van-grid-item icon="manager-o" text="ta 的主页" @click="$router.push('/family/members/people/1')"/>
-        <van-grid-item icon="add-o" text="添加亲人" @click="$router.push('/family/manage/members/add/0')"/>
+      <van-grid square :border="false">
+        <van-grid-item icon="add-o" text="添加亲人" to="/family/manage/members/add/0"/>
+        <van-grid-item icon="delete-o" text="移除此人" @click="removeFamilyPeople"/>
+        <van-grid-item icon="edit" text="编辑信息" to="/family/manage/members/edit/0"/>
+        <van-grid-item icon="manager-o" text="ta 的主页" to="/family/members/people/0"/>
       </van-grid>
     </van-action-sheet>
   </div>
@@ -57,7 +58,23 @@ export default {
       showPeopleSheet: false,
       // [true]全部节点折叠 [false]!全部节点折叠
       isAllFold: true,
-      rotate: 0
+      rotate: 0,
+      // [0]家族 [1]列表成员 [2]成员管理
+      type: '0'
+    }
+  },
+  mounted() {
+    this.type = this.$route.params.type
+  },
+  computed: {
+    dstRoute() {
+      let dst = '/'
+      if (this.type === '0') {
+        dst = '/family'
+      } else if (this.type === '1' || this.type === '2') {
+        dst = '/family/members/people/' + this.type
+      }
+      return dst
     }
   },
   watch: {
@@ -120,6 +137,17 @@ export default {
         })
       })
       this.showSearchSheet = false
+    },
+    removeFamilyPeople() {
+      this.$dialog.confirm({
+        title: '删除提示',
+        message: '您确定要删除《光头勇》这个家族成员吗？',
+      }).then(() => {
+        this.$toast.success('删除成功')
+        this.memberManageSheet = false
+      }).catch(() => {
+        // on cancel
+      });
     }
   }
 }

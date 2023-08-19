@@ -1,8 +1,10 @@
 <template>
   <div>
-    <van-nav-bar title="人员信息" left-arrow @click-left="$router.replace(dstRoute)" @click-right="$toast('家族树定位')">
+    <van-nav-bar title="人员信息" left-arrow @click-left="$router.replace(backRoute)"
+                 @click-right="$router.push(toRoute)">
       <template #right>
-        <van-icon name="aim" size="20"/>
+        <van-icon v-if="type === '1' || type === '2'" name="aim" size="20"/>
+        <van-icon v-else-if="type === '3'" name="edit" size="20"/>
       </template>
     </van-nav-bar>
 
@@ -13,10 +15,10 @@
           <van-image round height="100" width="100" :src="url" @click="previewImage"/>
         </template>
         <template #text>
-          <p class="name">冯勇贤
+          <p class="cover-name">冯勇贤
             <sex-tag/>
           </p>
-          <p class="signature">长相思兮长相忆，短相思兮无穷极。</p>
+          <p class="cover-signature">长相思兮长相忆，短相思兮无穷极。</p>
         </template>
       </van-grid-item>
     </van-grid>
@@ -42,7 +44,7 @@
 
     <!-- 手机、常住地 -->
     <van-cell-group>
-      <van-cell :border="false" center title="手机" label="13898564256" @click="$toast('添加联系人')"/>
+      <van-cell :border="false" title="手机" label="13898564256"/>
       <van-cell :border="false" title="常住地" label="湖北省/武汉市/洪山区/洪山街道武汉理工大学南湖校区智园"/>
     </van-cell-group>
     <!-- 生于、出生地 -->
@@ -58,21 +60,7 @@
 
     <!-- 家庭关系 -->
     <van-cell-group>
-      <van-cell title="家庭关系" :border="false" class="family-relationships">
-        <template #label>
-          <p>父亲：
-            <people-tag :name="'冯世元'" @click.native="$toast('查看人员信息')"/>
-          </p>
-          <p>母亲：</p>
-          <p>配偶：</p>
-          <p>子女：
-            <people-tag :name="'冯学慧'" :sex="3" @click.native="$toast('查看人员信息')"/>
-            <people-tag :name="'刘纯洲'" :sex="1" @click.native="$toast('查看人员信息')"/>
-            <people-tag :name="'冯学良'" @click.native="$toast('查看人员信息')"/>
-          </p>
-          <p>同胞：</p>
-        </template>
-      </van-cell>
+      <family-relationship :add-button="false"/>
       <van-cell title="备注" :border="false" label="备注与其父母亲的特殊关系，如养子、养女、继子、继女等" class="family-member-remarks"/>
     </van-cell-group>
 
@@ -93,7 +81,7 @@ export default {
   data() {
     return {
       url: 'https://img01.yzcdn.cn/vant/cat.jpeg',
-      // [0]成员列表 [1]家族树 [2]家族人员管理
+      // [0]家族树 [1]成员列表 [2]家族人员管理 [3]我的
       type: '0',
     }
   },
@@ -101,16 +89,21 @@ export default {
     this.type = this.$route.params.type
   },
   computed: {
-    dstRoute() {
+    backRoute() {
       let dst = '/'
       if (this.type === '0') {
-        dst = '/family/members'
+        dst = '/family/tree/' + this.type
       } else if (this.type === '1') {
-        dst = '/family/tree'
+        dst = '/family/members'
       } else if (this.type === '2') {
         dst = '/family/manage/members'
+      } else if (this.type === '3') {
+        dst = '/mine'
       }
-      return dst
+      return dst;
+    },
+    toRoute() {
+      return this.type === '3' ? '/family/manage/members/edit/2' : `/family/tree/${this.type}`
     }
   },
   methods: {
@@ -124,23 +117,6 @@ export default {
 </script>
 
 <style scoped>
-.van-grid-item__content p {
-  margin: 0;
-}
-
-.name {
-  color: #323233;
-  font-size: 14px;
-  line-height: 24px;
-  font-weight: bold;
-}
-
-.signature {
-  color: #969799;
-  font-size: 12px;
-  line-height: 18px;
-}
-
 .family-relationships {
   padding-bottom: 0;
 }

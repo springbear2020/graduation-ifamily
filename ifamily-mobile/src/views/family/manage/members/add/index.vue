@@ -15,29 +15,7 @@
     </van-grid>
 
     <!-- 家庭关系 -->
-    <van-cell title="家庭关系" :border="false">
-      <template #label>
-        <p>父亲：
-          <van-button type="primary" plain size="mini" icon="add-o" @click="addRelatives(1)">添加</van-button>
-        </p>
-        <p>母亲：
-          <van-button type="primary" plain size="mini" icon="add-o" @click="addRelatives(2)">添加</van-button>
-        </p>
-        <p>配偶：
-          <van-button type="primary" plain size="mini" icon="add-o" @click="addRelatives(3)">添加</van-button>
-        </p>
-        <p>子女：
-          <people-tag :name="'冯学慧'" :sex="3" :right="true" :bottom="true" @click.native="$toast.success('查看人员信息')"/>
-          <people-tag :name="'刘纯洲'" :sex="1" :right="true" :bottom="true" @click.native="$toast.success('查看人员信息')"/>
-          <people-tag :name="'冯学良'" :sex="0" :right="true" :bottom="true" @click.native="$toast.success('查看人员信息')"/>
-          <van-button type="primary" plain size="mini" icon="add-o" @click="addRelatives(4)">添加</van-button>
-        </p>
-        <p>同胞：
-          <people-tag :name="'冯世元'" :sex="0" :right="true" @click.native="$toast.success('查看人员信息')"/>
-          <van-button type="primary" plain size="mini" icon="add-o" @click="addRelatives(5)">添加</van-button>
-        </p>
-      </template>
-    </van-cell>
+    <family-relationship @add-type="addRelatives"/>
 
     <!-- 信息表单 -->
     <div v-show="showForm">
@@ -68,33 +46,10 @@ export default {
   },
   computed: {
     dstRoute() {
-      return this.type === '0' ? '/family/tree' : (this.type === '1' ? '/family/manage/members' : '/')
+      return this.type === '0' ? '/family/tree/0' : (this.type === '1' ? '/family/manage/members' : '/')
     }
   },
   methods: {
-    addRelatives(type) {
-      // [1]父亲 [2]母亲 [3]配偶 [4]子女 [5]同胞
-      switch (type) {
-        case 1:
-          this.subTitle = '添加父亲';
-          break;
-        case 2:
-          this.subTitle = '添加母亲';
-          break;
-        case 3:
-          this.subTitle = '添加配偶';
-          break;
-        case 4:
-          this.subTitle = '添加子女';
-          break;
-        case 5:
-          this.subTitle = '添加同胞';
-          break;
-        default:
-          this.subTitle = '添加亲人'
-      }
-      this.showForm = true
-    },
     previewImage() {
       let images = []
       images.push(this.url)
@@ -104,7 +59,30 @@ export default {
       console.log(formData)
       this.$toast.success('添加成功')
       this.showForm = false
-    }
+    },
+    addRelatives(type) {
+      // [1]父亲 [2]母亲 [3]配偶 [4]子女 [5]同胞
+      switch (type) {
+        case '1':
+          this.subTitle = '添加父亲';
+          break;
+        case '2':
+          this.subTitle = '添加母亲';
+          break;
+        case '3':
+          this.subTitle = '添加配偶';
+          break;
+        case '4':
+          this.subTitle = '添加子女';
+          break;
+        case '5':
+          this.subTitle = '添加同胞';
+          break;
+        default:
+          this.subTitle = '添加亲人'
+      }
+      this.showForm = true
+    },
   }
 }
 </script>
@@ -120,14 +98,5 @@ export default {
   line-height: 24px;
   font-weight: bold;
   margin-bottom: 0;
-}
-
-.van-cell__label p {
-  height: 20px;
-}
-
-.van-cell__title button {
-  height: 20px;
-  position: absolute;
 }
 </style>

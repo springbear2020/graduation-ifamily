@@ -11,6 +11,7 @@ import peopleTag from '@/components/tag/people-tag'
 import imageList from '@/components/image-list'
 import portraitDesc from '@/components/portrait-desc'
 import socialMoments from '@/components/social-moments'
+import familyRelationship from '@/components/family-relationship'
 
 Vue.component('logo-pattern', logoPattern)
 Vue.component('sex-tag', sexTag)
@@ -19,6 +20,7 @@ Vue.component('people-tag', peopleTag)
 Vue.component('image-list', imageList)
 Vue.component('portrait-desc', portraitDesc)
 Vue.component('social-moments', socialMoments)
+Vue.component('family-relationship', familyRelationship)
 
 Vue.use(Vant)
 

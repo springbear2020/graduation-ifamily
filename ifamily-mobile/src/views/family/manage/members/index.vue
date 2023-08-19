@@ -30,8 +30,8 @@
       <van-grid :gutter="8" square :border="false">
         <van-grid-item icon="add-o" text="添加亲人" to="/family/manage/members/add/1"/>
         <van-grid-item icon="delete-o" text="移除此人" @click="removeFamilyPeople"/>
-        <van-grid-item icon="edit" text="编辑信息" to="/family/manage/members/edit"/>
-        <van-grid-item icon="manager-o" text="ta 的主页" to="/family/members/people/3"/>
+        <van-grid-item icon="edit" text="编辑信息" to="/family/manage/members/edit/1"/>
+        <van-grid-item icon="manager-o" text="ta 的主页" to="/family/members/people/2"/>
       </van-grid>
     </van-action-sheet>
   </div>

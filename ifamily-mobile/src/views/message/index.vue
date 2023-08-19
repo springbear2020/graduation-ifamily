@@ -2,7 +2,7 @@
   <div>
     <van-nav-bar title="消息" @click-right="$toast('好友列表')">
       <template #right>
-        <van-icon name="friends-o" size="20"/>
+        <van-icon name="contact" size="20"/>
       </template>
     </van-nav-bar>
 

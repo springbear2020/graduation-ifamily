@@ -39,9 +39,9 @@
         </van-search>
         <!-- 人员列表 -->
         <van-swipe-cell v-for="i in 3" :key="i">
-          <portrait-desc :person="person"/>
+          <portrait-desc :person="person" :more="false"/>
           <template #right>
-            <van-button square type="danger" text="删除" @click="$toast('移除')"/>
+            <van-button square type="danger" text="移除" @click="$toast('移除')"/>
           </template>
         </van-swipe-cell>
       </van-collapse-item>
@@ -55,9 +55,9 @@
         </van-search>
         <!-- 人员列表 -->
         <van-swipe-cell v-for="i in 5" :key="i">
-          <portrait-desc :person="person"/>
+          <portrait-desc :person="person" :more="false"/>
           <template #right>
-            <van-button square type="danger" text="删除" @click="$toast('移除')"/>
+            <van-button square type="danger" text="移除" @click="$toast('移除')"/>
           </template>
         </van-swipe-cell>
       </van-collapse-item>

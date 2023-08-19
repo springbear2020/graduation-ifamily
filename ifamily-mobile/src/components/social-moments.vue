@@ -2,7 +2,7 @@
   <div>
     <div v-for="moment in dataList" :key="moment.id" class="van-hairline--bottom">
       <!-- 头像、标题、内容、更多 -->
-      <portrait-desc :person="moment" :more="true" @click.native="$toast('查看用户信息')"/>
+      <portrait-desc :person="moment" @click.native="$toast('查看用户信息')"/>
 
       <!-- 文本内容、图片列表、行为图标 -->
       <van-cell class="text-content-top">
