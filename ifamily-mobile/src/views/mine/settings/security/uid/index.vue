@@ -2,7 +2,7 @@
   <div>
     <van-nav-bar title="UID" left-arrow @click-left="$router.replace('/mine/settings/security')"/>
 
-    <van-empty description="UID 是百家谱的唯一凭证，一年只能修改一次" :image="require('@/assets/img/ifamily.png')">
+    <van-empty description="UID 是百家谱的唯一凭证，一年只能修改一次" :image="require('@/assets/img/ifamily-160x160.png')">
       <van-form @submit="handleUpdate">
         <van-field type="text" label="UID" placeholder="UID" clearable
                    v-model.trim="username"
@@ -17,7 +17,7 @@
           <div class="van-field__error-message">{{ error }}</div>
 
           <van-button block type="info" :disabled="username === user.username || !username">
-            确认
+            立即修改
           </van-button>
         </div>
       </van-form>
@@ -58,7 +58,7 @@ export default {
         // 身份令牌已无效，重新登录
         this.$store.dispatch('user/logout')
         this.$router.replace('/user/login')
-        this.$toast('UID 修改成功，身份令牌失效，请重新登录')
+        this.$toast('UID 修改成功，请重新登录')
       }).catch(err => {
         this.error = err.data || err.desc
       })

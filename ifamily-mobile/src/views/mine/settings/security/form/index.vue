@@ -79,11 +79,6 @@ export default {
       }
       this.error = ''
 
-      if (this.type === '1') {
-        this.$toast.fail('手机验证码服务暂不可用');
-        return;
-      }
-
       // 验证验证码格式
       if (!/^\d{6}$/.test(this.formData.code)) {
         this.error = '验证码为 6 位长度数字';
@@ -97,7 +92,7 @@ export default {
         this.error = ''
         this.formData.code = ''
         // 移除用户信息，重新查询最新信息
-        this.$store.commit('user/REMOVE_USER')
+        this.$store.dispatch('user/getUser')
       }).catch(err => {
         this.error = err.data || err.desc
       })

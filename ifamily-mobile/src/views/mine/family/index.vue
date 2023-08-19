@@ -15,7 +15,7 @@
 </template>
 
 <script>
-import MemberForm from "@/components/member-form";
+import MemberForm from "@/components/basis/member-form";
 import FamilyRelationship from "@/components/business/family-relationship";
 
 export default {

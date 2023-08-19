@@ -34,7 +34,13 @@ public class UsernameUpdateLogServiceImpl extends ServiceImpl<UsernameUpdateLogM
     @Override
     public boolean create(String oldUsername, String newUsername, Long userId) {
         Date date = new Date();
-        UsernameUpdateLogDO log = new UsernameUpdateLogDO(null, oldUsername, newUsername, date, date, DeleteStatusEnum.UNDELETED.getCode(), userId);
+        UsernameUpdateLogDO log = new UsernameUpdateLogDO();
+        log.setOldUsername(oldUsername);
+        log.setNewUsername(newUsername);
+        log.setCreated(date);
+        log.setModified(date);
+        log.setDeleted(DeleteStatusEnum.UNDELETED.getCode());
+        log.setUserId(userId);
         return this.baseMapper.insert(log) == 1;
     }
 

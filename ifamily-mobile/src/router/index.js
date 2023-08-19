@@ -76,7 +76,6 @@ export const constantRoutes = [
         path: '/mine/memorial',
         component: () => import('@/views/mine/memorial'),
     },
-
     {
         path: '/mine/contact',
         component: () => import('@/views/mine/contact'),
@@ -88,24 +87,30 @@ export const constantRoutes = [
         meta: {footerShow: true}
     },
     {
-        path: '/family/album',
-        component: () => import('@/views/family/album'),
-    },
-    {
-        path: '/family/info',
-        component: () => import('@/views/family/info'),
+        path: '/family/form/:type',
+        component: () => import('@/views/family/form'),
     },
     {
         path: '/family/list',
         component: () => import('@/views/family/list'),
     },
     {
-        path: '/family/members',
-        component: () => import('@/views/family/members'),
+        path: '/family/info',
+        component: () => import('@/views/family/info'),
+    },
+
+
+    {
+        path: '/family/album',
+        component: () => import('@/views/family/album'),
     },
     {
-        path: '/family/members/people/:type',
-        component: () => import('@/views/family/members/people'),
+        path: '/family/member',
+        component: () => import('@/views/family/member'),
+    },
+    {
+        path: '/family/member/people/:type',
+        component: () => import('@/views/family/member/people'),
     },
     {
         path: '/family/tree/:type',
@@ -116,28 +121,24 @@ export const constantRoutes = [
         component: () => import('@/views/family/notice'),
     },
     {
-        path: '/family/records',
-        component: () => import('@/views/family/records'),
+        path: '/family/record',
+        component: () => import('@/views/family/record'),
     },
     {
         path: '/family/manage',
         component: () => import('@/views/family/manage'),
     },
     {
-        path: '/family/manage/form/:type',
-        component: () => import('@/views/family/manage/form'),
+        path: '/family/manage/member',
+        component: () => import('@/views/family/manage/member'),
     },
     {
-        path: '/family/manage/members',
-        component: () => import('@/views/family/manage/members'),
+        path: '/family/manage/member/add/:type',
+        component: () => import('@/views/family/manage/member/add'),
     },
     {
-        path: '/family/manage/members/add/:type',
-        component: () => import('@/views/family/manage/members/add'),
-    },
-    {
-        path: '/family/manage/members/edit/:type',
-        component: () => import('@/views/family/manage/members/edit'),
+        path: '/family/manage/member/edit/:type',
+        component: () => import('@/views/family/manage/member/edit'),
     },
     {
         path: '/family/manage/seniority',

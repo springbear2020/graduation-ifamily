@@ -29,8 +29,8 @@
 </template>
 
 <script>
-import PortraitDesc from '@/components/portrait-desc'
-import ImageList from '@/components/image-list'
+import PortraitDesc from '@/components/basis/portrait-desc'
+import ImageList from '@/components/basis/image-list'
 
 export default {
   name: "index",

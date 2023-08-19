@@ -30,8 +30,8 @@
 </template>
 
 <script>
-import ImageList from '@/components/image-list'
-import PortraitDesc from '@/components/portrait-desc'
+import ImageList from '@/components/basis/image-list'
+import PortraitDesc from '@/components/basis/portrait-desc'
 
 export default {
   name: "index",

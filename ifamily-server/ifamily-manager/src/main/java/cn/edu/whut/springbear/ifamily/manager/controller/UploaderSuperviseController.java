@@ -29,10 +29,23 @@ public class UploaderSuperviseController {
     private QiniuService qiniuService;
 
     @ApiOperation("获取七牛云头像图片上传令牌")
-    @GetMapping("/qiniu/token/img/avatar")
-    public CommonResult<Object> qiniuImageToken(@RequestParam("suffix") String suffix) {
+    @GetMapping("/qiniu/img/token")
+    public CommonResult<Object> qiniuImageToken(@RequestParam("suffix") String suffix, @RequestParam("type") Integer type) {
+        // [1]用户头像 [2]家族封面
+        String imgType;
+        switch (type) {
+            case 1:
+                imgType = "avatar";
+                break;
+            case 2:
+                imgType = "cover";
+                break;
+            default:
+                return CommonResult.failed("图片类型不正确");
+        }
+
         // 自定义文件上传名，例：img/avatar/23/03/27/a5c8a5e8-df2b-4706-bea4-08d0939410e3.png
-        String key = "img/avatar/" + DateUtil.format(new Date(), "yyyy/MM/dd") + "/" + IdUtil.randomUUID() + suffix;
+        String key = "img/" + imgType + "/" + DateUtil.format(new Date(), "yyyy/MM/dd") + "/" + IdUtil.randomUUID() + suffix;
         Map<String, String> map = qiniuService.imgToken(key);
         return map == null ? CommonResult.failed(SystemMessageConstants.SYSTEM_EXCEPTION) : CommonResult.success(map);
     }

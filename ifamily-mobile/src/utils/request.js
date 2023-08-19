@@ -5,6 +5,9 @@ import nprogress from 'nprogress'
 import 'nprogress/nprogress.css'
 import {Notify} from 'vant';
 
+// 隐藏 nprogress 进度环
+nprogress.configure({showSpinner: false})
+
 const service = axios.create({
     baseURL: 'http://10.129.190.209:8888',
     timeout: 5000
@@ -47,7 +50,7 @@ service.interceptors.response.use(
                 // [500]内部异常 [503]服务不可用
                 Notify({
                     type: 'danger',
-                    message: '服务器被吃了( ╯□╰ )'
+                    message: '服务器维护中，请稍后重试'
                 })
             } else if (code === responseCode.UNAUTHORIZED || code === responseCode.FORBIDDEN) {
                 // [401]身份认证 [403]拒绝访问
@@ -63,7 +66,7 @@ service.interceptors.response.use(
         nprogress.done()
         Notify({
             type: 'danger',
-            message: '连接超时，请稍后重试'
+            message: '网络连接超时，请稍后重试'
         })
         return Promise.reject(err)
     }

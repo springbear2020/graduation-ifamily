@@ -1,13 +1,13 @@
 <template>
   <!-- 家族信息概况 -->
-  <van-card centered tag="李" title="相亲相爱" desc="湖北省/武汉市/江岸区"
-            thumb="https://res.dps.cn/template/thn/202109/8107a70605b27e46979a6958c442e640.jpg">
+  <van-card centered :tag="genealogy.surname" :title="genealogy.title" :desc="genealogy.address"
+            :thumb="genealogy.cover">
     <template #tags>
-      <desc-tag title="总" content="523" color="#fd7e14"/>
-      <desc-tag title="男" content="323" color="#007bff"/>
-      <desc-tag title="女" content="200" color="#e83e8c"/>
-      <desc-tag title="生" content="423" color="#28a745"/>
-      <desc-tag title="逝" content="100" color="#6c757d"/>
+      <desc-tag title="总" :content="genealogy.total" color="#fd7e14"/>
+      <desc-tag title="男" :content="genealogy.male" color="#007bff"/>
+      <desc-tag title="女" :content="genealogy.female" color="#e83e8c"/>
+      <desc-tag title="生" :content="genealogy.alive" color="#28a745"/>
+      <desc-tag title="逝" :content="genealogy.death" color="#6c757d"/>
     </template>
 
     <template #footer>
@@ -24,6 +24,10 @@ export default {
   name: "family-info-card",
   components: {DescTag},
   props: {
+    genealogy: {
+      type: Object,
+      required: true
+    },
     defaultFamily: {
       type: Boolean,
       default: false

@@ -2,6 +2,7 @@ package cn.edu.whut.springbear.ifamily.model.po;
 
 import com.baomidou.mybatisplus.annotation.*;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.util.Date;
 
@@ -9,17 +10,12 @@ import java.util.Date;
  * @author Spring-_-Bear
  * @since 23/03/11 09:52
  */
+@EqualsAndHashCode(callSuper = true)
 @Data
 @TableName("user")
-public class UserDO {
+public class UserDO extends AbstractBaseDO {
 
     private static final long serialVersionUID = 6809861721356316654L;
-
-    /**
-     * ID
-     */
-    @TableId(value = "id", type = IdType.AUTO)
-    private Long id;
 
     /**
      * 用户名
@@ -65,22 +61,5 @@ public class UserDO {
      * 上次登录时间
      */
     private Date lastLogin;
-
-    /**
-     * 创建时间
-     */
-    private Date created;
-
-    /**
-     * 修改时间
-     */
-    private Date modified;
-
-    /**
-     * 是否删除：[0]未删除 [1]已删除
-     */
-    @TableLogic
-    @TableField("is_deleted")
-    private Integer deleted;
 
 }

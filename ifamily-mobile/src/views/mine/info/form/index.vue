@@ -82,7 +82,7 @@ export default {
       this.$api.user.updateUserProfile(this.content, type).then(() => {
         this.$toast.success('更新成功')
         // 移除用户信息，查询最新的用户信息
-        this.$store.commit('user/REMOVE_USER')
+        this.$store.dispatch('user/getUser')
       }).catch((err) => {
         this.error = err.data || err.desc
       });

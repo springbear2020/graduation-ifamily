@@ -79,11 +79,6 @@ export default {
   },
   methods: {
     handleRegisterOrReset() {
-      if (this.accountType === '1') {
-        this.$toast.fail('手机验证码服务暂不可用')
-        return;
-      }
-
       if (this.type === '0') {
         this.userRegister();
       } else if (this.type === '1' || this.type === '2') {
@@ -107,6 +102,9 @@ export default {
         // 派发 action 清除登录用户信息
         this.$store.dispatch('user/logout')
         this.$toast('重置成功，即将前往登录页');
+        setTimeout(() => {
+          this.$router.replace('/user/login')
+        }, 2000)
       }).catch(err => {
         this.error = err.data || err.desc
       })

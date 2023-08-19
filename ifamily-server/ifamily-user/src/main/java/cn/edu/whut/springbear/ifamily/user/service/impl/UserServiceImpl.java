@@ -271,7 +271,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
             throw new IllegalConditionException(UserMessageConstants.ERROR_PASSWORD);
         }
 
-        // 更新用户账号启用状态、删除状态
+        // 更新用户账号删除状态
         return this.baseMapper.deleteById(user.getId()) == 1;
     }
 

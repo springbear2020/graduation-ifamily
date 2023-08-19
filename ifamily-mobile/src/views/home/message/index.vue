@@ -14,7 +14,7 @@
 
 <script>
 import messages from '@/assets/json/messages.json'
-import MessageBox from '@/components/message-box'
+import MessageBox from '@/components/basis/message-box'
 
 export default {
   name: "index",

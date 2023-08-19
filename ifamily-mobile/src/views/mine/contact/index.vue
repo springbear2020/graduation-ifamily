@@ -29,7 +29,7 @@
       <van-grid square :border="false" :column-num="3">
         <van-grid-item icon="chat-o" text="发起聊天" @click="$router.push('/home/message/chat')"/>
         <van-grid-item icon="delete-o" text="移除此人" @click="removeContact"/>
-        <van-grid-item icon="manager-o" text="ta 的主页" @click="$router.push('/family/members/people/3')"/>
+        <van-grid-item icon="manager-o" text="ta 的主页" @click="$router.push('/family/member/people/3')"/>
       </van-grid>
     </van-action-sheet>
   </div>

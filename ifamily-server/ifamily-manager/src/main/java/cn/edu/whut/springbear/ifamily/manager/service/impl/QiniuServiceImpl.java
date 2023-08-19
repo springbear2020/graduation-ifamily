@@ -51,10 +51,8 @@ public class QiniuServiceImpl implements QiniuService {
         policy.put("scope", bucket + key);
 
         // 七牛云 token 获取记录
-        Date date = new Date();
         UserDO currentUser = securityUserService.getCurrentUser();
-        QiniuTokenLogDO qiniuTokenLogDO = new QiniuTokenLogDO(null, bucket, key, cdn, null,
-                SuccessStatusEnum.FAILED.getCode(), date, date, DeleteStatusEnum.UNDELETED.getCode(), currentUser.getId());
+        QiniuTokenLogDO qiniuTokenLogDO = this.qiniuTokenLogDO(key, currentUser.getId());
 
         String token;
         try {
@@ -77,6 +75,21 @@ public class QiniuServiceImpl implements QiniuService {
         map.put("token", token);
         map.put("cdn", cdn);
         return map;
+    }
+
+    private QiniuTokenLogDO qiniuTokenLogDO(String key, Long userId) {
+        Date date = new Date();
+        QiniuTokenLogDO qiniuTokenLogDO = new QiniuTokenLogDO();
+        qiniuTokenLogDO.setBucket(bucket);
+        qiniuTokenLogDO.setFileKey(key);
+        qiniuTokenLogDO.setCdn(cdn);
+        qiniuTokenLogDO.setToken(null);
+        qiniuTokenLogDO.setStatus(SuccessStatusEnum.FAILED.getCode());
+        qiniuTokenLogDO.setCreated(date);
+        qiniuTokenLogDO.setModified(date);
+        qiniuTokenLogDO.setDeleted(DeleteStatusEnum.UNDELETED.getCode());
+        qiniuTokenLogDO.setUserId(userId);
+        return qiniuTokenLogDO;
     }
 
 }

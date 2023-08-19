@@ -1,43 +1,19 @@
 package cn.edu.whut.springbear.ifamily.model.po;
 
-import com.baomidou.mybatisplus.annotation.*;
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
-
-import java.io.Serializable;
-import java.util.Date;
+import lombok.EqualsAndHashCode;
 
 /**
  * @author Spring-_-Bear
  * @since 23/03/19 22:27
  */
+@EqualsAndHashCode(callSuper = true)
 @Data
 @TableName("role_permission")
-public class RoleMenuDO implements Serializable {
+public class RoleMenuDO extends AbstractBaseDO {
 
     private static final long serialVersionUID = 5058489921797195670L;
-
-    /**
-     * ID
-     */
-    @TableId(value = "id", type = IdType.AUTO)
-    private Long id;
-
-    /**
-     * 创建时间
-     */
-    private Date created;
-
-    /**
-     * 修改时间
-     */
-    private Date modified;
-
-    /**
-     * 是否删除：[0]未删除 [1]已删除
-     */
-    @TableLogic
-    @TableField("is_deleted")
-    private Integer deleted;
 
     /**
      * 角色 ID

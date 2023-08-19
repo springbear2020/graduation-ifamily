@@ -1,30 +1,31 @@
 @font-face {
-    font-family: "iconfont"; /* Project id 3906753 */
-    src: url('iconfont.woff2?t=1677992550712') format('woff2'),
-    url('iconfont.woff?t=1677992550712') format('woff'),
-    url('iconfont.ttf?t=1677992550712') format('truetype');
+  font-family: "iconfont"; /* Project id 3906753 */
+  src: url('iconfont.woff2?t=1680085182456') format('woff2'),
+       url('iconfont.woff?t=1680085182456') format('woff'),
+       url('iconfont.ttf?t=1680085182456') format('truetype');
 }
 
 .iconfont {
-    font-family: "iconfont" !important;
-    font-size: 16px;
-    font-style: normal;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-}
-
-.icon-female:before {
-    content: "\e71a";
-}
-
-.icon-male:before {
-    content: "\e71c";
-}
-
-.icon-exchange:before {
-    content: "\e618";
+  font-family: "iconfont" !important;
+  font-size: 16px;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 .icon-sweep:before {
-    content: "\ea00";
+  content: "\ea00";
 }
+
+.icon-female:before {
+  content: "\e71a";
+}
+
+.icon-male:before {
+  content: "\e71c";
+}
+
+.icon-exchange:before {
+  content: "\e618";
+}
+

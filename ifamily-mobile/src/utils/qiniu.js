@@ -7,7 +7,7 @@ import {Notify} from 'vant';
  * @param key 文件名
  * @param token 验证令牌
  */
-export function upload(file, key, token) {
+export function qiniuUploader(file, key, token) {
     return new Promise((resolve, reject) => {
         const config = {
             shouldUseQiniuFileName: false,

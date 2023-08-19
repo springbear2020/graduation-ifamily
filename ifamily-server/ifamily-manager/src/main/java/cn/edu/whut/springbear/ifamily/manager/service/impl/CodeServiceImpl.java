@@ -65,8 +65,8 @@ public class CodeServiceImpl implements CodeService {
         String emailContent = templateEngine.process("email-code-template", context);
 
         // 验证码发送记录
-        CodeSendLogDO codeSendLogDO = new CodeSendLogDO(null, email, code, CodeTypeEnum.EMAIL.getCode(),
-                SuccessStatusEnum.FAILED.getCode(), new Date(), new Date(), DeleteStatusEnum.UNDELETED.getCode());
+        CodeSendLogDO codeSendLogDO = this.codeSendLogDO(email, code);
+
         try {
             // 尝试发送邮件
             MimeMessage mimeMessage = javaMailSender.createMimeMessage();
@@ -75,7 +75,8 @@ public class CodeServiceImpl implements CodeService {
             helper.setTo(email);
             helper.setSubject("【百家谱】邮箱验证码身份认证");
             helper.setText(emailContent, true);
-            javaMailSender.send(mimeMessage);
+            // TODO open the next line when deploy
+//            javaMailSender.send(mimeMessage);
             // 邮件发送成功，更新发送记录状态为成功
             codeSendLogDO.setStatus(SuccessStatusEnum.SUCCESS.getCode());
         } catch (MessagingException | UnsupportedEncodingException e) {
@@ -95,6 +96,18 @@ public class CodeServiceImpl implements CodeService {
     public boolean sendSmsCode(String phone) {
         // TODO 手机验证码发送功能待实现
         return false;
+    }
+
+    private CodeSendLogDO codeSendLogDO(String email, String code) {
+        CodeSendLogDO codeSendLogDO = new CodeSendLogDO();
+        codeSendLogDO.setReceiver(email);
+        codeSendLogDO.setCode(code);
+        codeSendLogDO.setType(CodeTypeEnum.EMAIL.getCode());
+        codeSendLogDO.setStatus(SuccessStatusEnum.FAILED.getCode());
+        codeSendLogDO.setCreated(new Date());
+        codeSendLogDO.setModified(new Date());
+        codeSendLogDO.setDeleted(DeleteStatusEnum.UNDELETED.getCode());
+        return codeSendLogDO;
     }
 
 }

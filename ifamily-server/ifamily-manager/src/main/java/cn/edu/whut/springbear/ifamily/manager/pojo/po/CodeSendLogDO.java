@@ -1,32 +1,20 @@
 package cn.edu.whut.springbear.ifamily.manager.pojo.po;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
+import cn.edu.whut.springbear.ifamily.model.po.AbstractBaseDO;
 import com.baomidou.mybatisplus.annotation.TableName;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-
-import java.io.Serializable;
-import java.util.Date;
+import lombok.EqualsAndHashCode;
 
 /**
  * @author Spring-_-Bear
  * @since 2023-03-23
  */
+@EqualsAndHashCode(callSuper = true)
 @Data
 @TableName("code_send_log")
-@NoArgsConstructor
-@AllArgsConstructor
-public class CodeSendLogDO implements Serializable {
+public class CodeSendLogDO extends AbstractBaseDO {
 
     private static final long serialVersionUID = 7000871776368497458L;
-
-    /**
-     * ID
-     */
-    @TableId(value = "id", type = IdType.AUTO)
-    private Long id;
 
     /**
      * 收件人：邮箱或手机
@@ -47,20 +35,5 @@ public class CodeSendLogDO implements Serializable {
      * 发送状态：[0]成功 [1]失败
      */
     private Integer status;
-
-    /**
-     * 创建时间
-     */
-    private Date created;
-
-    /**
-     * 修改时间
-     */
-    private Date modified;
-
-    /**
-     * 是否删除：[0]未删除 [1]已删除
-     */
-    private Integer isDeleted;
 
 }

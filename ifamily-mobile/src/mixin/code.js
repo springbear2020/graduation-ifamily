@@ -56,7 +56,7 @@ export const code = {
         },
         // 发送手机验证码
         sendPhoneVerifyCode() {
-            this.$toast.fail('手机验证码服务暂不可用')
+            this.$toast('手机验证码服务暂不可用，请使用邮箱验证码')
         },
         // 锁定获取验证码按钮
         lockButton() {

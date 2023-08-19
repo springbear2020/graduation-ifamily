@@ -21,7 +21,6 @@ public class AclFeignController {
     @Autowired
     private PermissionService permissionService;
 
-
     /**
      * 查询用户拥有的所有系统权限
      */

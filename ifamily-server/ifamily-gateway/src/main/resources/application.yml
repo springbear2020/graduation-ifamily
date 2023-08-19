@@ -9,18 +9,23 @@ spring:
         server-addr: 127.0.0.1:8848
     gateway:
       routes:
-        - id: ifamily-user
+        - id: ifamily-acl
           uri: http://localhost:8081
+          predicates:
+            - Path=/*/acl/**
+        - id: ifamily-user
+          uri: http://localhost:8082
           predicates:
             - Path=/*/user/**
         - id: ifamily-manager
-          uri: http://localhost:8082
-          predicates:
-            - Path=/*/manager/**
-        - id: ifamily-acl
           uri: http://localhost:8083
           predicates:
-            - Path=/*/acl/**
+            - Path=/*/manager/**
+        - id: ifamily-genealogy
+          uri: http://localhost:8084
+          predicates:
+            - Path=/*/genealogy/**
+
 logging:
   level:
     com:

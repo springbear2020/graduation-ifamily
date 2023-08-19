@@ -74,7 +74,7 @@ export default {
       if (this.type === '0') {
         dst = '/family'
       } else if (this.type === '1' || this.type === '2' || this.type === '3') {
-        dst = '/family/members/people/' + this.type
+        dst = '/family/member/people/' + this.type
       }
       return dst
     }

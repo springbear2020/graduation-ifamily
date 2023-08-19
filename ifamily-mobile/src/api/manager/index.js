@@ -13,7 +13,7 @@ export function sendEmailCode(params) {
 
 export function getAvatarToken(params) {
     return request({
-        url: `${superviseBaseUrl}/uploader/qiniu/token/img/avatar`,
+        url: `${superviseBaseUrl}/uploader/qiniu/img/token`,
         method: 'get',
         params
     })

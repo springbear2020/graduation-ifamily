@@ -12,6 +12,7 @@
         <module>ifamily-client</module>
         <module>ifamily-model</module>
         <module>ifamily-acl</module>
+        <module>ifamily-genealogy</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>

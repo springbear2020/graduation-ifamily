@@ -5,26 +5,52 @@
                  @click-right="$router.push('/family/manage/form/0')"
     >
       <template #right>
-        <van-icon name="add-o" size="20"/>
+        <van-icon v-if="hasGenealogy" name="add-o" size="20"/>
       </template>
     </van-nav-bar>
 
-    <family-info-card v-for="i in 10" :key="i" :me-created="i === 3 || i ===1 " :default-family="i === 1"
-                      @click.native="setDefaultFamily"
+    <!-- 用户家族列表 -->
+    <family-info-card v-for="genealogy in genealogyList" :genealogy="genealogy" :key="genealogy.id"
+                      :default-family="genealogy.defaultGenealogy === 1"
+                      :me-created="genealogy.creatorUserId === userInfo.id"
+                      @click.native="updateDefaultFamily(genealogy.id)"
     />
   </div>
 </template>
 
 <script>
 import FamilyInfoCard from "@/components/business/family-info-card";
+import {mapState} from "vuex";
+import {genealogyList} from "@/mixin/genealogy-list";
 
 export default {
   name: "index",
+  mixins: [genealogyList],
   components: {FamilyInfoCard},
+  computed: {
+    ...mapState({
+      genealogyList: state => {
+        return state.genealogy.genealogyList
+      },
+      userInfo: state => {
+        return state.user.user
+      }
+    })
+  },
   methods: {
-    setDefaultFamily() {
-      this.$toast('设为默认家庭')
-      this.$router.replace('/family')
+    updateDefaultFamily(genealogyId) {
+      // 用户选择的家族不是默认家族时则更新用户选择家族为其默认家族
+      if (genealogyId !== this.$store.getters["genealogy/defaultGenealogy"].id) {
+        this.$api.genealogy.setDefaultGenealogyOfUser(genealogyId).then(() => {
+          // 移除 store 中的家族列表信息，查询最新的家族信息
+          this.$store.dispatch('genealogy/listGenealogyList')
+          this.$router.replace('/family')
+        }).catch(err => {
+          this.$toast.fail(err.data || err.desc)
+        })
+      } else {
+        this.$router.replace('/family')
+      }
     }
   }
 }

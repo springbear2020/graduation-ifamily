@@ -25,7 +25,7 @@
 </template>
 
 <script>
-import PortraitDesc from '@/components/portrait-desc';
+import PortraitDesc from '@/components/basis/portrait-desc';
 
 export default {
   name: "index",
