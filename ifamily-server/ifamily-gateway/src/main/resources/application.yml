@@ -1,0 +1,9 @@
+server:
+  port: 8888
+spring:
+  application:
+    name: ifamily-gateway
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
