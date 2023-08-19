@@ -47,11 +47,12 @@
 
 <script>
 import {user} from '@/mixin/user'
+import {code} from '@/mixin/code'
 import {setToken} from "@/utils/auth";
 
 export default {
   name: "index",
-  mixins: [user],
+  mixins: [user, code],
   data() {
     return {
       // [0]用户注册 [1]忘记密码 [2]修改密码
@@ -105,13 +106,7 @@ export default {
       this.$api.user.reset({account, password, code}).then(() => {
         // 派发 action 清除登录用户信息
         this.$store.dispatch('user/logout')
-        this.$toast.success('重置成功');
-        this.$notify({
-          type: 'success',
-          message: '密码重置成功，即将前往登录页',
-          duration: 3000,
-          onClose: () => this.$router.replace('/user/login')
-        })
+        this.$toast('重置成功，即将前往登录页');
       }).catch(err => {
         this.error = err.data || err.desc
       })

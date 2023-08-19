@@ -67,10 +67,11 @@
 
 <script>
 import {user} from '@/mixin/user'
+import {code} from '@/mixin/code'
 
 export default {
   name: "index",
-  mixins: [user],
+  mixins: [user, code],
   computed: {
     rightText() {
       return this.formData.loginType === '0' ? '验证码登录' : (this.formData.loginType === '1' ? '密码登录' : '');
@@ -79,11 +80,6 @@ export default {
   methods: {
     // 用户登录请求
     handleLogin() {
-      if (this.accountType === '1') {
-        this.$toast.fail('手机验证码服务暂不可用')
-        return;
-      }
-
       this.$store.dispatch('user/login', this.formData).then(() => {
         const dstRoute = this.$route.query.redirect ? this.$route.query.redirect : '/home'
         this.$router.replace(dstRoute)

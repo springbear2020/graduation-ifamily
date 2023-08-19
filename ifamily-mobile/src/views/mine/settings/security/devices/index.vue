@@ -31,7 +31,11 @@ export default {
   methods: {
     onLoad() {
       this.$api.user.getUserLoginLog(this.formData).then(logList => {
-        this.loginLogList = this.loginLogList.concat(logList)
+        if (Array.isArray(logList)) {
+          logList.forEach(item => {
+            this.loginLogList.push(item)
+          })
+        }
         this.loading = false
         this.formData.current += 1
       }).catch(() => {

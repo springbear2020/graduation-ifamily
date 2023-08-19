@@ -1,7 +1,7 @@
 import request from "@/utils/request";
 
 const apiBaseUrl = '/api/user'
-const manageBaseUrl = '/supervise/user'
+const superviseBaseUrl = '/supervise/user'
 
 export function login(data) {
     return request({
@@ -29,14 +29,26 @@ export function register(data) {
 
 export function getUser() {
     return request({
-        url: `${manageBaseUrl}`,
+        url: `${superviseBaseUrl}`,
         method: 'get'
+    })
+}
+
+
+/**
+ * 用户账号注销
+ */
+export function logout(params) {
+    return request({
+        url: `${superviseBaseUrl}`,
+        method: 'delete',
+        params
     })
 }
 
 export function getUserLoginLog(params) {
     return request({
-        url: `${manageBaseUrl}/devices`,
+        url: `${superviseBaseUrl}/devices`,
         method: 'get',
         params
     })
@@ -49,7 +61,7 @@ export function getUserLoginLog(params) {
  */
 export function updateUserProfile(content, type) {
     return request({
-        url: `${manageBaseUrl}/profile/${type}`,
+        url: `${superviseBaseUrl}/profile/${type}`,
         method: 'put',
         params: {content}
     })
@@ -63,7 +75,7 @@ export function updateUserProfile(content, type) {
  */
 export function updateUserPrivacy(content, extra, type) {
     return request({
-        url: `${manageBaseUrl}/privacy/${type}`,
+        url: `${superviseBaseUrl}/privacy/${type}`,
         method: 'put',
         params: {content, extra}
     })

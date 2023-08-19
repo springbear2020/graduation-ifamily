@@ -55,13 +55,16 @@ service.interceptors.response.use(
                     type: 'danger',
                     message: `[${jsonData.desc}]${jsonData.data}`
                 })
-            } else {
-                return Promise.reject(jsonData)
             }
+            return Promise.reject(jsonData)
         }
     },
     err => {
         nprogress.done()
+        Notify({
+            type: 'danger',
+            message: '连接超时，请稍后重试'
+        })
         return Promise.reject(err)
     }
 )
