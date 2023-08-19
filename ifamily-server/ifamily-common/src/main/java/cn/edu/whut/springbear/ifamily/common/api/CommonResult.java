@@ -9,7 +9,7 @@ import lombok.Data;
  * @since 23/03/11 10:10
  */
 @Data
-public class CommonResult<T> {
+public final class CommonResult<T> {
 
     /**
      * 状态码
@@ -31,45 +31,66 @@ public class CommonResult<T> {
     }
 
     /**
-     * 成功返回统一消息
+     * 成功
      */
     public static <T> CommonResult<T> success() {
         return new CommonResult<>(ResultCodeEnum.SUCCESS.getCode(), ResultCodeEnum.SUCCESS.getMessage(), null);
     }
 
     /**
-     * 成功返回统一消息和数据
+     * 成功
      */
     public static <T> CommonResult<T> success(T data) {
         return new CommonResult<>(ResultCodeEnum.SUCCESS.getCode(), ResultCodeEnum.SUCCESS.getMessage(), data);
     }
 
     /**
-     * 失败返回统一消息
+     * 失败
      */
-    public static <T> CommonResult<T> failed() {
-        return new CommonResult<>(ResultCodeEnum.FAILED.getCode(), ResultCodeEnum.FAILED.getMessage(), null);
+    public static <T> CommonResult<T> failed(T data) {
+        return new CommonResult<>(ResultCodeEnum.NOT_ACCEPTABLE.getCode(), ResultCodeEnum.NOT_ACCEPTABLE.getMessage(), data);
     }
 
     /**
-     * 失败返回自定义消息
+     * 未授权
      */
-    public static <T> CommonResult<T> failed(String desc) {
-        return new CommonResult<>(ResultCodeEnum.FAILED.getCode(), desc, null);
+    public static <T> CommonResult<T> forbidden(T data) {
+        return new CommonResult<>(ResultCodeEnum.FORBIDDEN.getCode(), ResultCodeEnum.FORBIDDEN.getMessage(), data);
     }
 
     /**
-     * 未授权自定义消息
+     * 未认证
      */
-    public static <T> CommonResult<T> forbidden(String desc) {
-        return new CommonResult<>(ResultCodeEnum.FORBIDDEN.getCode(), desc, null);
+    public static <T> CommonResult<T> unauthorized(T data) {
+        return new CommonResult<>(ResultCodeEnum.UNAUTHORIZED.getCode(), ResultCodeEnum.UNAUTHORIZED.getMessage(), data);
     }
 
     /**
-     * 未认证自定义消息
+     * 非法参数
      */
-    public static <T> CommonResult<T> unauthorized(String desc) {
-        return new CommonResult<>(ResultCodeEnum.UNAUTHORIZED.getCode(), desc, null);
+    public static <T> CommonResult<T> badRequest(T data) {
+        return new CommonResult<>(ResultCodeEnum.BAD_REQUEST.getCode(), ResultCodeEnum.BAD_REQUEST.getMessage(), data);
+    }
+
+    /**
+     * 非法请求方法
+     */
+    public static <T> CommonResult<T> methodNotAllowed(T data) {
+        return new CommonResult<>(ResultCodeEnum.METHOD_NOT_ALLOWED.getCode(), ResultCodeEnum.METHOD_NOT_ALLOWED.getMessage(), data);
+    }
+
+    /**
+     * 服务器内部异常
+     */
+    public static <T> CommonResult<T> serverInternalError(T data) {
+        return new CommonResult<>(ResultCodeEnum.SERVER_INTERNAL_ERROR.getCode(), ResultCodeEnum.SERVER_INTERNAL_ERROR.getMessage(), data);
+    }
+
+    /**
+     * 服务不可用
+     */
+    public static <T> CommonResult<T> serviceUnavailable(T data) {
+        return new CommonResult<>(ResultCodeEnum.SERVICE_UNAVAILABLE.getCode(), ResultCodeEnum.SERVICE_UNAVAILABLE.getMessage(), data);
     }
 
 }

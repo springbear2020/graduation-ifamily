@@ -12,4 +12,10 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class UserLoginLogServiceImpl extends ServiceImpl<UserLoginLogMapper, UserLoginLogDO> implements UserLoginLogService {
+
+    @Override
+    public Boolean create(UserLoginLogDO userLoginLogDO) {
+        return this.baseMapper.insert(userLoginLogDO) == 1;
+    }
+
 }

@@ -24,21 +24,22 @@ public class DynamicAccessDecisionManager implements AccessDecisionManager {
 
     @Override
     public void decide(Authentication authentication, Object object, Collection<ConfigAttribute> configAttributes) throws AccessDeniedException, InsufficientAuthenticationException {
-        // 访问当前资源不做权限控制，直接放行
+        // 当前用户请求无需权限控制，直接放行
         if (CollUtil.isEmpty(configAttributes)) {
             return;
         }
 
+        Collection<? extends GrantedAuthority> grantedAuthorities = authentication.getAuthorities();
+        // 检查当前登录用户已授权的权限 grantedAuthorities 中是否包含当前请求所需权限 configAttributes
         for (ConfigAttribute configAttribute : configAttributes) {
             String needAuthority = configAttribute.getAttribute();
-            // 比对用户拥有的权限和访问当前资源需要的权限，若用户拥有权限则放行
-            for (GrantedAuthority grantedAuthority : authentication.getAuthorities()) {
+            for (GrantedAuthority grantedAuthority : grantedAuthorities) {
                 if (needAuthority.trim().equals(grantedAuthority.getAuthority())) {
                     return;
                 }
             }
         }
-        throw new AccessDeniedException("抱歉，您没有访问权限");
+        throw new AccessDeniedException("抱歉，您缺少动态访问权限");
     }
 
     @Override

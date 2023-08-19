@@ -30,7 +30,7 @@ public class RoleDO implements Serializable {
     /**
      * 角色描述
      */
-    private String desc;
+    private String description;
 
     /**
      * 角色状态：[0]启用 [1]禁用

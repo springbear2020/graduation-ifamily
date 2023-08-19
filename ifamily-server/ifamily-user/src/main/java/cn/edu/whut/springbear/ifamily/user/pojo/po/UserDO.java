@@ -57,7 +57,7 @@ public class UserDO {
     private String signature;
 
     /**
-     * 用户状态：[0]正常 [1]异常
+     * 用户状态：[0]启用 [1]禁用
      */
     private Integer status;
 

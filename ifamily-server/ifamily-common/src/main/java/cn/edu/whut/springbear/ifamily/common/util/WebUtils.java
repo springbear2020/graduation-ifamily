@@ -14,7 +14,7 @@ import java.net.UnknownHostException;
  * @author Spring-_-Bear
  * @since 23/03/12 09:22
  */
-public class WebUtils {
+public final class WebUtils {
 
     /**
      * 百度地图签发的 IP 归属地解析请求地址 FIXME update the sensitive info before deploying the server

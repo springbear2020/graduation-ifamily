@@ -55,15 +55,15 @@ public class JwtUtils {
     /**
      * 验证 token 是否过期
      *
-     * @return [true]已过期
+     * @return [true]未过期
      */
-    public static boolean expired(String token) {
+    public static boolean isNonExpired(String token) {
         Jws<Claims> claims = Jwts.parser().setSigningKey(JwtUtils.SECRET).parseClaimsJws(token);
         // 过期时间
         long expirationTime = claims.getBody().getExpiration().getTime();
         // 当前时间
         long currentTime = System.currentTimeMillis();
-        return expirationTime < currentTime;
+        return expirationTime > currentTime;
     }
 
 }

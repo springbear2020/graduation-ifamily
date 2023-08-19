@@ -23,11 +23,6 @@ public class MenuDO implements Serializable {
     private Long id;
 
     /**
-     * 父级菜单 ID
-     */
-    private Long parentId;
-
-    /**
      * 菜单名称
      */
     private String name;
@@ -35,7 +30,7 @@ public class MenuDO implements Serializable {
     /**
      * 菜单描述
      */
-    private String desc;
+    private String description;
 
     /**
      * 菜单值：模块:控制器:操作[user:login:create]
@@ -78,5 +73,10 @@ public class MenuDO implements Serializable {
     @TableLogic
     @TableField("is_deleted")
     private Integer deleted;
+
+    /**
+     * 父级菜单 ID
+     */
+    private Long parentId;
 
 }

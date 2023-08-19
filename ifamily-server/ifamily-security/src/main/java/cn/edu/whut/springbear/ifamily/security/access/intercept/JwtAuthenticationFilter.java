@@ -38,11 +38,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
-            // 验证 token 有效期以及合法性
-            if (!JwtUtils.expired(token) && username.equals(userDetails.getUsername())) {
+            // 验证 token 有效期以及合法性，验证通过后注入用户到安全框架上下文中，从而实现免鉴权认证
+            if (JwtUtils.isNonExpired(token) && username.equals(userDetails.getUsername())) {
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                log.info("authenticated user:{}", username);
+                log.info("Authenticated username: {}", username);
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
         }

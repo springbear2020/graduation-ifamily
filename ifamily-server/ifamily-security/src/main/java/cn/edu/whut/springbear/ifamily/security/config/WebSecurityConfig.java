@@ -53,22 +53,22 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 // 关闭跨站请求防护以及不使用 session
                 .csrf().disable().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-                // 自定义权限拒绝处理类
-                .exceptionHandling().accessDeniedHandler(restfulForbiddenHandler).authenticationEntryPoint(restfulUnauthorizedEntryPoint)
+                // 自定义权限拒绝处理类和认证错误处理类
+                .exceptionHandling().accessDeniedHandler(this.restfulForbiddenHandler).authenticationEntryPoint(this.restfulUnauthorizedEntryPoint)
                 .and()
                  // 自定义权限拦截器 JWT 过滤器，将其置于用户名密码验证过滤器之前，实现 token 有效时免用户认证
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(this.jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         // 有动态权限配置时添加动态权限校验过滤器
-        if (dynamicSecurityService != null) {
-            http.authorizeRequests().and().addFilterBefore(dynamicSecurityFilter, FilterSecurityInterceptor.class);
+        if (this.dynamicSecurityService != null) {
+            http.authorizeRequests().and().addFilterBefore(this.dynamicSecurityFilter, FilterSecurityInterceptor.class);
         }
     }
 
     @Override
     public void configure(WebSecurity web) {
         // 配置不需要权限控制的路径，直接放行
-        List<String> urls = whitelistResourcePathConfig.getUrls();
+        List<String> urls = this.whitelistResourcePathConfig.getUrls();
         web.ignoring().antMatchers(urls.toArray(new String[0]));
     }
 

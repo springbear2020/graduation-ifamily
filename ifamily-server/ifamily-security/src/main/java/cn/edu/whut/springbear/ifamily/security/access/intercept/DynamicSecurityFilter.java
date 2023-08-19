@@ -34,7 +34,7 @@ public class DynamicSecurityFilter extends AbstractSecurityInterceptor implement
     private WhitelistResourcePathConfig whitelistResourcePathConfig;
 
     @Autowired
-    public void setMyAccessDecisionManager(DynamicAccessDecisionManager dynamicAccessDecisionManager) {
+    public void setAccessDecisionManager(DynamicAccessDecisionManager dynamicAccessDecisionManager) {
         super.setAccessDecisionManager(dynamicAccessDecisionManager);
     }
 
@@ -51,7 +51,7 @@ public class DynamicSecurityFilter extends AbstractSecurityInterceptor implement
 
         // 白名单请求直接放行
         PathMatcher pathMatcher = new AntPathMatcher();
-        for (String path : whitelistResourcePathConfig.getUrls()) {
+        for (String path : this.whitelistResourcePathConfig.getUrls()) {
             if (pathMatcher.match(path, request.getRequestURI())) {
                 fi.getChain().doFilter(fi.getRequest(), fi.getResponse());
                 return;
@@ -74,7 +74,7 @@ public class DynamicSecurityFilter extends AbstractSecurityInterceptor implement
 
     @Override
     public SecurityMetadataSource obtainSecurityMetadataSource() {
-        return dynamicPermissionMetadataSource;
+        return this.dynamicPermissionMetadataSource;
     }
 
     @Override

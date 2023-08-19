@@ -30,7 +30,7 @@ public class DynamicPermissionMetadataSource implements FilterInvocationSecurity
 
     @PostConstruct
     public void loadDataSource() {
-        configAttributeMap = dynamicPermissionProvider.loadDataSource();
+        configAttributeMap = this.dynamicPermissionProvider.loadDataSource();
     }
 
     /**
@@ -46,14 +46,14 @@ public class DynamicPermissionMetadataSource implements FilterInvocationSecurity
 
         // 获取当前访问路径
         String url = ((FilterInvocation) o).getRequestUrl();
-        String path = URLUtil.getPath(url);
+        String requestPath = URLUtil.getPath(url);
 
         PathMatcher pathMatcher = new AntPathMatcher();
         Set<String> configAttributeSet = configAttributeMap.keySet();
-        for (String pattern : configAttributeSet) {
-            if (pathMatcher.match(pattern, path)) {
-                // 设置访问当前路径所需的权限资源
-                configAttributes.add(configAttributeMap.get(pattern));
+        for (String path : configAttributeSet) {
+            if (pathMatcher.match(path, requestPath)) {
+                // 将系统权限列表中匹配当前请求的资源路径配置到当前请求所需权限列表中 configAttributes
+                configAttributes.add(configAttributeMap.get(path));
             }
         }
         return configAttributes;
@@ -61,7 +61,14 @@ public class DynamicPermissionMetadataSource implements FilterInvocationSecurity
 
     @Override
     public Collection<ConfigAttribute> getAllConfigAttributes() {
-        return null;
+        if (configAttributeMap == null) {
+            this.loadDataSource();
+        }
+
+        List<ConfigAttribute> configAttributes = new ArrayList<>();
+        configAttributeMap.keySet().forEach(path -> configAttributes.add(configAttributeMap.get(path)));
+
+        return configAttributes;
     }
 
     @Override
