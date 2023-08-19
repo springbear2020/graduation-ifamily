@@ -1,6 +1,6 @@
 <template>
   <div>
-    <van-nav-bar title="家庭纪念日" left-arrow @click-left="$router.replace('/mine')"/>
+    <van-nav-bar title="纪念日" left-arrow @click-left="$router.replace('/mine')"/>
 
     <van-tabs v-model="active">
       <!-- 生日 -->

@@ -7,10 +7,11 @@
       </template>
     </van-nav-bar>
 
-    <!-- 修改昵称 -->
-    <div v-if="type === '0'">
-      <van-field v-model="nickname" type="text" name="nickname" label="昵称" placeholder="昵称" autofocus
-      />
+    <!-- 修改昵称和签名 -->
+    <div v-if="type === '0'" class="van-hairline--bottom">
+      <van-field v-model="nickname" type="text" name="nickname" label="昵称" placeholder="昵称" autofocus/>
+      <van-field rows="3" autosize type="textarea" maxlength="100" label="签名" placeholder="签名" show-word-limit
+                 v-model="signature"/>
     </div>
 
     <!-- 修改手机、修改邮箱 -->
@@ -38,7 +39,8 @@ export default {
       mobile: '',
       email: '',
       code: '',
-      nickname: ''
+      nickname: '',
+      signature: ''
     }
   },
   mounted() {
@@ -48,7 +50,7 @@ export default {
     title() {
       let title = '家族'
       if (this.type === '0') {
-        title = '修改昵称'
+        title = '修改信息'
       } else if (this.type === '1') {
         title = '修改手机'
       } else if (this.type === '2') {

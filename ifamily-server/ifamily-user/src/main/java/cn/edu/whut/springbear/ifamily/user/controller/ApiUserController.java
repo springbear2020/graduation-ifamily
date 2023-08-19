@@ -1,21 +1,23 @@
 package cn.edu.whut.springbear.ifamily.user.controller;
 
 import cn.edu.whut.springbear.ifamily.common.api.CommonResult;
-import cn.edu.whut.springbear.ifamily.common.exception.SqlExecutionException;
+import cn.edu.whut.springbear.ifamily.common.exception.SystemServiceException;
 import cn.edu.whut.springbear.ifamily.user.constant.UserMessageConstants;
+import cn.edu.whut.springbear.ifamily.user.pojo.query.UserLoginQuery;
 import cn.edu.whut.springbear.ifamily.user.pojo.query.UserQuery;
 import cn.edu.whut.springbear.ifamily.user.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 /**
  * @author Spring-_-Bear
  * @since 23/03/19 19:45
  */
-@Api(tags = "用户开放接口")
+@Api(tags = "用户服务接口")
 @RestController
 @RequestMapping("/api/user")
 public class ApiUserController {
@@ -25,8 +27,9 @@ public class ApiUserController {
 
     @ApiOperation("用户登录")
     @PostMapping("/login")
-    public CommonResult<String> login(@RequestParam("username") String username, @RequestParam("password") String password) {
-        return CommonResult.success(this.userService.login(username, password));
+    public CommonResult<String> login(@Validated @RequestBody UserLoginQuery userLoginQuery) {
+        String token = this.userService.login(userLoginQuery);
+        return CommonResult.success(token);
     }
 
     @ApiOperation("用户注册")
@@ -35,7 +38,7 @@ public class ApiUserController {
         if (this.userService.create(userQuery)) {
             return CommonResult.success();
         }
-        throw new SqlExecutionException(UserMessageConstants.SQL_EXECUTION_ERROR);
+        throw new SystemServiceException(UserMessageConstants.SQL_EXECUTION_ERROR);
     }
 
     @ApiOperation("信息验证")

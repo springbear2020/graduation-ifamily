@@ -3,6 +3,7 @@ package cn.edu.whut.springbear.ifamily.common.exception;
 import cn.edu.whut.springbear.ifamily.common.api.CommonResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -16,28 +17,28 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class GlobalExceptionHandler {
 
     /**
-     * 400
+     * 412
      */
-    @ExceptionHandler(IllegalArgumentException.class)
-    public CommonResult<String> illegalArgument(IllegalArgumentException e) {
-        return CommonResult.badRequest(e.getMessage());
+    @ExceptionHandler(IllegalConditionException.class)
+    public CommonResult<String> preconditionFailed(IllegalConditionException e) {
+        return CommonResult.preconditionFailed(e.getMessage());
     }
 
     /**
      * 403
      */
-    @ExceptionHandler(IllegalStateException.class)
-    public CommonResult<String> illegalState(IllegalStateException e) {
+    @ExceptionHandler(IllegalStatusException.class)
+    public CommonResult<String> illegalStatus(IllegalStatusException e) {
         return CommonResult.forbidden(e.getMessage());
     }
 
     /**
      * 503
      */
-    @ExceptionHandler(SqlExecutionException.class)
-    public CommonResult<String> sqlExecution(SqlExecutionException e) {
+    @ExceptionHandler(SystemServiceException.class)
+    public CommonResult<String> sqlExecution(SystemServiceException e) {
         log.error(e.getMessage());
-        return CommonResult.serviceUnavailable(e.getMessage());
+        return CommonResult.serviceUnavailable();
     }
 
     /**
@@ -51,10 +52,14 @@ public class GlobalExceptionHandler {
         } else if (e instanceof HttpRequestMethodNotSupportedException) {
             // 405
             return CommonResult.methodNotAllowed(e.getMessage());
+        } else if (e instanceof MethodArgumentNotValidException) {
+            // 412
+            String validateMsg = ((MethodArgumentNotValidException) e).getBindingResult().getAllErrors().get(0).getDefaultMessage();
+            return CommonResult.preconditionFailed(validateMsg);
         }
 
         log.error(e.getMessage());
-        return CommonResult.serverInternalError(e.getMessage());
+        return CommonResult.serverInternalError();
     }
 
 }

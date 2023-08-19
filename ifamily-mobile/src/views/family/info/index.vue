@@ -71,9 +71,12 @@
 
 <script>
 import {ImagePreview} from "vant";
+import PeopleTag from '@/components/tag/people-tag'
+import DescTag from '@/components/tag/desc-tag'
 
 export default {
   name: "index",
+  components: {PeopleTag, DescTag},
   data() {
     return {
       activeNames: ['1', '2'],

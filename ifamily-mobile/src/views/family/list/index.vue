@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import FamilyInfoCard from "@/views/family/list/family-info-card";
+import FamilyInfoCard from "@/components/business/family-info-card";
 
 export default {
   name: "index",

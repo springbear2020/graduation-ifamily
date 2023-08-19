@@ -10,13 +10,20 @@
     <van-cell title="注销账号" is-link @click="$toast('注销成功')"/>
 
     <div class="block-btn-container">
-      <van-button color="linear-gradient(to right, #ff6034, #ee0a24)" block @click="$toast('退出登录')">退出登录</van-button>
+      <van-button color="linear-gradient(to right, #ff6034, #ee0a24)" block @click="logout">退出登录</van-button>
     </div>
   </div>
 </template>
 
 <script>
 export default {
-  name: "index"
+  name: "index",
+  methods: {
+    async logout() {
+      // 移除 store 和 localStorage 中的 token 信息
+      await this.$store.dispatch('user/logout')
+      await this.$router.replace('/user/login')
+    }
+  }
 }
 </script>

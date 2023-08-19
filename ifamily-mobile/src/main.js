@@ -1,32 +1,27 @@
 import Vue from 'vue'
-import App from './App.vue'
+import App from '@/App.vue'
 import router from '@/router'
+import store from '@/store'
+
 import Vant from 'vant'
 import 'vant/lib/index.css'
-import './assets/iconfont/iconfont.css'
-import logoPattern from '@/components/layout/logo-pattern'
-import sexTag from '@/components/tag/sex-tag'
-import descTag from '@/components/tag/desc-tag'
-import peopleTag from '@/components/tag/people-tag'
-import imageList from '@/components/image-list'
-import portraitDesc from '@/components/portrait-desc'
-import socialMoments from '@/components/social-moments'
-import familyRelationship from '@/components/family-relationship'
+// 解决 [Violation] Added non-passive event listener...
+import 'default-passive-events'
 
-Vue.component('logo-pattern', logoPattern)
-Vue.component('sex-tag', sexTag)
-Vue.component('desc-tag', descTag)
-Vue.component('people-tag', peopleTag)
-Vue.component('image-list', imageList)
-Vue.component('portrait-desc', portraitDesc)
-Vue.component('social-moments', socialMoments)
-Vue.component('family-relationship', familyRelationship)
+import api from '@/api'
+import '@/assets/iconfont/iconfont.css'
+import logoPattern from '@/components/layout/logo-pattern.vue'
 
 Vue.use(Vant)
+Vue.component('logo-pattern', logoPattern)
 
 Vue.config.productionTip = false
 
 new Vue({
     render: h => h(App),
-    router
+    router,
+    store,
+    beforeCreate() {
+        Vue.prototype.$api = api
+    }
 }).$mount('#app')

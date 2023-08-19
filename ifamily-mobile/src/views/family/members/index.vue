@@ -40,8 +40,11 @@
 </template>
 
 <script>
+import SexTag from '@/components/tag/sex-tag'
+
 export default {
   name: "index",
+  components: {SexTag},
   data() {
     return {
       indexList: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],

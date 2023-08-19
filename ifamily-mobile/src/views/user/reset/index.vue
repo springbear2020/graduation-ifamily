@@ -15,9 +15,9 @@
         </template>
       </van-field>
 
-      <van-field v-model="password" type="password" name="password" label="密码" placeholder="密码"
+      <van-field v-model="password" type="password" name="password" label="密码" placeholder="密码" autocomplete="on"
                  right-icon="closed-eye"/>
-      <van-field v-model="rePassword" type="password" name="password" label="确认密码" placeholder="确认密码"
+      <van-field v-model="rePassword" type="password" name="password" label="确认密码" placeholder="确认密码" autocomplete="on"
                  right-icon="closed-eye"/>
 
       <van-field name="agree">

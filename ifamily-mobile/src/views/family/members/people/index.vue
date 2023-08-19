@@ -6,9 +6,9 @@
     >
       <template #right>
         <!-- 人员家族树定位 -->
-        <van-icon v-if="type === '1' || type === '2'" name="aim" size="20"/>
+        <van-icon v-if="type === '1' || type === '2' || type === '3'" name="aim" size="20"/>
         <!-- 编辑人员信息 -->
-        <van-icon v-else-if="type === '3'" name="edit" size="20"/>
+        <van-icon v-else-if="type === '4'" name="edit" size="20"/>
       </template>
     </van-nav-bar>
 
@@ -22,7 +22,6 @@
           <p class="cover-name">冯勇贤
             <sex-tag/>
           </p>
-          <p class="cover-signature">长相思兮长相忆，短相思兮无穷极。</p>
         </template>
       </van-grid-item>
     </van-grid>
@@ -67,25 +66,22 @@
       <family-relationship :add-button="false" class="family-relationships"/>
       <van-cell title="备注" :border="false" label="备注与其父母亲的特殊关系，如养子、养女、继子、继女等" class="family-member-remarks"/>
     </van-cell-group>
-
-    <!-- 个人动态 -->
-    <van-cell title="个人动态">
-      <template #label>
-        <van-empty description="无内容"/>
-      </template>
-    </van-cell>
   </div>
 </template>
 
 <script>
 import {ImagePreview} from "vant";
+import SexTag from '@/components/tag/sex-tag'
+import DescTag from '@/components/tag/desc-tag'
+import FamilyRelationship from '@/components/business/family-relationship'
 
 export default {
   name: "index",
+  components: {SexTag, FamilyRelationship, DescTag},
   data() {
     return {
       url: 'https://img01.yzcdn.cn/vant/cat.jpeg',
-      // [0]家族树 [1]成员列表 [2]家族人员管理 [3]我的
+      // [0]家族树 [1]成员列表 [2]家族人员管理 [3]我的 [4]联系人
       type: '0',
     }
   },
@@ -102,12 +98,14 @@ export default {
       } else if (this.type === '2') {
         dst = '/family/manage/members'
       } else if (this.type === '3') {
+        dst = '/mine/contact'
+      } else if (this.type === '4') {
         dst = '/mine'
       }
       return dst;
     },
     toRoute() {
-      return this.type === '3' ? '/family/manage/members/edit/2' : `/family/tree/${this.type}`
+      return this.type === '4' ? '/family/manage/members/edit/2' : `/family/tree/${this.type}`
     }
   },
   methods: {

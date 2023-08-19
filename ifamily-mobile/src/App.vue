@@ -15,11 +15,12 @@ export default {
 </script>
 
 <style>
-/* portrait-desc.vue, message-box.vue, family-members.vue, family-manage-members.vue */
+/* 弹性单元格标题内容 */
 .flex-cell-container .van-cell__title {
   display: flex;
 }
 
+/* 头像标题内容容器 */
 .portrait-title-container {
   margin-left: 10px;
 }
@@ -32,7 +33,7 @@ export default {
   font-weight: bold;
 }
 
-/* desc-tag.vue, people-tag.vue, image-list.vue */
+/* 右、下间距 */
 .right {
   margin-right: 1px;
 }
@@ -41,12 +42,12 @@ export default {
   margin-bottom: 1px;
 }
 
-/* user-login.vue, user-reset.vue, mine-security.vue */
+/* 块级按钮 */
 .block-btn-container {
   margin: 16px;
 }
 
-/* family-info.vue, family-manage-form.vue */
+/* 弹性容器 */
 .flex-container {
   display: flex;
 }
@@ -56,7 +57,7 @@ export default {
   padding: 30px
 }
 
-/* members-people.vue */
+/* 封面下内容间间距 */
 .van-grid-item__content p {
   margin: 0;
 }
@@ -74,17 +75,17 @@ export default {
   line-height: 18px;
 }
 
-/* family-manage-form.vue */
+/* 全地址输入框背景色 */
 .full-address-container .van-field {
   background-color: #f7f8fa;
 }
 
-/* message-box.vue, family-manage-access.vue */
+/* 滑动单元格操作按钮 */
 .van-swipe-cell button {
   height: 100%;
 }
 
-/* members.vue, manage-members.vue*/
+/* 人员信息卡片左边距 */
 .name-container {
   margin-left: 10px;
 }

@@ -1,6 +1,7 @@
 package cn.edu.whut.springbear.ifamily.user.service;
 
 import cn.edu.whut.springbear.ifamily.user.pojo.po.UserDO;
+import cn.edu.whut.springbear.ifamily.user.pojo.query.UserLoginQuery;
 import cn.edu.whut.springbear.ifamily.user.pojo.query.UserQuery;
 import cn.edu.whut.springbear.ifamily.user.pojo.vo.UserVO;
 import com.baomidou.mybatisplus.extension.service.IService;
@@ -22,13 +23,11 @@ public interface UserService extends IService<UserDO> {
     UserDetails loadUserByUsername(String username) throws UsernameNotFoundException;
 
     /**
-     * 用户登录：根据（用户名 | 手机 | 邮箱）和密码查询用户
+     * 用户登录：[0]密码登录 [1]验证码登录
      *
-     * @param account  用户名 | 手机 | 邮箱
-     * @param password 密码
      * @return 验证通过返回签发的 token，否则返回 null
      */
-    String login(String account, String password);
+    String login(UserLoginQuery userLoginQuery);
 
     /**
      * 新增用户

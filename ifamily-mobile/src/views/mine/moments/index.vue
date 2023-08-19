@@ -21,9 +21,11 @@
 
 <script>
 import moments from '@/assets/json/moments.json'
+import SocialMoments from '@/components/business/social-moments'
 
 export default {
   name: "index",
+  components: {SocialMoments},
   data() {
     return {
       momentList: [],

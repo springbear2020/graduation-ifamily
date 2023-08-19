@@ -42,7 +42,7 @@
 </template>
 
 <script>
-import SearchPeopleList from "@/views/family/manage/access/search-people-list";
+import SearchPeopleList from "@/components/business/search-people-list";
 
 export default {
   name: "index",

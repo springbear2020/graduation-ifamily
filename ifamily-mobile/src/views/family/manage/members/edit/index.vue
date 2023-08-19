@@ -6,7 +6,7 @@
 </template>
 
 <script>
-import MemberForm from "@/views/family/manage/members/member-form";
+import MemberForm from "@/components/member-form";
 
 export default {
   name: "index",
@@ -28,7 +28,7 @@ export default {
       } else if (this.type === '1') {
         dst = '/family/manage/members'
       } else if (this.type === '2') {
-        dst = '/family/members/people/3'
+        dst = '/family/members/people/4'
       }
       return dst
     }

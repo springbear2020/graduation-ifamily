@@ -1,7 +1,10 @@
 package cn.edu.whut.springbear.ifamily.user.service.impl;
 
+import cn.edu.whut.springbear.ifamily.common.constant.RedisConstants;
 import cn.edu.whut.springbear.ifamily.common.enumerate.DeleteStatusEnum;
 import cn.edu.whut.springbear.ifamily.common.enumerate.EnableStatusEnum;
+import cn.edu.whut.springbear.ifamily.common.exception.IllegalConditionException;
+import cn.edu.whut.springbear.ifamily.common.exception.IllegalStatusException;
 import cn.edu.whut.springbear.ifamily.common.util.WebUtils;
 import cn.edu.whut.springbear.ifamily.security.util.JwtUtils;
 import cn.edu.whut.springbear.ifamily.user.constant.UserMessageConstants;
@@ -10,6 +13,7 @@ import cn.edu.whut.springbear.ifamily.user.pojo.dto.SecurityUserDetailsDTO;
 import cn.edu.whut.springbear.ifamily.user.pojo.po.PermissionDO;
 import cn.edu.whut.springbear.ifamily.user.pojo.po.UserDO;
 import cn.edu.whut.springbear.ifamily.user.pojo.po.UserLoginLogDO;
+import cn.edu.whut.springbear.ifamily.user.pojo.query.UserLoginQuery;
 import cn.edu.whut.springbear.ifamily.user.pojo.query.UserQuery;
 import cn.edu.whut.springbear.ifamily.user.pojo.vo.UserVO;
 import cn.edu.whut.springbear.ifamily.user.service.PermissionService;
@@ -19,6 +23,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -47,6 +52,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
     private PermissionService permissionService;
     @Autowired
     private UserLoginLogService userLoginLogService;
+    @Autowired
+    private RedisTemplate<String, String> redisTemplate;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -55,6 +62,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
         UserDO user = this.baseMapper.selectOne(queryWrapper);
 
         if (user == null) {
+            // [401]UsernameNotFoundException -> AuthenticationException -> RestfulUnauthorizedEntryPoint
             throw new UsernameNotFoundException(UserMessageConstants.USER_NOT_EXISTS);
         }
 
@@ -65,21 +73,38 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
     }
 
     @Override
-    public String login(String account, String password) {
+    public String login(UserLoginQuery userLoginQuery) {
+        String account = userLoginQuery.getAccount();
         QueryWrapper<UserDO> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("phone", account).or().eq("username", account).or().eq("email", account);
+        queryWrapper.eq("phone", account).or().eq("email", account).or().eq("username", account);
         UserDO user = this.baseMapper.selectOne(queryWrapper);
         if (user == null) {
-            throw new IllegalArgumentException(UserMessageConstants.USER_NOT_EXISTS);
+            throw new IllegalConditionException(UserMessageConstants.USER_NOT_EXISTS);
         }
 
-        // 验证密码正确性
-        if (!this.passwordEncoder.matches(password, user.getPassword())) {
-            throw new IllegalStateException("账号密码错误");
+        // 客户端请求的登录类型：[0]密码登录 [1]验证码登录
+        String loginType = userLoginQuery.getLoginType();
+        if (UserLoginQuery.LOGIN_TYPE_CODE.equals(loginType)) {
+            String key = RedisConstants.VERIFY_CODE_PREFIX + account;
+            String codeFromRedis = redisTemplate.opsForValue().get(key);
+            if (codeFromRedis == null) {
+                throw new IllegalConditionException("验证码不存在，请先获取验证码");
+            }
+            if (!codeFromRedis.equals(userLoginQuery.getCode())) {
+                throw new IllegalConditionException("验证码不正确");
+            }
+            // 从 Redis 中移除验证码
+            redisTemplate.delete(key);
+        } else {
+            // 验证密码正确性
+            if (!this.passwordEncoder.matches(userLoginQuery.getPassword(), user.getPassword())) {
+                throw new IllegalConditionException("账号密码错误");
+            }
         }
+
         // 检查用户账号状态
         if (EnableStatusEnum.DISABLE.getCode().equals(user.getStatus())) {
-            throw new IllegalStateException("禁止登录，用户状态异常");
+            throw new IllegalStatusException("禁止登录，用户状态异常");
         }
 
         // 查询当前用户的系统权限，将当前用户信息注入到安全框架中
@@ -89,8 +114,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        // 保存用户登录记录
-        this.createUserLoginLog(user.getId());
+        /// FIXME 保存用户登录记录
+        // this.createUserLoginLog(user.getId());
         // 更新上次登录时间
         this.updateLastLogin(user.getId());
 
@@ -171,7 +196,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
         // 从请求头中解析 IP 地址
         String ipAddress = WebUtils.getRequestIp(request);
         userLoginLogDO.setIp(ipAddress);
-        // 解析 IP 归属地，先使用百度地图 API，解析失败使用淘宝公共 API FIXME don't comment the next line after the development finished
+        // 解析 IP 归属地，先使用百度地图 API，解析失败使用淘宝公共 API
         String location = WebUtils.baiduParseIpLocation(ipAddress);
         location = "未知地点".equals(location) ? WebUtils.taobaoParseIpLocation(ipAddress) : location;
         userLoginLogDO.setLocation(location);

@@ -29,8 +29,12 @@
 </template>
 
 <script>
+import PortraitDesc from '@/components/portrait-desc'
+import ImageList from '@/components/image-list'
+
 export default {
   name: "index",
+  components: {PortraitDesc, ImageList},
   data() {
     return {
       imgList: [

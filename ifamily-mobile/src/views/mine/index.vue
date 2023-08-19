@@ -14,17 +14,14 @@
         <p class="mine-portrait-content van-ellipsis">昵称：你不懂我&我不怪你</p>
         <p class="mine-portrait-content van-ellipsis">签名：长相思兮长相忆，短相思兮无穷极。</p>
       </template>
-      <template #footer>
-        <van-button size="mini" type="primary" to="/user/login" plain>登录 / 注册</van-button>
-      </template>
     </van-card>
 
     <van-grid :column-num="2">
-      <van-grid-item icon="contact" text="联系人"/>
+      <van-grid-item icon="contact" text="通讯录" @click="$router.push('/mine/contact')"/>
       <van-grid-item icon="calendar-o" text="纪念日" @click="$router.push('/mine/memorial')"/>
     </van-grid>
 
-    <van-cell title="我的资料" icon="user-circle-o" is-link to="/family/members/people/3"/>
+    <van-cell title="我的资料" icon="user-circle-o" is-link to="/family/members/people/4"/>
     <van-cell title="我的动态" icon="flag-o" is-link to="/mine/moments"/>
     <van-cell title="我的亲人" icon="friends-o" is-link to="/mine/family"/>
     <van-cell title="家庭相册" icon="photo-o" is-link to="/mine/family/album"/>

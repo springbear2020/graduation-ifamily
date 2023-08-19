@@ -18,7 +18,7 @@ public class MyBatisGenerator {
 
         // 2、全局配置
         GlobalConfig gc = new GlobalConfig();
-        gc.setOutputDir("D:\\Repository\\dev\\ifamily\\ifamily-user" + "\\src\\main\\java");
+        gc.setOutputDir("D:\\Repository\\dev\\ifamily\\ifamily-manager" + "\\src\\main\\java");
         // 去掉 Service 接口的首字母 I
         gc.setServiceName("%sService");
         gc.setAuthor("Spring-_-Bear");
@@ -28,7 +28,7 @@ public class MyBatisGenerator {
 
         // 3、数据源配置
         DataSourceConfig dsc = new DataSourceConfig();
-        dsc.setUrl("jdbc:mysql://localhost:3306/ifamily_user");
+        dsc.setUrl("jdbc:mysql://localhost:3306/ifamily_manager");
         dsc.setDriverName("com.mysql.cj.jdbc.Driver");
         dsc.setUsername("root");
         dsc.setPassword("root");
@@ -37,7 +37,7 @@ public class MyBatisGenerator {
 
         // 4、包配置
         PackageConfig pc = new PackageConfig();
-        pc.setParent("cn.edu.whut.springbear.ifamily.user.generate");
+        pc.setParent("cn.edu.whut.springbear.ifamily.manager.generate");
         pc.setController("controller");
         pc.setEntity("entity");
         pc.setService("service");
@@ -47,7 +47,7 @@ public class MyBatisGenerator {
         // 5、策略配置
         StrategyConfig strategy = new StrategyConfig();
         // 包含的表
-        strategy.setInclude("user_role");
+        strategy.setInclude("code_send_log");
         // 数据库表映射到实体的命名策略
         strategy.setNaming(NamingStrategy.underline_to_camel);
         // 数据库表字段映射到实体的命名策略

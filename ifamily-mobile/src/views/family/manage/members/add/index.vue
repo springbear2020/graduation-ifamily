@@ -27,11 +27,12 @@
 
 <script>
 import {ImagePreview} from "vant";
-import MemberForm from "@/views/family/manage/members/member-form";
+import MemberForm from "@/components/member-form";
+import FamilyRelationship from "@/components/business/family-relationship";
 
 export default {
   name: "index",
-  components: {MemberForm},
+  components: {MemberForm, FamilyRelationship},
   data() {
     return {
       // [0]家谱树 [1]成员管理

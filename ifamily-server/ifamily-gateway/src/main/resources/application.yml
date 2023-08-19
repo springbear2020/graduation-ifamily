@@ -13,6 +13,10 @@ spring:
           uri: http://localhost:8081
           predicates:
             - Path=/*/user/**
+        - id: ifamily-manager
+          uri: http://localhost:8082
+          predicates:
+            - Path=/*/manager/**
 logging:
   level:
     com:

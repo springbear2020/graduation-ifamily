@@ -20,7 +20,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 public class BaseSwaggerConfig {
 
     @Bean
-    public Docket restApiConfig() {
+    public Docket docket() {
         return new Docket(DocumentationType.SWAGGER_2)
                 .groupName("ifamily")
                 .apiInfo(apiInfo())

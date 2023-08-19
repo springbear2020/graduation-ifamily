@@ -8,6 +8,7 @@
         <module>ifamily-gateway</module>
         <module>ifamily-user</module>
         <module>ifamily-security</module>
+        <module>ifamily-manager</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>

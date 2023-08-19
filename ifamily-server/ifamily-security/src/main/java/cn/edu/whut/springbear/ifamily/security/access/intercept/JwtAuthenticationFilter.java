@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
@@ -32,13 +33,17 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws ServletException, IOException {
-        // 从请求头中获取 token，而后解析 token 获取到用户名
+        // 从请求头中获取 token，若 token 内容为空则直接放行
         String token = request.getHeader("Authentication");
-        String username = JwtUtils.get(token, "username");
+        if (!StringUtils.hasLength(token)) {
+            chain.doFilter(request, response);
+            return;
+        }
 
+        // 解析 token 获取到用户名，验证 token 有效期以及合法性，验证通过后注入用户到安全框架上下文中，从而实现免鉴权认证
+        String username = JwtUtils.get(token, "username");
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
-            // 验证 token 有效期以及合法性，验证通过后注入用户到安全框架上下文中，从而实现免鉴权认证
             if (JwtUtils.isNonExpired(token) && username.equals(userDetails.getUsername())) {
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));

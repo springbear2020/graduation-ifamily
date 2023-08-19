@@ -25,8 +25,11 @@
 </template>
 
 <script>
+import PortraitDesc from '@/components/portrait-desc';
+
 export default {
   name: "index",
+  components: {PortraitDesc},
   data() {
     return {
       person: {

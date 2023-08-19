@@ -30,8 +30,15 @@
 </template>
 
 <script>
+import ImageList from '@/components/image-list'
+import PortraitDesc from '@/components/portrait-desc'
+
 export default {
   name: "index",
+  components: {
+    ImageList,
+    PortraitDesc
+  },
   data() {
     return {
       isRefreshing: false,

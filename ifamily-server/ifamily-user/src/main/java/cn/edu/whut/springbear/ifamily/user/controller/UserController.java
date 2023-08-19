@@ -1,7 +1,7 @@
 package cn.edu.whut.springbear.ifamily.user.controller;
 
 import cn.edu.whut.springbear.ifamily.common.api.CommonResult;
-import cn.edu.whut.springbear.ifamily.common.exception.SqlExecutionException;
+import cn.edu.whut.springbear.ifamily.common.exception.SystemServiceException;
 import cn.edu.whut.springbear.ifamily.user.constant.UserMessageConstants;
 import cn.edu.whut.springbear.ifamily.user.pojo.query.UserQuery;
 import cn.edu.whut.springbear.ifamily.user.pojo.vo.UserVO;
@@ -34,7 +34,7 @@ public class UserController {
         if (this.userService.remove(id)) {
             return CommonResult.success();
         }
-        throw new SqlExecutionException(UserMessageConstants.SQL_EXECUTION_ERROR);
+        throw new SystemServiceException(UserMessageConstants.SQL_EXECUTION_ERROR);
     }
 
     @ApiOperation("编辑用户")
@@ -48,7 +48,7 @@ public class UserController {
         if (this.userService.edit(userQuery)) {
             return CommonResult.success();
         }
-        throw new SqlExecutionException(UserMessageConstants.SQL_EXECUTION_ERROR);
+        throw new SystemServiceException(UserMessageConstants.SQL_EXECUTION_ERROR);
     }
 
     @ApiOperation("查询用户")

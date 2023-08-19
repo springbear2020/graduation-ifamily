@@ -37,7 +37,7 @@
 </template>
 
 <script>
-import FamilyTree from '@/views/family/tree/family-tree';
+import FamilyTree from '@/components/tree/family-tree';
 import stone from '@/assets/json/stone.json'
 
 export default {
@@ -58,7 +58,7 @@ export default {
       showPeopleSheet: false,
       // [true]全部节点折叠 [false]!全部节点折叠
       isAllFold: true,
-      // [0]家族 [1]列表成员 [2]成员管理
+      // [0]家族 [1]列表成员 [2]成员管理 [3]成员管理
       type: '0',
       peopleName: '',
       // 树节点旋转角度值
@@ -73,7 +73,7 @@ export default {
       let dst = '/'
       if (this.type === '0') {
         dst = '/family'
-      } else if (this.type === '1' || this.type === '2') {
+      } else if (this.type === '1' || this.type === '2' || this.type === '3') {
         dst = '/family/members/people/' + this.type
       }
       return dst
