@@ -3,10 +3,8 @@ package cn.edu.whut.springbear.ifamily.genealogy.controller.admin;
 import cn.edu.whut.springbear.ifamily.common.api.CommonResult;
 import cn.edu.whut.springbear.ifamily.common.pojo.dto.UserDTO;
 import cn.edu.whut.springbear.ifamily.common.util.WebUtils;
-import cn.edu.whut.springbear.ifamily.genealogy.constant.MessageConstants;
 import cn.edu.whut.springbear.ifamily.genealogy.pojo.po.UserGenealogyDO;
 import cn.edu.whut.springbear.ifamily.genealogy.pojo.query.PeopleQuery;
-import cn.edu.whut.springbear.ifamily.genealogy.pojo.vo.PeopleVO;
 import cn.edu.whut.springbear.ifamily.genealogy.service.PeopleService;
 import cn.edu.whut.springbear.ifamily.genealogy.service.UserGenealogyService;
 import io.swagger.annotations.Api;
@@ -25,7 +23,7 @@ import javax.servlet.http.HttpServletRequest;
 @AllArgsConstructor
 @Api(tags = "家族人员管理接口")
 @RestController
-@RequestMapping("/genealogy/people/admin")
+@RequestMapping("/genealogy/admin/people")
 public class PeopleAdminController {
 
     private final HttpServletRequest httpServletRequest;
@@ -68,7 +66,7 @@ public class PeopleAdminController {
                 return CommonResult.preconditionFailed("亲人类型：[1]生父 [2]生母 [3]配偶 [4]子女 [5]同胞");
         }
 
-        return saveResult ? CommonResult.success() : CommonResult.failed("请求添加亲人失败");
+        return saveResult ? CommonResult.success() : CommonResult.failed("请求在默认家族中添加亲人失败");
     }
 
     @ApiOperation("移除用户默认家族人员")
@@ -77,7 +75,7 @@ public class PeopleAdminController {
         UserDTO userDTO = WebUtils.parseGeneralUser(httpServletRequest);
         UserGenealogyDO defaultGenealogy = this.userGenealogyService.getDefault(userDTO.getId());
         boolean deleteResult = this.peopleService.removeGenealogyPeople(defaultGenealogy.getGenealogyId(), peopleId, userDTO.getId());
-        return deleteResult ? CommonResult.success() : CommonResult.failed("请求删除家族人员失败");
+        return deleteResult ? CommonResult.success() : CommonResult.failed("请求删除默认家族人员失败");
     }
 
     @ApiOperation("更新用户默认家族人员")
@@ -86,16 +84,7 @@ public class PeopleAdminController {
         UserDTO userDTO = WebUtils.parseGeneralUser(httpServletRequest);
         UserGenealogyDO defaultGenealogy = this.userGenealogyService.getDefault(userDTO.getId());
         boolean updateResult = this.peopleService.editGenealogyPeople(defaultGenealogy.getGenealogyId(), peopleQuery, userDTO.getId());
-        return updateResult ? CommonResult.success() : CommonResult.failed("请求更新人员信息失败");
-    }
-
-    @ApiOperation("查询用户默认家族人员")
-    @GetMapping
-    public CommonResult<Object> get(@ApiParam("家族人员 ID") @RequestParam("peopleId") Long peopleId) {
-        UserDTO userDTO = WebUtils.parseGeneralUser(httpServletRequest);
-        UserGenealogyDO defaultGenealogy = this.userGenealogyService.getDefault(userDTO.getId());
-        PeopleVO peopleVO = this.peopleService.getGenealogyPeople(defaultGenealogy.getGenealogyId(), peopleId);
-        return peopleVO == null ? CommonResult.failed(MessageConstants.PEOPLE_INFO_NO_DATA) : CommonResult.success(peopleVO);
+        return updateResult ? CommonResult.success() : CommonResult.failed("请求更新默认家族人员信息失败");
     }
 
 }

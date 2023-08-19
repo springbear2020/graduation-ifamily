@@ -6,8 +6,7 @@
       </template>
     </van-nav-bar>
 
-    <van-card centered :thumb="userInfo.avatar || 'img/avatar.jpg'"
-              @click-thumb="previewImage(userInfo.avatar || 'img/avatar.jpg')">
+    <van-card centered :thumb="avatar" @click-thumb="previewImage(avatar)">
       <template #desc>
         <van-cell is-link center @click="$router.push('/mine/info')">
           <p class="van-ellipsis">UID：{{ userInfo.username }}</p>
@@ -18,12 +17,12 @@
     </van-card>
 
     <van-grid :column-num="3" class="top">
-      <van-grid-item icon="contact" text="通讯录"/>
+      <van-grid-item icon="manager-o" text="联系人"/>
       <van-grid-item icon="calendar-o" text="纪念日"/>
-      <van-grid-item icon="star-o" text="收藏夹"/>
+      <van-grid-item icon="idcard" text="通讯录"/>
     </van-grid>
 
-    <van-cell title="我的动态" icon="flag-o" is-link class="top"/>
+    <van-cell title="我的动态" icon="flag-o" is-link class="top" to="/mine/moment"/>
     <van-cell title="个人档案" icon="user-circle-o" is-link/>
     <van-cell title="家族列表" icon="cluster-o" is-link class="top"/>
     <van-cell title="亲人列表" icon="friends-o" is-link/>
@@ -40,6 +39,9 @@ export default {
   computed: {
     userInfo() {
       return this.$store.state.user.user || {}
+    },
+    avatar() {
+      return this.userInfo.avatar || 'img/avatar.jpg'
     }
   }
 }
@@ -51,7 +53,7 @@ export default {
 }
 
 /deep/ .van-card {
-  background-color: #ffffff;
+  background-color: white;
 }
 
 .van-card p {

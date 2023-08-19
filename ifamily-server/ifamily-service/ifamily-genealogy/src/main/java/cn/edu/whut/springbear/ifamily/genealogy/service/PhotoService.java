@@ -1,7 +1,7 @@
 package cn.edu.whut.springbear.ifamily.genealogy.service;
 
 import cn.edu.whut.springbear.ifamily.common.pojo.query.PageQuery;
-import cn.edu.whut.springbear.ifamily.genealogy.pojo.po.PhotoBO;
+import cn.edu.whut.springbear.ifamily.genealogy.pojo.bo.PhotoBO;
 import cn.edu.whut.springbear.ifamily.genealogy.pojo.po.PhotoDO;
 import com.baomidou.mybatisplus.extension.service.IService;
 

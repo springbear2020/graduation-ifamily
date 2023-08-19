@@ -1,5 +1,5 @@
 export const TOKEN_KEY = 'Authorization'
-export const REFRESH_TOKEN_KEY = 'refreshToken'
+export const REFRESH_TOKEN_KEY = 'RefreshToken'
 
 export function setToken(token) {
     localStorage.setItem(TOKEN_KEY, token)

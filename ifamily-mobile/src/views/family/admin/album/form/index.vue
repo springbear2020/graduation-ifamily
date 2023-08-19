@@ -2,12 +2,12 @@
   <div>
     <van-nav-bar title="上传图片" left-arrow @click-left="$router.replace('/family/admin')" @click-right="uploadImages">
       <template #right>
-        <van-icon name="passed" size="20"/>
+        <van-button type="info" size="mini" class="nav-button">上传</van-button>
       </template>
     </van-nav-bar>
 
     <van-uploader multiple v-model="fileList"
-                  :after-read="afterRead" :max-size="5 * 1024 * 1024" :before-read="beforeRead"
+                  :before-read="beforeRead" :after-read="afterRead" :max-size="5 * 1024 * 1024"
                   @oversize="$toast({message: '文件大小不能超过 5MB', position: 'bottom'})"
     />
   </div>
@@ -50,11 +50,11 @@ export default {
       }
 
       // 将图片列表集合上传到服务器
-      this.$api.album.uploadPhotos(qs.stringify({'imgUrls': imgUrls}, {arrayFormat: 'brackets'})).then(() => {
+      this.$api.genealogy.uploadPhoto(qs.stringify({'imgUrls': imgUrls}, {arrayFormat: 'repeat'})).then(() => {
         this.$toast.success('上传成功');
         this.$router.replace('/family/album')
-      }).catch(err => {
-        this.$toast({message: err.data || err.desc, position: 'bottom'})
+      }).catch(msg => {
+        this.$toast({message: msg, position: 'bottom'})
       })
     }
   }
@@ -64,11 +64,11 @@ export default {
 <style scoped>
 /deep/ .van-uploader__preview {
   margin: 8px 0 8px 8px;
-  background-color: #ffffff;
+  background-color: white;
 }
 
 /deep/ .van-uploader__upload {
   margin: 8px 0 8px 8px;
-  background-color: #ffffff;
+  background-color: white;
 }
 </style>

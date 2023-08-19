@@ -7,9 +7,10 @@
       <div class="flex-container">
         <van-field :rules="[{ required: true, message: '请选择您的家族封面图片' }]">
           <template #input>
-            <!-- 家族封面图片 -->
-            <van-uploader max-count="1" :after-read="afterRead" v-model="fileList" :max-size="5 * 1024 * 1024"
-                          @oversize="$toast({message: '文件大小不能超过 5MB', position: 'bottom'})" :before-read="beforeRead"/>
+            <van-uploader max-count="1" v-model="fileList"
+                          :before-read="beforeRead" :after-read="afterRead" :max-size="5 * 1024 * 1024"
+                          @oversize="$toast({message: '文件大小不能超过 5MB', position: 'bottom'})"
+            />
           </template>
         </van-field>
       </div>
@@ -43,8 +44,9 @@
       <van-area :area-list="areaList" @confirm="confirmArea" @cancel="showAreaSheet = false" title="选择省市区">
         <template #columns-bottom>
           <div class="full-address-wrapper">
-            <van-field rows="1" :autosize="true" label="详细地址" type="textarea" maxlength="100" placeholder="详细地址"
-                       show-word-limit v-model="fullAddress" class="grey-background"/>
+            <van-field rows="1" label="详细地址" type="textarea" maxlength="100" placeholder="详细地址" show-word-limit
+                       :autosize="true" v-model="fullAddress" class="grey-background"
+            />
           </div>
         </template>
       </van-area>
@@ -60,14 +62,14 @@ export default {
   name: "index",
   data() {
     return {
+      fileList: [],
       // [0]创建家族 [1]编辑家族
       type: '0',
+      // [0]家族地址 [1]家族祖籍
+      areaType: '0',
       showAreaSheet: false,
       areaList: [],
       fullAddress: '',
-      // [0]家族地址 [1]家族祖籍
-      areaType: '0',
-      fileList: [],
       formData: {
         id: undefined,
         cover: undefined,
@@ -83,6 +85,8 @@ export default {
   mixins: [imageUploader],
   mounted() {
     this.areaList = areaList
+    // [1]用户头像 [2]家族封面
+    this.imgType = '2';
 
     // [0]创建家族 [1]编辑家族
     let type = this.$route.params.type
@@ -91,9 +95,6 @@ export default {
     }
     this.type = type
 
-    // 修改图片类型为家族封面 [1]用户头像 [2]家族封面
-    this.imgType = '2';
-    // 如果是编辑家族，则取出仓库中的默认家族信息赋值给表单
     this.initFormData()
   },
   watch: {
@@ -144,23 +145,23 @@ export default {
       this.$api.genealogy.createGenealogy(this.formData).then(() => {
         // 创建成功，切换到新创建的默认家族，移除所有家族信息
         this.$store.commit('genealogy/CLEAR_STATE')
-        this.$toast.success('创建成功')
         this.$router.replace("/family")
-      }).catch(err => {
-        this.$toast({message: err.data || err.desc, position: 'bottom'})
+        this.$toast.success('创建成功')
+      }).catch(msg => {
+        this.$toast({message: msg, position: 'bottom'})
       })
     },
     editGenealogy() {
-      this.$api.genealogy.updateDefaultGenealogy(this.formData).then(() => {
-        // 查询最新的家族列表信息
-        this.$store.dispatch('genealogy/listGenealogyList').then(() => {
-          this.$toast.success('更新成功')
+      this.$api.genealogy.updateGenealogy(this.formData).then(() => {
+        // 更新成功，查询最新的家族列表信息
+        this.$store.dispatch('genealogy/genealogies').then(() => {
           this.$router.replace("/family/info")
-        }).catch(err => {
-          this.$toast({message: err.data || err.desc, position: 'bottom'})
+          this.$toast.success('更新成功')
+        }).catch(msg => {
+          this.$toast({message: msg, position: 'bottom'})
         })
-      }).catch(err => {
-        this.$toast({message: err.data || err.desc, position: 'bottom'})
+      }).catch(msg => {
+        this.$toast({message: msg, position: 'bottom'})
       })
     }
   }

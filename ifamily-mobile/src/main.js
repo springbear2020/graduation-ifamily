@@ -11,10 +11,8 @@ import 'default-passive-events'
 import api from '@/api'
 import '@/styles/index.css'
 import '@/assets/iconfont/iconfont.css'
-import logoPattern from '@/components/layout/logo-pattern.vue'
 
 Vue.use(Vant)
-Vue.component('logo-pattern', logoPattern)
 
 Vue.config.productionTip = false
 

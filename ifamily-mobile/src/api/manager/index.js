@@ -1,8 +1,9 @@
 import request from "@/utils/request";
 
-// 开放接口 =============================================================================================================
+const codeApiBaseUrl = '/manager/api/code'
+const transferSuperviseBaseUrl = '/manager/supervise/transfer'
 
-const codeApiBaseUrl = '/ifamily-manager/manager/code/api'
+// 验证码开放接口 *******************************************************************************************************
 
 export function sendEmailCode(params) {
     return request({
@@ -20,9 +21,7 @@ export function sendPhoneCode(params) {
     })
 }
 
-// 监督接口 =============================================================================================================
-
-const transferSuperviseBaseUrl = '/ifamily-manager/manager/transfer/supervise'
+// 文件传输监督接口 ======================================================================================================
 
 export function getImageToken(params) {
     return request({

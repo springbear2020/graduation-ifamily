@@ -8,7 +8,9 @@ import cn.edu.whut.springbear.ifamily.common.constant.RedisConstants;
 import cn.edu.whut.springbear.ifamily.common.constant.RegExpConstants;
 import cn.edu.whut.springbear.ifamily.common.enumerate.AssertEnum;
 import cn.edu.whut.springbear.ifamily.common.exception.IncorrectConditionException;
+import cn.edu.whut.springbear.ifamily.common.pojo.vo.CommonUserVO;
 import cn.edu.whut.springbear.ifamily.common.pojo.dto.UserDTO;
+import cn.edu.whut.springbear.ifamily.common.util.NicknameGenerator;
 import cn.edu.whut.springbear.ifamily.common.util.WebUtils;
 import cn.edu.whut.springbear.ifamily.user.constant.MessageConstants;
 import cn.edu.whut.springbear.ifamily.user.mapper.UserMapper;
@@ -136,6 +138,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
 
         // 设置用户注册所需的必要信息，ID 置空、用户名唯一、密码加密存储
         userDO.setId(null);
+        userDO.setNickname(NicknameGenerator.generate());
         userDO.setUsername(IdUtil.simpleUUID());
         userDO.setPassword(BCrypt.hashpw(resetQuery.getPassword()));
         userDO.setDeleted(AssertEnum.NO.getCode());
@@ -347,6 +350,18 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
         userDO.setPhone(phone);
         userDO.setId(user.getId());
         return this.updateById(userDO);
+    }
+
+    @Override
+    public CommonUserVO getUserById(Long userId) {
+        UserDO userDO = this.getById(userId);
+        // DO -> DTO
+        if (userDO != null) {
+            CommonUserVO commonUserVO = new CommonUserVO();
+            BeanUtils.copyProperties(userDO, commonUserVO);
+            return commonUserVO;
+        }
+        return null;
     }
 
     /**

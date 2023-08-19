@@ -7,9 +7,9 @@
           <div :class="{'couple': true, 'mate': tree.mates}">
             <!-- 当前节点 -->
             <div class="person" @click="$emit('click-node', tree)"
-                 :class="[Array.isArray(tree.class) ? tree.class : [], `pid-${tree.id}`]">
+                 :class="[Array.isArray(tree.class) ? tree.class : [], `pid-${tree.id}`, tree.gender === 0 ? 'male' : 'female']">
               <div class="avatar">
-                <img :src="tree.portrait || defaultPortrait(tree.gender)" alt="img"/>
+                <img :src="tree.portrait || defaultPortrait(tree.gender)" alt="portrait"/>
               </div>
               <div class="name">{{ tree.name }}</div>
             </div>
@@ -17,10 +17,10 @@
             <!-- 伴侣节点 -->
             <template v-if="Array.isArray(tree.mates) && tree.mates.length">
               <div class="person" v-for="(mate, mateIndex) in tree.mates" :key="tree.name+mateIndex"
-                   :class="[Array.isArray(mate.class) ? mate.class : [],`pid-${mate.id}`]"
+                   :class="[Array.isArray(mate.class) ? mate.class : [],`pid-${mate.id}`, mate.gender === 0 ? 'male' : 'female']"
                    @click="$emit('click-node', mate)">
                 <div class="avatar">
-                  <img :src="mate.portrait || defaultPortrait(mate.gender)" alt="img"/>
+                  <img :src="mate.portrait || defaultPortrait(mate.gender)" alt="portrait"/>
                 </div>
                 <div class="name">{{ mate.name }}</div>
               </div>
@@ -48,14 +48,12 @@
 </template>
 
 <script>
+import {defaultPortrait} from "@/mixin/common-utils";
+
 export default {
   name: "family-tree-branch",
   props: ['tree', 'single'],
-  methods: {
-    defaultPortrait(gender) {
-      return gender === 0 ? 'img/male.jpg' : 'img/female.jpg'
-    }
-  }
+  mixins: [defaultPortrait]
 }
 </script>
 
@@ -65,7 +63,6 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
 }
 
 table {
@@ -98,14 +95,14 @@ td {
   height: 100%;
   box-sizing: border-box;
   border: 2px solid;
-  border-color: #ccc #ccc transparent transparent;
+  border-color: #ebedf0 #ebedf0 transparent transparent;
   transform: rotateZ(135deg);
   transform-origin: 50% 50% 0;
   transition: transform ease 300ms;
 }
 
 .arrow:hover:before {
-  border-color: #333 #333 transparent transparent;
+  border-color: #969799 #969799 transparent transparent;
 }
 
 .extend .arrow:before {
@@ -118,7 +115,7 @@ td {
   left: 50%;
   bottom: 15px;
   height: 15px;
-  border-left: 2px solid #ccc;
+  border-left: 2px solid #ebedf0;
   transform: translate3d(-1px, 0, 0)
 }
 
@@ -128,7 +125,7 @@ td {
   left: 50%;
   bottom: 100%;
   height: 15px;
-  border-left: 2px solid #ccc;
+  border-left: 2px solid #ebedf0;
   transform: translate3d(-1px, 0, 0)
 }
 
@@ -138,7 +135,7 @@ td {
   left: 0;
   right: 0;
   top: -15px;
-  border-top: 2px solid #ccc;
+  border-top: 2px solid #ebedf0;
 }
 
 .child:first-child:before, .child:last-child:before {
@@ -149,7 +146,7 @@ td {
   left: 50%;
   height: 15px;
   border: 2px solid;
-  border-color: #ccc transparent transparent #ccc;
+  border-color: #ebedf0 transparent transparent #ebedf0;
   border-radius: 6px 0 0 0;
   transform: translate3d(1px, 0, 0)
 }
@@ -158,7 +155,7 @@ td {
   right: 50%;
   height: 15px;
   border: 2px solid;
-  border-color: #ccc #ccc transparent transparent;
+  border-color: #ebedf0 #ebedf0 transparent transparent;
   border-radius: 0 6px 0 0;
   transform: translate3d(-1px, 0, 0)
 }
@@ -166,7 +163,7 @@ td {
 .child:first-child.child:last-child::after {
   left: auto;
   border-radius: 0;
-  border-color: transparent #ccc transparent transparent;
+  border-color: transparent #ebedf0 transparent transparent;
   transform: translate3d(1px, 0, 0)
 }
 
@@ -187,6 +184,7 @@ td {
   overflow: hidden;
   white-space: normal;
   transition: all 1s;
+  cursor: pointer;
 }
 
 .couple .person .avatar {
@@ -195,8 +193,8 @@ td {
   height: 4em;
   margin: auto;
   overflow: hidden;
-  background: #fff;
-  border: 2px solid #ccc;
+  background: white;
+  border: 2px solid #ebedf0;
   box-sizing: border-box;
   border-radius: 2em;
 }
@@ -219,7 +217,7 @@ td {
   left: 2em;
   right: 2em;
   top: 2em;
-  border-top: 2px solid #ccc;
+  border-top: 2px solid #ebedf0;
   z-index: 1;
 }
 
@@ -229,5 +227,13 @@ td {
 
 .single {
   margin: auto;
+}
+
+.male {
+  color: #007bff;
+}
+
+.female {
+  color: #e83e8c
 }
 </style>

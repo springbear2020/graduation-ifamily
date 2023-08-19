@@ -19,44 +19,38 @@ spring:
         - id: ifamily-auth
           uri: lb://ifamily-auth
           predicates:
-            - Path=/ifamily-auth/**
+            - Path=/auth/**
           filters:
             - StripPrefix=1
         - id: ifamily-acl
           uri: lb://ifamily-acl
           predicates:
-            - Path=/ifamily-acl/**
-          filters:
-            - StripPrefix=1
+            - Path=/acl/**
         - id: ifamily-user
           uri: lb://ifamily-user
           predicates:
-            - Path=/ifamily-user/**
-          filters:
-            - StripPrefix=1
+            - Path=/user/**
         - id: ifamily-backend
           uri: lb://ifamily-backend
           predicates:
-            - Path=/ifamily-backend/**
-          filters:
-            - StripPrefix=1
+            - Path=/backend/**
         - id: ifamily-manager
           uri: lb://ifamily-manager
           predicates:
-            - Path=/ifamily-manager/**
-          filters:
-            - StripPrefix=1
+            - Path=/manager/**
         - id: ifamily-genealogy
           uri: lb://ifamily-genealogy
           predicates:
-            - Path=/ifamily-genealogy/**
-          filters:
-            - StripPrefix=1
+            - Path=/genealogy/**
+        - id: ifamily-social
+          uri: lb://ifamily-social
+          predicates:
+            - Path=/social/**
   security:
     oauth2:
       resourceserver:
         jwt:
-          jwk-set-uri: 'http://localhost:9420/rsa/public'
+          jwk-set-uri: "http://localhost:9420/rsa/public"
 secure:
   ignore:
     urls:
@@ -70,6 +64,5 @@ secure:
       - "/*/*.ico"
       - "/*/*.map"
       - "/webjars/**"
-      - "/ifamily-auth/oauth/token"
-      - "/ifamily-user/user/api/**"
-      - "/ifamily-manager/manager/code/api/**"
+      - "/auth/oauth/token"
+      - "/*/api/**"

@@ -2,15 +2,15 @@
   <div>
     <van-nav-bar title="UID" left-arrow @click-left="$router.replace('/mine/settings/security')"/>
 
-    <van-empty description="UID 是百家谱的唯一凭证，一年只能修改一次" :image="require('@/assets/img/uid.png')" class="empty">
+    <van-empty description="UID 是百家谱的唯一凭证，一年只能修改一次" :image="require('@/assets/img/ifamily.png')" class="empty">
       <van-form @submit="handleUpdate">
         <van-field size="large" type="text" label="UID" placeholder="UID" v-model.trim="username"
-                   :rules="[{required: true, pattern: /^[a-zA-Z]([-_a-zA-Z0-9]{4,19})+$/,
-                   message: 'UID 长度限 5-20 位且以字母开头，可包含数字、字母、下划线和连字符'}]"
+                   :rules="[{required: true, pattern: /^[a-zA-Z]([-_a-zA-Z0-9]{4,19})+$/, message: 'UID 长度限 5-20 位且以字母开头，可包含数字、字母、下划线和连字符'}]"
         />
+
         <van-field size="large" label="密码" placeholder="密码" autocomplete="on"
                    v-model.trim="password" :rules="[{required: true, message: '请输入您的账号登录密码'}]"
-                   :right-icon="rightIcon" :type="passwordFieldType"
+                   :right-icon="passwordFieldType === 'password' ? 'closed-eye' : 'eye-o'" :type="passwordFieldType"
                    @click-right-icon="passwordFieldType = (passwordFieldType === 'password' ? 'text' : 'password')"
         />
 
@@ -40,22 +40,19 @@ export default {
   computed: {
     user() {
       return this.$store.state.user.user || {}
-    },
-    rightIcon() {
-      return this.passwordFieldType === 'password' ? 'closed-eye' : 'eye-o';
     }
   },
   methods: {
     handleUpdate() {
-      // type: [1]用户名 [2]邮箱 [3]手机
+      // [1]用户名 [2]邮箱 [3]手机
       this.$api.user.updateUserPrivacy(this.username, this.password, 1).then(() => {
-        // 退出登录，移除仓库信息，前往登录页
+        // UID 修改成功，清除仓库信息，前往登录页
         this.$store.dispatch('user/logout')
         this.$store.commit('genealogy/CLEAR_STATE')
         this.$router.replace('/user/login')
         this.$toast.success('UID 修改成功\n请重新登录')
-      }).catch(err => {
-        this.$toast({message: err.data || err.desc, position: 'bottom'})
+      }).catch(msg => {
+        this.$toast({message: msg, position: 'bottom'})
       })
     }
   }

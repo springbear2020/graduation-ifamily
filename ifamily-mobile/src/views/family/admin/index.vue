@@ -6,7 +6,7 @@
     <van-cell title="成员管理" is-link to="/family/admin/member" class="top"/>
     <van-cell title="发布公告" is-link to="/family/admin/notice/form" class="top"/>
     <van-cell title="上传图片" is-link to="/family/admin/album/form"/>
-    <van-cell title="编写大事" is-link to="/family/admin/memorabilia/form"/>
+    <van-cell title="编纂大事" is-link to="/family/admin/memorabilia/form"/>
   </div>
 </template>
 

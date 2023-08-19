@@ -13,6 +13,7 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.IdUtil;
 import com.qiniu.util.Auth;
 import com.qiniu.util.StringMap;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +26,7 @@ import java.util.Map;
  * @author Spring-_-Bear
  * @since 23/03/27 16:19
  */
+@RequiredArgsConstructor
 @Service
 public class QiniuServiceImpl implements QiniuService {
 
@@ -40,14 +42,9 @@ public class QiniuServiceImpl implements QiniuService {
     private final QiniuLogService qiniuLogService;
     private final HttpServletRequest httpServletRequest;
 
-    public QiniuServiceImpl(QiniuLogService qiniuLogService, HttpServletRequest httpServletRequest) {
-        this.qiniuLogService = qiniuLogService;
-        this.httpServletRequest = httpServletRequest;
-    }
-
     @Override
     public Map<String, String> imgToken(String suffix, Integer type) {
-        // 图片类型：[1]用户头像 [2]家族封面 [3]人物肖像 [4]家族相册 [5]家族大事
+        // 图片类型：[1]用户头像 [2]家族封面 [3]人物肖像 [4]家族相册 [5]家族大事 [6]动态图片
         String imgType;
         switch (type) {
             case 1:
@@ -65,8 +62,11 @@ public class QiniuServiceImpl implements QiniuService {
             case 5:
                 imgType = ImageTypeEnum.MEMORABILIA.getDirectory();
                 break;
+            case 6:
+                imgType = ImageTypeEnum.MOMENT.getDirectory();
+                break;
             default:
-                throw new IncorrectConditionException("图片类型：[1]用户头像 [2]家族封面 [3]人物肖像 [4]家族相册 [5]家族大事");
+                throw new IncorrectConditionException("图片类型：[1]用户头像 [2]家族封面 [3]人物肖像 [4]家族相册 [5]家族大事 [6]动态图片");
         }
 
         // 自定义文件上传名，例：img/avatar/23/03/27/a5c8a5e8-df2b-4706-bea4-08d0939410e3.png

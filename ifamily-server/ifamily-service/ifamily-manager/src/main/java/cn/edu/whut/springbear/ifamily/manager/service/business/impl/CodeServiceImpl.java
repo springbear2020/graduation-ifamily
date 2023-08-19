@@ -12,6 +12,7 @@ import cn.edu.whut.springbear.ifamily.manager.service.CodeLogService;
 import cn.edu.whut.springbear.ifamily.manager.service.business.CodeService;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.ReUtil;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -32,6 +33,7 @@ import java.util.concurrent.TimeUnit;
  * @author Spring-_-Bear
  * @since 23/03/23 09:19
  */
+@RequiredArgsConstructor
 @Service
 public class CodeServiceImpl implements CodeService {
 
@@ -55,13 +57,6 @@ public class CodeServiceImpl implements CodeService {
     private final TemplateEngine templateEngine;
     private final JavaMailSender javaMailSender;
     private final RedisTemplate<String, String> redisTemplate;
-
-    public CodeServiceImpl(CodeLogService codeLogService, TemplateEngine templateEngine, JavaMailSender javaMailSender, RedisTemplate<String, String> redisTemplate) {
-        this.codeLogService = codeLogService;
-        this.templateEngine = templateEngine;
-        this.javaMailSender = javaMailSender;
-        this.redisTemplate = redisTemplate;
-    }
 
     @Override
     public boolean sendEmailCode(String email) {

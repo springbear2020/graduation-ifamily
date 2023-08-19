@@ -1,16 +1,36 @@
+/* 进度条 */
+#nprogress .bar {
+    background: #6610f2 !important;
+}
+
 /* 块级按钮容器 */
 .block-button-container {
     margin: 8px 16px;
 }
 
-/* 灰色背景色 */
+/* 灰色背景 */
 .grey-background {
     background-color: #f7f8fa;
+}
+
+/* 白色背景 */
+.white-background {
+    background-color: white;
 }
 
 /* 上间距 */
 .top {
     margin-top: 8px;
+}
+
+/* 左边距 */
+.left {
+    margin-left: 2px;
+}
+
+/* 右边距 */
+.right {
+    margin-right: 2px;
 }
 
 /* 空状态 */
@@ -23,8 +43,8 @@
     margin: auto;
 }
 
-/* 无边距 <p> 标签 */
-.plain-p {
+/* 无边距 */
+.plain-border {
     margin: 0;
     padding: 0;
 }
@@ -34,15 +54,40 @@
     display: flex;
 }
 
-/* 封面图片居中 */
-.flex-container .cover {
-    margin: auto auto;
-    padding: 8px;
-}
-
 /* 全弹出层 */
 .full-popup {
     height: 100%;
     width: 100%;
     background-color: #f7f8fa;
+}
+
+/* 顶部导航栏按钮 */
+.nav-button {
+    padding: 0 8px;
+}
+
+/* 字体加粗 */
+.bold {
+    font-weight: bold;
+}
+
+/* 头像单元格标题内容浮动布局 */
+.avatar-cell .van-cell__title {
+    display: flex;
+}
+
+/* 头像内容包装器 */
+.avatar-wrapper {
+    margin-left: 8px;
+}
+
+/* 头像描述内容 */
+.avatar-wrapper_desc {
+    color: #969799;
+    font-size: 12px;
+}
+
+/* 内容换行 */
+.line-wrap {
+    white-space: pre-wrap
 }

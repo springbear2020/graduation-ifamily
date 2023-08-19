@@ -3,23 +3,28 @@ import {getToken, TOKEN_KEY} from '@/utils/auth'
 import nprogress from 'nprogress'
 import 'nprogress/nprogress.css'
 import {Notify} from 'vant';
-
-const service = axios.create({
-    baseURL: 'http://10.128.184.117:8888',
-    timeout: 5000
-})
+import store from '@/store'
 
 // 隐藏 nprogress 进度环
 nprogress.configure({showSpinner: false})
 
-/*
+const service = axios.create({
+    baseURL: 'http://10.128.184.117:8888',
+    timeout: 10000
+})
+
+let timer = undefined
+
+/**
  * 请求拦截器
  */
 service.interceptors.request.use(
     config => {
-        nprogress.start()
+        if (!store.state.loading.isLoading) {
+            nprogress.start()
+        }
 
-        const token = getToken()
+        const token = getToken();
         if (token) {
             config.headers[TOKEN_KEY] = token
         }
@@ -31,7 +36,7 @@ service.interceptors.request.use(
     }
 )
 
-/*
+/**
  * 响应拦截器
  */
 service.interceptors.response.use(
@@ -53,12 +58,13 @@ service.interceptors.response.use(
                 })
             }
 
-            // [406]请求失败 [412]条件错误
-            return Promise.reject(jsonData)
+            // [code]失败，返回提示消息
+            return Promise.reject(jsonData.data || jsonData.desc)
         }
     },
     err => {
         nprogress.done()
+
         Notify({
             type: 'danger',
             message: '网络连接超时，请稍后重试'

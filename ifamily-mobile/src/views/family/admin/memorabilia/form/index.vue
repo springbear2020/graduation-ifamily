@@ -1,6 +1,6 @@
 <template>
   <div>
-    <van-nav-bar title="编写大事" left-arrow @click-left="$router.replace('/family/admin')"/>
+    <van-nav-bar title="编纂大事" left-arrow @click-left="$router.replace('/family/admin')"/>
 
     <van-form @submit="handleSave">
       <van-field required size="large" label="标题" placeholder="家族大事标题" v-model.trim="formData.title"
@@ -9,13 +9,13 @@
 
       <van-field required size="large" label="时间" placeholder="点击选择年份" readonly clickable
                  v-model="formData.occurredYear" @click="showYearPicker = true"
-                 :rules="[{ required: true, message: '请选择选择家族大事发生时间' }]"
+                 :rules="[{ required: true, message: '请选择家族大事发生时间' }]"
       />
 
       <van-field required size="large" label="配图" :rules="[{ required: true, message: '请选择家族大事配图' }]">
         <template #input>
-          <van-uploader max-count="1" :after-read="afterRead" :before-read="beforeRead"
-                        v-model="fileList" :max-size="5 * 1024 * 1024"
+          <van-uploader max-count="1" v-model="fileList"
+                        :before-read="beforeRead" :after-read="afterRead" :max-size="5 * 1024 * 1024"
                         @oversize="$toast({message: '文件大小不能超过 5MB', position: 'bottom'})"
           />
         </template>
@@ -23,7 +23,7 @@
 
       <van-field required size="large" label="内容" placeholder="家族大事内容" rows="10" type="textarea" maxlength="1000"
                  show-word-limit v-model.trim="formData.content" :autosize="true"
-                 :rules="[{ required: true,  message: '家族大事内容' }]"
+                 :rules="[{ required: true,  message: '请填写家族大事内容, 长度不大于 100' }]"
       />
 
       <div class="block-button-container">
@@ -71,22 +71,21 @@ export default {
       while (curYear > 0) {
         arr.push(curYear--)
       }
-      return arr;
+      return arr
     }
   },
   watch: {
-    // 图片上传成功
     imgUrl(imgUrl) {
       this.formData.cover = imgUrl
     }
   },
   methods: {
     handleSave() {
-      this.$api.memorabilia.saveMemorabilia(this.formData).then(() => {
-        this.$toast.success('发布成功')
+      this.$api.genealogy.saveMemorabilia(this.formData).then(() => {
         this.$router.replace('/family/memorabilia')
-      }).catch(err => {
-        this.$toast({message: err.data || err.desc, position: 'bottom'})
+        this.$toast.success('发布成功')
+      }).catch(msg => {
+        this.$toast({message: msg, position: 'bottom'})
       })
     }
   }

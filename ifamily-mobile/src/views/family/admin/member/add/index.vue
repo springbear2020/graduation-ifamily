@@ -4,14 +4,14 @@
 
     <div v-if="people.me">
       <!-- 肖像、姓名、性别 -->
-      <van-grid :border="false" :column-num="1" class="portrait-grid">
+      <van-grid :column-num="1">
         <van-grid-item>
           <template #icon>
             <van-image round height="100" width="100" :src="me.portrait || defaultPortrait(me.gender)"
                        @click="previewImage(me.portrait || defaultPortrait(me.gender))"/>
           </template>
           <template #text>
-            <p class="plain-p">
+            <p class="plain-border">
               {{ me.name }}
               <sex-tag :sex="me.gender"/>
             </p>
@@ -28,11 +28,11 @@
           <desc-tag title="排行" :content="me.seniority" color="#17a2b8"/>
         </van-grid-item>
         <van-grid-item>
-          <desc-tag title="健在" content="" color="#28a745" v-if="!me.deathDate"/>
+          <desc-tag title="健在" content="" color="#28a745" v-if="alive"/>
           <desc-tag title="已逝" content="" color="#6c757d" v-else/>
         </van-grid-item>
         <van-grid-item>
-          <desc-tag title="年龄" :content="me.age" color="#20c997"/>
+          <desc-tag title="年龄" :content="age" color="#20c997"/>
         </van-grid-item>
         <van-grid-item>
           <desc-tag title="字辈" :content="me.generationName" color="#dc3545"/>
@@ -40,15 +40,16 @@
       </van-grid>
 
       <!-- 家庭关系 -->
-      <family-relationship @add-type="addRelatives" :relation="{father: people.father, mother: people.mother, mates: people.mates,
-                             children: people.children, compatriots: people.compatriots}" :hasHusband="!!me.gender"
-                           @view-family-member="viewFamilyMember" :border="false"/>
+      <family-relationship @add-type="addRelatives" :relation="familyRelation" :hasHusband="!!me.gender"
+                           @view-family-member="viewFamilyMember" :border="false"
+      />
 
       <!-- 信息表单 -->
       <div v-show="showForm">
         <van-divider :style="{color: '#1989fa', borderColor: '#1989fa'}"> {{ subTitle }}</van-divider>
         <member-form @save="handleSave" @hidden-form="showForm = false" :people="relativePeople" :anonymous="true"
-                     ref="memberForm"/>
+                     ref="memberForm"
+        />
       </div>
     </div>
 
@@ -61,13 +62,13 @@ import SexTag from '@/components/tag/sex-tag'
 import DescTag from '@/components/tag/desc-tag'
 import MemberForm from "@/components/business/member-form";
 import FamilyRelationship from "@/components/basis/family-relationship";
-import {peopleInfo} from "@/mixin/people-info";
+import {peopleDetails} from "@/mixin/people-details";
 import {defaultPortrait} from "@/mixin/common-utils";
 import {previewImage} from "@/mixin/common-utils";
 
 export default {
   name: "index",
-  mixins: [peopleInfo, defaultPortrait, previewImage],
+  mixins: [peopleDetails, defaultPortrait, previewImage],
   components: {SexTag, DescTag, MemberForm, FamilyRelationship},
   data() {
     return {
@@ -86,19 +87,30 @@ export default {
   mounted() {
     this.initPeople()
   },
+  computed: {
+    familyRelation() {
+      return {
+        father: this.people.father,
+        mother: this.people.mother,
+        mates: this.people.mates,
+        children: this.people.children,
+        compatriots: this.people.compatriots
+      }
+    }
+  },
   methods: {
     handleSave(formData) {
-      this.$api.people.addRelatives(formData, {relativeType: this.relativeType}).then(() => {
+      this.$api.genealogy.addRelative(formData, {relativeType: this.relativeType}).then(() => {
         // 添加亲人成功，重新查询当前人员详细信息
         this.showForm = false
         this.$refs.memberForm.resetForm()
         this.initPeople()
         this.$toast.success(`${this.subTitle}成功`)
 
-        // 更新家族仓库中的信息
+        // 更新家族仓库中的家族列表信息
         this.$store.dispatch('genealogy/updateGenealogyStore')
-      }).catch(err => {
-        this.$toast({message: err.data || err.desc, position: 'bottom'})
+      }).catch(msg => {
+        this.$toast({message: msg, position: 'bottom'})
       })
     },
     addRelatives(type) {

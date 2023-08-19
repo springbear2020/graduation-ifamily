@@ -37,9 +37,9 @@
     <van-index-bar :index-list="generations">
       <div v-for="generation in generations" :key="generation">
         <van-index-anchor :index="generation">{{ chineseGeneration(generation) }}</van-index-anchor>
+
         <van-cell is-link center v-for="people in memberMap[generation]" :key="people.id"
-                  @click="$router.push(`/family/member/info/1?pid=${people.id}`)"
-        >
+                  @click="$router.push(`/family/member/info/1?pid=${people.id}`)">
           <template #title>
             <van-image round width="52" height="52" :src="people.portrait || defaultPortrait(people.gender)"/>
             <p>
@@ -55,7 +55,7 @@
       </div>
     </van-index-bar>
 
-    <van-empty class="empty" v-if="!generations || generations.length === 0" description="空空如也~"/>
+    <van-empty class="empty" v-if="emptyShow" description="空空如也~"/>
   </div>
 </template>
 
@@ -85,7 +85,8 @@ export default {
         alive: undefined
       },
       generations: [],
-      memberMap: {}
+      memberMap: {},
+      emptyShow: false
     }
   },
   watch: {
@@ -93,18 +94,18 @@ export default {
       immediate: true,
       deep: true,
       handler() {
-        // 根据过滤条件查询家族世代列表
         this.getGenerationsMember()
       }
     }
   },
   methods: {
     getGenerationsMember() {
-      this.$api.member.listGenerationMember(this.formData).then(res => {
+      this.$api.genealogy.listGenerationMember(this.formData).then(res => {
         this.generations = res.generations
         this.memberMap = res.members
-      }).catch(err => {
-        this.$toast({message: err.data || err.desc, position: 'bottom'})
+      }).catch(msg => {
+        this.emptyShow = true
+        this.$toast({message: msg, position: 'bottom'})
       })
     },
     chineseGeneration(generation) {
@@ -152,7 +153,7 @@ export default {
 
 .condition-tags-container {
   text-align: center;
-  background-color: #ffffff;
+  background-color: white;
   padding: 0 16px 8px 16px;
 }
 

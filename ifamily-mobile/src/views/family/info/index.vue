@@ -5,7 +5,8 @@
     <div v-if="defaultGenealogy.id">
       <!-- 家族封面 -->
       <div class="flex-container">
-        <van-image class="cover" width="50%" :src="defaultGenealogy.cover" @click="previewImage(defaultGenealogy.cover)"/>
+        <van-image class="cover" width="50%" :src="defaultGenealogy.cover"
+                   @click="previewImage(defaultGenealogy.cover)"/>
       </div>
 
       <!-- 家族成员概况 -->
@@ -36,8 +37,8 @@
       <van-cell title="家族祖籍" :label="defaultGenealogy.ancestryAddress"/>
 
       <!-- 简介、字辈歌 -->
-      <van-cell title="家族简介" :label="defaultGenealogy.introduction" class="top"/>
-      <van-cell title="字辈歌" :label="defaultGenealogy.generationSong"/>
+      <van-cell title="家族简介" :label="defaultGenealogy.introduction" class="top line-wrap"/>
+      <van-cell title="字辈歌" :label="defaultGenealogy.generationSong" class="line-wrap"/>
 
       <!-- 修委会、创建者 -->
       <van-cell title="修委会" v-if="defaultGenealogy.admins" class="top">
@@ -73,3 +74,10 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.flex-container .cover {
+  margin: auto auto;
+  padding: 8px;
+}
+</style>

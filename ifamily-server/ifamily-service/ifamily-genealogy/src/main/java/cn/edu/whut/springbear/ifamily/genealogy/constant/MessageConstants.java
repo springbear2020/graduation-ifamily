@@ -10,6 +10,6 @@ public class MessageConstants {
 
     public static final String PEOPLE_NOT_EXISTS = "人员信息不存在";
 
-    public static final String PEOPLE_INFO_NO_DATA = "家族人员信息无数据";
+    public static final String PEOPLE_INFO_NO_DATA = "默认家族人员信息无数据";
 
 }

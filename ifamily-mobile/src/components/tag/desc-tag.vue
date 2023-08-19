@@ -1,6 +1,6 @@
 <template>
   <!-- 内容描述标签如：[男 234] 或 [年龄 23] 等 -->
-  <van-tag :color="color" style="margin-right: 2px">
+  <van-tag :color="color" class="right">
     {{ title }} {{ content }}
   </van-tag>
 </template>

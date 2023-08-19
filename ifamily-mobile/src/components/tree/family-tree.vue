@@ -1,5 +1,5 @@
 <template>
-  <!-- wrapper高度 = viewport的高度 - 顶部导航栏高度46px -->
+  <!-- wrapper 高度 = viewport 高度 - 顶部导航栏高度 46px -->
   <div ref="wrapper" class="wrapper" :style="{height: `${viewport.h - 46}px`}"
        @mousedown="dragstart" @mousemove="drag" @mouseup="dragend" @mouseleave="dragend"
        @touchstart="dragstart" @touchmove="drag" @touchend="dragend" @touchcancel="dragend" @touchleave="dragend"
@@ -35,11 +35,13 @@ export default {
   mounted() {
     this.viewport.w = document.documentElement.clientWidth
     this.viewport.h = document.documentElement.clientHeight
+
     // 页面缩放宽、高变化，重新设置视口大小
     window.onresize = () => {
       this.viewport.w = document.documentElement.clientWidth
       this.viewport.h = document.documentElement.clientHeight
     }
+
     // 树的根节点居中展示
     const rootElement = document.getElementsByClassName('root-node')[0]
     this.centerNode(rootElement)
@@ -53,8 +55,8 @@ export default {
          *  - 理论上 centerY = document.body.clientHeight / 2，但因页面顶部导航栏占据高度 46px，为减小视觉上的中心点误差，故再使 centerY -= 46
          */
         const {top, left, width} = element.getBoundingClientRect();
-        const centerY = document.body.clientHeight / 2 - 46
         const centerX = document.body.clientWidth / 2 - width / 2;
+        const centerY = document.body.clientHeight / 2 - 46
         // 计算 element 容器左上角距页面中心点 (centerX, centerY) 的距离以得出 element 父容器 container 的移动距离
         const moveY = centerY - top;
         const moveX = centerX - left;
@@ -70,7 +72,6 @@ export default {
       this.point.x = event.pageX || event.touches[0].pageX;
       this.point.y = event.pageY || event.touches[0].pageY;
       this.point.dragStarted = true;
-      this.$emit("dragstart", event);
     },
     drag(event) {
       if (this.point.dragStarted) {
@@ -95,9 +96,9 @@ export default {
     dragend() {
       this.point.dragStarted = false;
       this.point.mouseCursor = "default";
-      setTimeout(() => {
+      this.$nextTick(() => {
         this.preventMouseEvents = false;
-      }, 150);
+      })
     }
   },
 };

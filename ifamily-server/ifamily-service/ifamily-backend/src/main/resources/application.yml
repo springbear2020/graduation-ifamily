@@ -1,5 +1,5 @@
 server:
-  port: 8083
+  port: 1573
 spring:
   application:
     name: ifamily-backend

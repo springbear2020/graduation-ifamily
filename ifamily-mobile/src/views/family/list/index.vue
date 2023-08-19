@@ -7,7 +7,8 @@
                       @click.native="updateDefaultFamily(genealogy.id)"
     />
     <van-empty class="empty" description="空空如也~" v-if="genealogyList.length === 0"
-               :image="require('@/assets/img/empty.png')"/>
+               :image="require('@/assets/img/empty.png')"
+    />
   </div>
 </template>
 
@@ -37,8 +38,8 @@ export default {
           // 切换家族，移除已有的所有家族信息
           this.$store.commit('genealogy/CLEAR_STATE')
           this.$router.replace('/family')
-        }).catch(err => {
-          this.$toast({message: err.data || err.desc, position: 'bottom'})
+        }).catch(msg => {
+          this.$toast({message: msg, position: 'bottom'})
         })
       } else {
         this.$router.replace('/family')
@@ -51,6 +52,6 @@ export default {
 <style scoped>
 /deep/ .van-card {
   margin: 8px;
-  background-color: #ffffff;
+  background-color: white;
 }
 </style>

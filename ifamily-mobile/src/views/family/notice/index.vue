@@ -3,10 +3,20 @@
     <van-nav-bar title="家族公告" left-arrow @click-left="$router.replace('/family')"/>
 
     <van-list finished-text="没有更多了" :finished="finished" v-model="loading" @load="loadNotices">
-      <div v-for="notice in list" :key="notice.id" class="van-hairline--bottom">
-        <portrait-desc :person="notice.announcer"/>
+      <div v-for="notice in list" :key="notice.id" class="top">
+        <van-cell center class="avatar-cell" :border="false">
+          <template #title>
+            <van-image round width="52" height="52" :src="notice.announcer.portrait"/>
+            <div class="avatar-wrapper">
+              <p class="plain-border">{{ notice.announcer.name }}</p>
+              <p class="plain-border avatar-wrapper_desc">{{ notice.announcer.content }}</p>
+            </div>
+          </template>
+
+          <!-- TODO 家族公告已读人数 -->
+        </van-cell>
         <van-cell style="padding-top: 0">
-          {{ notice.content }}
+          <div class="line-wrap" v-html="notice.content"/>
         </van-cell>
       </div>
     </van-list>
@@ -14,15 +24,12 @@
 </template>
 
 <script>
-import PortraitDesc from '@/components/basis/portrait-desc';
 import {momentDate} from "@/utils/converter";
 
 export default {
   name: "index",
-  components: {PortraitDesc},
   data() {
     return {
-      // 分页数据
       finished: false,
       loading: false,
       formData: {
@@ -34,9 +41,8 @@ export default {
   },
   methods: {
     loadNotices() {
-      this.$api.notice.noticePageData(this.formData).then(notices => {
+      this.$api.genealogy.noticePageData(this.formData).then(notices => {
         notices.forEach(item => {
-          // 将发布时间追加到发布者对象中
           item.announcer.content = momentDate(item.created)
           this.list.push(item)
         })

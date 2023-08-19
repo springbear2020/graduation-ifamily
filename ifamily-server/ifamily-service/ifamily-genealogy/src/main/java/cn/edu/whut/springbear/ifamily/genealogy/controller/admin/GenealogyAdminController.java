@@ -38,7 +38,7 @@ public class GenealogyAdminController {
         UserDTO userDTO = WebUtils.parseGeneralUser(httpServletRequest);
         UserGenealogyDO defaultGenealogy = this.userGenealogyService.getDefault(userDTO.getId());
         boolean updateResult = this.genealogyService.edit(genealogyQuery, defaultGenealogy.getGenealogyId());
-        return updateResult ? CommonResult.success() : CommonResult.failed("请求更新家族资料失败");
+        return updateResult ? CommonResult.success() : CommonResult.failed("请求更新默认家族资料失败");
     }
 
 }

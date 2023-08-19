@@ -20,11 +20,11 @@ public class SwaggerConfig extends BaseSwaggerConfig {
         return SwaggerDTO.builder()
                 .apiBasePackage("cn.edu.whut.springbear.ifamily.acl.controller")
                 .enableSecurity(true)
-                .title("百家谱权限中心")
-                .description("百家谱权限中心相关接口文档")
+                .title("百家谱权限模块")
+                .description("百家谱权限服务中心相关接口文档")
                 .version("1.0")
                 .contactName("Spring-_-Bear")
-                .contactUrl("https://springbear.blog.csdn.net")
+                .contactUrl("https://github.com/springbear2020")
                 .contactEmail("springbear2020@163.com")
                 .build();
     }

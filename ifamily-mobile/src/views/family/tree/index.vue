@@ -13,8 +13,9 @@
     </van-nav-bar>
 
     <!-- 家族系谱图 -->
-    <FamilyTree ref="familyTree" @click-node="(node) => $router.push(`/family/member/info/0?pid=${node.id}`)"
-                :tree="tree" v-if="tree.id"/>
+    <FamilyTree ref="familyTree" v-if="tree.id"
+                :tree="tree" @click-node="(node) => $router.push(`/family/member/info/0?pid=${node.id}`)"
+    />
 
     <!-- 空状态 -->
     <van-empty class="empty" v-if="emptyShow" description="空空如也~"/>
@@ -112,10 +113,10 @@ export default {
       // 先从仓库获取家族树结构数据，不存在则进行查询
       let tree = this.$store.state.genealogy.tree
       if (!tree.id) {
-        this.$store.dispatch('genealogy/getGenealogyTree').then(() => {
+        this.$store.dispatch('genealogy/memberTree').then(() => {
           this.tree = this.$store.state.genealogy.tree
-        }).catch((err) => {
-          this.$toast({message: err.data || err.desc, position: 'bottom'})
+        }).catch((msg) => {
+          this.$toast({message: msg, position: 'bottom'})
           this.emptyShow = true
         })
       } else {
@@ -137,7 +138,6 @@ export default {
         case 2:
           // [2]定位到我
           this.isAllFold = false
-          // 取出仓库中的 “我” 用户-家族成员数据
           this.locateMemberNode(this.$store.state.genealogy.userPeople.id)
           break;
         case 3:
@@ -169,10 +169,10 @@ export default {
         return
       }
 
-      this.$api.member.listMemberByName({name: this.content}).then(list => {
+      this.$api.genealogy.listMemberByName({name: this.content}).then(list => {
         this.searchList = list
-      }).catch((err) => {
-        this.$toast({message: err.data || err.desc, position: 'bottom'})
+      }).catch((msg) => {
+        this.$toast({message: msg, position: 'bottom'})
       });
     }
   }

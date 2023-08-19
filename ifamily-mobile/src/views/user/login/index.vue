@@ -2,23 +2,24 @@
   <div>
     <van-nav-bar title="用户登录" right-text="新用户注册" @click-right="$router.push('/user/reset/0')"/>
 
-    <logo-pattern/>
+    <van-empty :image="require('@/assets/img/ifamily.png')"/>
 
     <van-form @submit="handleLogin">
-      <van-field size="large" type="text" label="账号" autofocus placeholder="UID / 手机 / 邮箱"
+      <van-field size="large" label="账号" placeholder="UID / 手机 / 邮箱" autofocus
                  :rules="[{ required: true }]" v-model.trim="formData.account"
       />
 
       <van-field size="large" label="密码" placeholder="密码" autocomplete="on"
-                 :type="passwordFieldType" :right-icon="rightIcon"
                  :rules="[{ required: true }]" v-model.trim="formData.password"
+                 :type="passwordFieldType" :right-icon="passwordFieldType === 'password' ? 'closed-eye' : 'eye-o'"
                  @click-right-icon="passwordFieldType = passwordFieldType === 'password' ? 'text' : 'password'"
       />
 
-      <van-field :rules="[{ required: true }]" size="large">
+      <van-field size="large" :rules="[{ required: true, message: '请阅读并勾选同意《服务条款》和《隐私协议》'}]">
         <template #input>
           <van-checkbox v-model="agree">已阅读并同意</van-checkbox>
-          《服务条款》和《隐私协议》
+          <span class="van-nav-bar__text" @click="$toast({message: '服务条款', position: 'bottom'})">《服务条款》</span>
+          <span class="van-nav-bar__text" @click="$toast({message: '隐私协议', position: 'bottom'})">《隐私协议》</span>
         </template>
       </van-field>
 
@@ -46,19 +47,14 @@ export default {
       passwordFieldType: 'password'
     }
   },
-  computed: {
-    rightIcon() {
-      return this.passwordFieldType === 'password' ? 'closed-eye' : 'eye-o';
-    }
-  },
   methods: {
     handleLogin() {
       this.$store.dispatch('user/login', this.formData).then(() => {
         const redirect = this.$route.query.redirect
         this.$router.replace(redirect ? redirect : '/')
-      }).catch(err => {
-        this.$toast({message: err.data || err.desc, position: 'bottom'})
-      });
+      }).catch(msg => {
+        this.$toast({message: msg, position: 'bottom'})
+      })
     }
   }
 }

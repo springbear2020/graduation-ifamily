@@ -4,8 +4,9 @@ import cn.edu.whut.springbear.ifamily.common.constant.RegExpConstants;
 import cn.edu.whut.springbear.ifamily.common.enumerate.AssertEnum;
 import cn.edu.whut.springbear.ifamily.common.exception.IncorrectConditionException;
 import cn.edu.whut.springbear.ifamily.common.pojo.query.PageQuery;
+import cn.edu.whut.springbear.ifamily.common.pojo.vo.PhotoVO;
 import cn.edu.whut.springbear.ifamily.genealogy.mapper.PhotoMapper;
-import cn.edu.whut.springbear.ifamily.genealogy.pojo.po.PhotoBO;
+import cn.edu.whut.springbear.ifamily.genealogy.pojo.bo.PhotoBO;
 import cn.edu.whut.springbear.ifamily.genealogy.pojo.po.PhotoDO;
 import cn.edu.whut.springbear.ifamily.genealogy.pojo.vo.PeopleCardVO;
 import cn.edu.whut.springbear.ifamily.genealogy.pojo.vo.PeopleVO;
@@ -98,10 +99,10 @@ public class PhotoServiceImpl extends ServiceImpl<PhotoMapper, PhotoDO> implemen
                     // 上传时间
                     photoBO.setUploadTime(created);
                     // 图片集合
-                    List<PhotoBO.ImageVO> imgUrls = new ArrayList<>();
+                    List<PhotoVO> imgUrls = new ArrayList<>();
                     List<PhotoDO> images = userPhoto.getValue();
                     for (PhotoDO image : images) {
-                        PhotoBO.ImageVO imageVO = new PhotoBO.ImageVO();
+                        PhotoVO imageVO = new PhotoVO();
                         imageVO.setId(image.getId());
                         imageVO.setUrl(image.getUrl());
                         imgUrls.add(imageVO);

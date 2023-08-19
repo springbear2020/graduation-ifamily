@@ -1,11 +1,11 @@
 <template>
   <span>
     <!-- [0]male -->
-    <van-icon v-if="sex === 0" name="male" color="#007bff" class="iconfont" class-prefix="icon" size="14"/>
+    <van-icon name="male" color="#007bff" class="iconfont left" size="14" class-prefix="icon" v-if="sex === 0"/>
     <!-- [1]female -->
-    <van-icon v-else-if="sex === 1" name="female" color="#e83e8c" class="iconfont" class-prefix="icon" size="14"/>
+    <van-icon name="female" color="#e83e8c" class="iconfont left" size="14" class-prefix="icon" v-else-if="sex === 1"/>
     <!-- known -->
-    <van-icon v-else name="circle" color="#6c757d" size="14"/>
+    <van-icon name="circle" color="#343a40" class="left" size="14" v-else/>
   </span>
 </template>
 
@@ -20,9 +20,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-.iconfont {
-  margin-left: 2px;
-}
-</style>

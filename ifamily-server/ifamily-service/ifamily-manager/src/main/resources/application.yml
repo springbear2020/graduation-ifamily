@@ -1,5 +1,5 @@
 server:
-  port: 8084
+  port: 7086
 spring:
   application:
     name: ifamily-manager

@@ -3,7 +3,6 @@
     <van-nav-bar title="修谱记录" left-arrow @click-left="$router.replace('/family')"/>
 
     <van-tabs v-model="active">
-      <!-- 修谱日志 -->
       <van-tab title="修谱日志">
         <van-list finished-text="没有更多了" :finished="revision.finished" v-model="revision.loading" @load="loadRevision">
           <van-steps direction="vertical" active-color="#1989fa">
@@ -19,15 +18,14 @@
         </van-list>
       </van-tab>
 
-      <!-- 访问记录 -->
       <van-tab title="访问记录">
         <van-list finished-text="没有更多了" :finished="visitor.finished" v-model="visitor.loading" @load="loadVisitor">
           <van-steps direction="vertical">
             <van-step v-for="(item, index) in visitor.list" :key="index">
               <h3>{{ item.visitedDate }}</h3>
-              <div v-for="people in item.visitors" class="visitor-container">
+              <div v-for="people in item.visitors" class="visitor-container right">
                 <van-image round height="52" width="52" :src="people.portrait || defaultPortrait(people.gender)"/>
-                <p style="margin: 0">{{ people.name }}</p>
+                <p class="plain-border">{{ people.name }}</p>
               </div>
             </van-step>
           </van-steps>
@@ -71,7 +69,7 @@ export default {
   },
   methods: {
     loadRevision() {
-      this.$api.record.revisionLogPageData(this.revision.formData).then(revisionList => {
+      this.$api.genealogy.revisionLogPageData(this.revision.formData).then(revisionList => {
         revisionList.forEach(item => {
           item.operationDate = diffDate(item.operationDate)
           this.revision.list.push(item)
@@ -87,7 +85,7 @@ export default {
       })
     },
     loadVisitor() {
-      this.$api.record.visitorLogPageData(this.visitor.formData).then(visitorList => {
+      this.$api.genealogy.visitorLogPageData(this.visitor.formData).then(visitorList => {
         visitorList.forEach(item => {
           item.visitedDate = diffDate(item.visitedDate)
           this.visitor.list.push(item)
@@ -129,11 +127,6 @@ export default {
   margin: 8px 0;
 }
 
-.visitor-container {
-  display: inline-block;
-  text-align: center;
-}
-
 .operation-type-1 {
   color: #07c160;
 }
@@ -147,6 +140,11 @@ export default {
 }
 
 .operation-type-4 {
-  color: #323233;
+  color: #969799;
+}
+
+.visitor-container {
+  display: inline-block;
+  text-align: center;
 }
 </style>

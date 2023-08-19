@@ -1,4 +1,4 @@
-import {reqLogin, reqGetCurrentUser, reqRefreshToken} from '@/api/user'
+import {login, getCurrentUser, refreshUserToken} from '@/api/user'
 import {setToken, removeToken, setRefreshToken, removeRefreshToken, getRefreshToken} from "@/utils/auth";
 
 export default {
@@ -26,14 +26,14 @@ export default {
             removeRefreshToken()
             commit('CLEAR_STATE')
         },
-        signIn({commit}, res) {
-            setToken(res.accessToken)
-            setRefreshToken(res.refreshToken)
-            commit('SET_TOKEN', res.accessToken)
+        signIn({commit}, token, refreshToken) {
+            setToken(token)
+            setRefreshToken(refreshToken)
+            commit('SET_TOKEN', token)
         },
         login({commit}, params) {
             return new Promise((resolve, reject) => {
-                reqLogin(params).then(res => {
+                login(params).then(res => {
                     setToken(res.accessToken)
                     setRefreshToken(res.refreshToken)
                     commit('SET_TOKEN', res.accessToken);
@@ -43,9 +43,9 @@ export default {
                 })
             })
         },
-        getUser({commit}) {
+        currentUser({commit}) {
             return new Promise((resolve, reject) => {
-                reqGetCurrentUser().then(user => {
+                getCurrentUser().then(user => {
                     commit('SET_USER', user)
                     resolve()
                 }).catch(err => {
@@ -55,10 +55,10 @@ export default {
         },
         refreshUserToken({commit}) {
             return new Promise((resolve, reject) => {
-                const token = getRefreshToken()
-                if (token) {
+                const refreshToken = getRefreshToken()
+                if (refreshToken) {
                     // 请求认证服务器刷新用户令牌
-                    reqRefreshToken(token).then(res => {
+                    refreshUserToken(refreshToken).then(res => {
                         setToken(res.accessToken)
                         setRefreshToken(res.refreshToken)
                         commit('SET_TOKEN', res.accessToken)

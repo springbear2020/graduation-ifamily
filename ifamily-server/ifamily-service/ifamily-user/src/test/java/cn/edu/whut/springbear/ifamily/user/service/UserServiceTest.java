@@ -8,8 +8,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.Date;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 /**
  * @author Spring-_-Bear
  * @since 23/04/13 09:35

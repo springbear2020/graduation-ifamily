@@ -33,7 +33,7 @@ public class AuthController {
     private final TokenEndpoint tokenEndpoint;
     private final KeyPair keyPair;
 
-    @ApiOperation("签发认证令牌")
+    @ApiOperation("签发或刷新认证令牌")
     @PostMapping("/oauth/token")
     public CommonResult<Object> postAccessToken(
             @ApiParam("授权类型：password 或 refresh_token") @RequestParam("grant_type") String grantType,
@@ -66,7 +66,7 @@ public class AuthController {
         return CommonResult.success(resultMap);
     }
 
-    @ApiOperation("获取 rsa 公钥")
+    @ApiOperation("获取认证 rsa 公钥")
     @GetMapping("/rsa/public")
     public Map<String, Object> publicKey() {
         RSAPublicKey publicKey = (RSAPublicKey) this.keyPair.getPublic();

@@ -70,10 +70,10 @@ export default {
         return
       }
 
-      this.$api.member.listMemberByName({name: this.memberName}).then(list => {
+      this.$api.genealogy.listMemberByName({name: this.memberName}).then(list => {
         this.searchList = list
-      }).catch((err) => {
-        this.$toast({message: err.data || err.desc, position: 'bottom'})
+      }).catch((msg) => {
+        this.$toast({message: msg, position: 'bottom'})
       });
     },
     removeGenealogyPeople() {
@@ -84,13 +84,13 @@ export default {
         title: '移除成员',
         message: `您确定要从《${genealogyName}》家族中移除<p style="color: #ee0a24">${this.clickedPeople.name}</p>这个家族成员吗？`,
       }).then(() => {
-        this.$api.people.removePeople({peopleId: this.clickedPeople.id}).then(() => {
-          this.$toast.success('移除成功')
-          this.memberName = ''
-          // 更新家族仓库中的信息
+        this.$api.genealogy.removePeople({peopleId: this.clickedPeople.id}).then(() => {
+          // 更新家族仓库中的家族列表信息
           this.$store.dispatch('genealogy/updateGenealogyStore')
-        }).catch(err => {
-          this.$toast({message: err.data || err.desc, position: 'bottom'})
+          this.memberName = ''
+          this.$toast.success('移除成功')
+        }).catch(msg => {
+          this.$toast({message: msg, position: 'bottom'})
         })
       }).catch(() => {
       })

@@ -18,6 +18,7 @@
         <module>ifamily-user</module>
         <module>ifamily-manager</module>
         <module>ifamily-genealogy</module>
+        <module>ifamily-social</module>
     </modules>
 
     <dependencies>

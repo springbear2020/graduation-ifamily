@@ -1,6 +1,4 @@
-import {reqListGenealogies} from "@/api/genealogy";
-import {reqMemberTreeOfGenealogy} from "@/api/genealogy/member";
-import {reqCurrentUserPeople} from "@/api/genealogy/people";
+import {listGenealogies, getMemberTree, getCurrentUserPeople} from "@/api/genealogy";
 
 export default {
     namespaced: true,
@@ -35,12 +33,16 @@ export default {
         }
     },
     actions: {
-        updateGenealogyStore({commit}) {
-            // FIXME Used by 添加亲人、编辑成员、移除成员
-            return new Promise((resolve, reject) => {
+        updateGenealogyStore({dispatch, commit}) {
+            return new Promise(() => {
                 commit('CLEAR_STATE')
-                // 重新查询家族列表信息
-                reqListGenealogies().then(list => {
+                // 查询最新的家族列表信息
+                dispatch('genealogies')
+            })
+        },
+        genealogies({commit}) {
+            return new Promise((resolve, reject) => {
+                listGenealogies().then(list => {
                     commit('SET_GENEALOGY_LIST', list)
                     resolve()
                 }).catch(err => {
@@ -48,19 +50,9 @@ export default {
                 })
             })
         },
-        listGenealogyList({commit}) {
+        memberTree({commit}) {
             return new Promise((resolve, reject) => {
-                reqListGenealogies().then(list => {
-                    commit('SET_GENEALOGY_LIST', list)
-                    resolve()
-                }).catch(err => {
-                    reject(err)
-                })
-            })
-        },
-        getGenealogyTree({commit}) {
-            return new Promise((resolve, reject) => {
-                reqMemberTreeOfGenealogy().then(tree => {
+                getMemberTree().then(tree => {
                     // 为祖先节点添加 root-node 样式名称使得初始化页面时其居中展示
                     tree.class = ['root-node']
                     commit('SET_GENEALOGY_TREE', tree)
@@ -70,9 +62,9 @@ export default {
                 })
             })
         },
-        getPeopleOfUser({commit}) {
+        genealogyUserPeople({commit}) {
             return new Promise((resolve, reject) => {
-                reqCurrentUserPeople().then(people => {
+                getCurrentUserPeople().then(people => {
                     commit('SET_USER_PEOPLE', people)
                     resolve()
                 }).catch(err => {

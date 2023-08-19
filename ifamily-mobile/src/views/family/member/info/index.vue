@@ -11,7 +11,7 @@
                        @click="previewImage(me.portrait || defaultPortrait(me.gender))"/>
           </template>
           <template #text>
-            <p class="plain-p">
+            <p class="plain-border">
               {{ me.name }}
               <sex-tag :sex="me.gender"/>
             </p>
@@ -51,8 +51,7 @@
 
       <!-- 家庭关系 -->
       <family-relationship :add-button="false" @view-family-member="viewFamilyMember" class="top"
-                           :relation="{father: people.father, mother: people.mother, mates: people.mates,
-                             children: people.children, compatriots: people.compatriots}"
+                           :relation="familyRelation"
       />
       <van-cell title="关系备注" :label="me.familyRelationRemark" v-if="me.familyRelationRemark"/>
     </div>
@@ -66,14 +65,19 @@ import SexTag from '@/components/tag/sex-tag'
 import DescTag from '@/components/tag/desc-tag'
 import FamilyRelationship from '@/components/basis/family-relationship'
 import {solarToLunar} from "@/utils/converter"
-import {peopleInfo} from "@/mixin/people-info";
+import {peopleDetails} from "@/mixin/people-details";
 import {defaultPortrait} from "@/mixin/common-utils";
 import {previewImage} from "@/mixin/common-utils";
 
 export default {
   name: "index",
   components: {SexTag, FamilyRelationship, DescTag},
-  mixins: [peopleInfo, defaultPortrait, previewImage],
+  mixins: [peopleDetails, defaultPortrait, previewImage],
+  data() {
+    return {
+      type: '0'
+    }
+  },
   mounted() {
     // [0] 家族树谱 [1]成员列表 [2]成员管理
     let type = this.$route.params.type
@@ -82,7 +86,6 @@ export default {
     }
     this.type = type
 
-    // 初始化人员数据
     this.initPeople()
   },
   computed: {
@@ -102,7 +105,16 @@ export default {
     },
     deathDate() {
       return this.me.deathDate ? solarToLunar(this.me.deathDate, this.me.lunarDeathDate) : ''
+    },
+    familyRelation() {
+      return {
+        father: this.people.father,
+        mother: this.people.mother,
+        mates: this.people.mates,
+        children: this.people.children,
+        compatriots: this.people.compatriots
+      }
     }
-  },
+  }
 }
 </script>

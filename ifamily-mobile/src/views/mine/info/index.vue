@@ -15,7 +15,12 @@
 
     <!-- 昵称、签名修改弹出层 -->
     <van-popup v-model="showPopup" position="right" class="full-popup">
-      <van-nav-bar left-arrow :title="popupTitle" @click-left="showPopup = false"/>
+      <van-nav-bar :title="popupTitle" @click-left="showPopup = false">
+        <template #left>
+          <van-icon name="cross" size="20"/>
+        </template>
+      </van-nav-bar>
+
       <van-form @submit="handleUpdate">
         <van-field rows="1" type="textarea" maxlength="30" show-word-limit
                    :autosize="true" v-model="content" :label="inputLabel" :placeholder="inputLabel"
@@ -36,9 +41,10 @@ export default {
   name: "index",
   mixins: [imageUploader],
   mounted() {
-    // 修改图片类型为用户头像 [1]用户头像 [2]家族封面
+    // [1]用户头像 [2]家族封面
     this.imgType = '1'
-    // 初始化用户原始头像
+
+    // 初始化展示用户原始头像
     this.initAvatar()
   },
   data() {
@@ -72,10 +78,14 @@ export default {
     updateAvatar(imgUrl) {
       // 更新用户头像地址 [1]用户昵称 [2]个性签名 [3]头像地址
       this.$api.user.updateUserProfile(imgUrl, 3).then(() => {
-        this.$store.dispatch('user/getUser')
-        this.$toast.success('更新成功')
-      }).catch((err) => {
-        this.$toast({message: err.data || err.desc, position: 'bottom'})
+        // 更新成功，查询最新的用户信息
+        this.$store.dispatch('user/currentUser').then(() => {
+          this.$toast.success('更新成功')
+        }).catch((msg) => {
+          this.$toast({msg, position: 'bottom'})
+        })
+      }).catch((msg) => {
+        this.$toast({message: msg, position: 'bottom'})
       })
     },
     openPopup(type) {
@@ -102,15 +112,15 @@ export default {
 
       // 请求服务器更新用户昵称或签名：[1]用户昵称 [2]个性签名 [3]头像地址
       this.$api.user.updateUserProfile(this.content, this.operationType).then(() => {
-        // 查询修改后最新的用户信息
-        this.$store.dispatch('user/getUser').then(() => {
+        // 更新成功，查询最新的用户信息
+        this.$store.dispatch('user/currentUser').then(() => {
           this.showPopup = false
           this.$toast.success('更新成功')
-        }).catch((err) => {
-          this.$toast({message: err.data || err.desc, position: 'bottom'})
+        }).catch((msg) => {
+          this.$toast({msg, position: 'bottom'})
         })
-      }).catch((err) => {
-        this.$toast({message: err.data || err.desc, position: 'bottom'})
+      }).catch((msg) => {
+        this.$toast({msg, position: 'bottom'})
       })
     }
   }

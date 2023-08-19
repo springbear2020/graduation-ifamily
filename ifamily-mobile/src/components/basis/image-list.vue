@@ -1,6 +1,6 @@
 <template>
-  <van-cell>
-    <van-grid square :column-num="3" :gutter="2" :border="false">
+  <van-cell :border="false">
+    <van-grid square :column-num="columnNum" :gutter="2" :border="false">
       <van-grid-item v-for="(img, index) in dataList" :key="index">
         <van-image :src="img.url" @click="previewImage(index)" class="img"/>
       </van-grid-item>
@@ -19,6 +19,18 @@ export default {
       required: true
     }
   },
+  computed: {
+    columnNum() {
+      const length = this.dataList.length
+      if (length === 1) {
+        return 1
+      } else if (length === 2 || length === 4) {
+        return 2
+      } else {
+        return 3
+      }
+    }
+  },
   methods: {
     previewImage(index) {
       let images = []
@@ -26,7 +38,7 @@ export default {
         images.push(item.url)
       })
       ImagePreview({images: images, startPosition: index})
-    },
+    }
   }
 }
 </script>

@@ -28,7 +28,11 @@ public enum ImageTypeEnum {
     /**
      * 大事配图
      */
-    MEMORABILIA(5, "大事配图", "memorabilia");
+    MEMORABILIA(5, "大事配图", "memorabilia"),
+    /**
+     * 动态图片
+     */
+    MOMENT(6, "动态图片", "moment");
 
     private final Integer code;
     private final String desc;

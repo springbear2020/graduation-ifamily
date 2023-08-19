@@ -21,14 +21,14 @@ export default {
   },
   methods: {
     handleSave(formData) {
-      this.$api.people.updatePeople(formData).then(() => {
+      this.$api.genealogy.updatePeople(formData).then(() => {
         // 跳转到家族人员信息页
         this.$router.replace(`/family/member/info/2?pid=${this.people.id}`)
         this.$toast.success('更新成功')
-        // 更新家族仓库中的信息
+        // 更新家族仓库中的家族列表信息
         this.$store.dispatch('genealogy/updateGenealogyStore')
-      }).catch(err => {
-        this.$toast({message: err.data || err.desc, position: "bottom"})
+      }).catch(msg => {
+        this.$toast({message: msg, position: "bottom"})
       })
     },
     initPeople() {
@@ -38,10 +38,10 @@ export default {
         return
       }
 
-      this.$api.people.getPeople({peopleId: pid}).then(people => {
+      this.$api.genealogy.getPeople(pid).then(people => {
         this.people = people
-      }).catch(err => {
-        this.$toast({message: err.data || err.desc, position: 'bottom'})
+      }).catch(msg => {
+        this.$toast({message: msg, position: 'bottom'})
       })
     }
   }

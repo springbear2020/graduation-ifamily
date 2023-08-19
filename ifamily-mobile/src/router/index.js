@@ -46,6 +46,14 @@ export const constantRoutes = [
         path: '/mine/settings/security/devices',
         component: () => import('@/views/mine/settings/security/devices'),
     },
+    {
+        path: '/mine/moment',
+        component: () => import('@/views/mine/moment'),
+    },
+    {
+        path: '/mine/moment/post/:type',
+        component: () => import('@/views/mine/moment/post'),
+    },
     /// family =========================================================================================================
     {
         path: '/family',
@@ -88,7 +96,6 @@ export const constantRoutes = [
         path: '/family/memorabilia',
         component: () => import('@/views/family/memorabilia'),
     },
-    /// 家族管理 ========================================================================================================
     {
         path: '/family/admin',
         component: () => import('@/views/family/admin'),
@@ -131,14 +138,6 @@ export const constantRoutes = [
         component: () => import('@/views/home'),
         meta: {footerShow: true}
     },
-    {
-        path: '/home/message',
-        component: () => import('@/views/home/message'),
-    },
-    {
-        path: '/home/message/chat',
-        component: () => import('@/views/home/message/chat'),
-    },
     /// 404 page must be placed at the end =============================================================================
     {
         path: '/404',
@@ -167,8 +166,8 @@ export function resetRouter() {
  */
 router.beforeEach((to, from, next) => {
     let token = store.state.user.token
-    // 基于本地存储的 token 实现用户免密登录
     if (!token) {
+        // 基于本地存储的令牌实现用户免密登录
         token = getToken()
         if (token) {
             store.commit('user/SET_TOKEN', token)
@@ -176,14 +175,20 @@ router.beforeEach((to, from, next) => {
     }
 
     if (token) {
-        // 是否存在用户信息，不存在则派发 action 查询用户信息
+        // 已登录且前往用户登录、注册、找回密码页面，跳转到首页
+        if (to.path === '/user/login' || to.path === '/user/reset/0' || to.path === '/user/reset/1') {
+            next('/')
+        }
+
+        // 已登录，判断是否存在用户信息，不存在则进行查询
         let uid = store.state.user.user.id
+
         if (!uid) {
-            // 派发 action 获取用户信息，而后放行
-            store.dispatch('user/getUser').then(() => {
+            store.dispatch('user/currentUser').then(() => {
+                // 用户信息获取成功，放行
                 next()
             }).catch(() => {
-                // 用户信息获取失败，令牌已过期，尝试刷新令牌
+                // 用户信息获取失败，当前令牌已过期，尝试刷新令牌
                 store.dispatch('user/refreshUserToken').then(() => {
                     next()
                 }).catch(() => {
@@ -201,14 +206,8 @@ router.beforeEach((to, from, next) => {
             })
         }
 
-        const toPath = to.path;
-        // 已登录且前往用户登录、注册、找回密码页面，跳转到首页
-        if (toPath === '/user/login' || toPath === '/user/reset/0' || toPath === '/user/reset/1') {
-            next('/')
-        }
-
-        // 已登录，其它情况一律放行
-        next();
+        // 其余情况一律放行
+        next()
     } else {
         // 未登录且前往用户登录、注册页面则直接放行，否则跳转到登录页面
         if (to.path.indexOf('/user') !== -1) {
