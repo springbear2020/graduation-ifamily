@@ -4,6 +4,9 @@ import cn.edu.whut.springbear.ifamily.auth.pojo.vo.Oauth2TokenVO;
 import cn.edu.whut.springbear.ifamily.common.api.CommonResult;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import lombok.AllArgsConstructor;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.provider.endpoint.TokenEndpoint;
@@ -13,8 +16,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import java.security.KeyPair;
-import java.security.Principal;
 import java.security.interfaces.RSAPublicKey;
 import java.util.HashMap;
 import java.util.Map;
@@ -23,6 +26,7 @@ import java.util.Map;
  * @author Spring-_-Bear
  * @since 23/04/11 15:21
  */
+@Api(tags = "开放认证接口")
 @RestController
 @AllArgsConstructor
 public class AuthController {
@@ -30,12 +34,16 @@ public class AuthController {
     private final TokenEndpoint tokenEndpoint;
     private final KeyPair keyPair;
 
+    @ApiOperation("签发认证令牌")
     @PostMapping("/oauth/token")
     public CommonResult<Object> postAccessToken(
-            @RequestParam("grant_type") String grantType, @RequestParam("client_id") String clientId,
-            @RequestParam("client_secret") String clientSecret, @RequestParam("refresh_token") String refreshToken,
-            @RequestParam("username") String username, @RequestParam("password") String password,
-            Principal principal) throws HttpRequestMethodNotSupportedException {
+            @ApiParam("授权类型：password 或 refresh_token") @RequestParam("grant_type") String grantType,
+            @ApiParam("客户端类型：mobile-app 或 admin-app") @RequestParam("client_id") String clientId,
+            @ApiParam("客户端密钥") @RequestParam("client_secret") String clientSecret,
+            @ApiParam("刷新令牌：grant_type != refresh_token 时可填写任意值，但不能为空") @RequestParam("refresh_token") String refreshToken,
+            @ApiParam("用户名") @RequestParam("username") String username,
+            @ApiParam("密码") @RequestParam("password") String password,
+            HttpServletRequest request) throws HttpRequestMethodNotSupportedException {
 
         // 收集、转换请求参数
         Map<String, String> parameters = new HashMap<>(6);
@@ -47,9 +55,8 @@ public class AuthController {
         parameters.putIfAbsent("password", password);
 
         // 请求签发 token
-        OAuth2AccessToken token = this.tokenEndpoint.postAccessToken(principal, parameters).getBody();
+        OAuth2AccessToken token = this.tokenEndpoint.postAccessToken(request.getUserPrincipal(), parameters).getBody();
         if (token == null) {
-            // FIXME throw RuntimeException ?
             return CommonResult.failed("令牌签发失败");
         }
 
@@ -60,6 +67,7 @@ public class AuthController {
         return CommonResult.success(tokenVO);
     }
 
+    @ApiOperation("获取 rsa 公钥")
     @GetMapping("/rsa/public")
     public Map<String, Object> publicKey() {
         RSAPublicKey publicKey = (RSAPublicKey) this.keyPair.getPublic();

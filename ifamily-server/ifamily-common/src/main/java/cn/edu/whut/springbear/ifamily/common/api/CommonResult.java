@@ -1,5 +1,6 @@
 package cn.edu.whut.springbear.ifamily.common.api;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 /**
@@ -14,14 +15,17 @@ public final class CommonResult<T> {
     /**
      * 状态码
      */
+    @ApiModelProperty("状态码")
     private Integer code;
     /**
      * 描述消息
      */
+    @ApiModelProperty("描述消息")
     private String desc;
     /**
      * 返回数据
      */
+    @ApiModelProperty("返回数据")
     private T data;
 
     private CommonResult(Integer code, String desc, T data) {
@@ -49,6 +53,13 @@ public final class CommonResult<T> {
      */
     public static <T> CommonResult<T> failed(T data) {
         return new CommonResult<>(ResultCodeEnum.NOT_ACCEPTABLE.getCode(), ResultCodeEnum.NOT_ACCEPTABLE.getMessage(), data);
+    }
+
+    /**
+     * 失败
+     */
+    public static <T> CommonResult<T> preconditionFailed(T data) {
+        return new CommonResult<>(ResultCodeEnum.PRECONDITION_FAILED.getCode(), ResultCodeEnum.PRECONDITION_FAILED.getMessage(), data);
     }
 
     /// ================================================================================================================
@@ -81,29 +92,6 @@ public final class CommonResult<T> {
      */
     public static <T> CommonResult<T> serviceUnavailable(T data) {
         return new CommonResult<>(ResultCodeEnum.SERVICE_UNAVAILABLE.getCode(), ResultCodeEnum.SERVICE_UNAVAILABLE.getMessage(), data);
-    }
-
-    /// ================================================================================================================
-
-    /**
-     * 错误条件
-     */
-    public static <T> CommonResult<T> preconditionFailed(T data) {
-        return new CommonResult<>(ResultCodeEnum.PRECONDITION_FAILED.getCode(), ResultCodeEnum.PRECONDITION_FAILED.getMessage(), data);
-    }
-
-    /**
-     * 缺少参数
-     */
-    public static <T> CommonResult<T> badRequest(T data) {
-        return new CommonResult<>(ResultCodeEnum.BAD_REQUEST.getCode(), ResultCodeEnum.BAD_REQUEST.getMessage(), data);
-    }
-
-    /**
-     * 非法方法
-     */
-    public static <T> CommonResult<T> methodNotAllowed(T data) {
-        return new CommonResult<>(ResultCodeEnum.METHOD_NOT_ALLOWED.getCode(), ResultCodeEnum.METHOD_NOT_ALLOWED.getMessage(), data);
     }
 
 }

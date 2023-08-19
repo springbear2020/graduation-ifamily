@@ -16,6 +16,7 @@
         <module>ifamily-acl</module>
         <module>ifamily-admin</module>
         <module>ifamily-user</module>
+        <module>ifamily-manager</module>
     </modules>
 
     <dependencies>
@@ -46,10 +47,6 @@
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>cn.hutool</groupId>
-            <artifactId>hutool-all</artifactId>
         </dependency>
     </dependencies>
 

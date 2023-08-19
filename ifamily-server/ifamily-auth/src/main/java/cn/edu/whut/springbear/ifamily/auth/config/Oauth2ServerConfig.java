@@ -44,20 +44,20 @@ public class Oauth2ServerConfig extends AuthorizationServerConfigurerAdapter {
         clients.inMemory()
                 // 后台管理
                 .withClient(AuthConstants.CLIENT_ADMIN_ID)
-                .secret(this.passwordEncoder.encode("ifamily-admin"))
+                .secret(this.passwordEncoder.encode(AuthConstants.COMMON_AUTH_PASSWORD))
                 .scopes("all")
                 .authorizedGrantTypes("password", "refresh_token")
-                // 管理员令牌有效期 1 天
+                // 管理员令牌有效期 1 天，刷新令牌有效期 7 天
                 .accessTokenValiditySeconds(3600 * 24)
                 .refreshTokenValiditySeconds(3600 * 24 * 7)
                 .and()
                 // 移动应用
                 .withClient(AuthConstants.CLIENT_MOBILE_ID)
-                .secret(this.passwordEncoder.encode("ifamily-mobile"))
+                .secret(this.passwordEncoder.encode(AuthConstants.COMMON_AUTH_PASSWORD))
                 .scopes("all")
                 .authorizedGrantTypes("password", "refresh_token")
-                // 用户令牌有效期 3 天
-                .accessTokenValiditySeconds(3600 * 24 * 3)
+                // 用户令牌有效期 1 天，刷新令牌有效期 7 天
+                .accessTokenValiditySeconds(3600 * 24)
                 .refreshTokenValiditySeconds(3600 * 24 * 7);
     }
 
@@ -95,7 +95,7 @@ public class Oauth2ServerConfig extends AuthorizationServerConfigurerAdapter {
     @Bean
     public KeyPair keyPair() {
         // 从 classpath 下的证书中获取秘钥对 [keytool -genkey -alias jwt -keyalg RSA -keystore jwt.jks]
-        char[] rsaPassword = "ifamily".toCharArray();
+        char[] rsaPassword = AuthConstants.COMMON_AUTH_PASSWORD.toCharArray();
         KeyStoreKeyFactory keyStoreKeyFactory = new KeyStoreKeyFactory(new ClassPathResource("jwt.jks"), rsaPassword);
         return keyStoreKeyFactory.getKeyPair("jwt", rsaPassword);
     }

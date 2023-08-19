@@ -29,7 +29,7 @@ import java.time.Duration;
 @AllArgsConstructor
 @EnableCaching
 @Configuration
-public class BaseRedisConfig {
+public class RedisConfig {
 
     /**
      * 缓存有效期 1 天

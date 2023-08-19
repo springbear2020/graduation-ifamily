@@ -32,6 +32,8 @@
         <oauth2.version>2.2.5.RELEASE</oauth2.version>
         <hutool.version>5.8.0</hutool.version>
         <mybatisplus.version>3.5.1</mybatisplus.version>
+        <knife4j.version>3.0.3</knife4j.version>
+        <qiniu.version>7.7.0</qiniu.version>
     </properties>
 
     <dependencyManagement>
@@ -77,6 +79,21 @@
                 <groupId>com.baomidou</groupId>
                 <artifactId>mybatis-plus-boot-starter</artifactId>
                 <version>${mybatisplus.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.xiaoymin</groupId>
+                <artifactId>knife4j-micro-spring-boot-starter</artifactId>
+                <version>${knife4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.xiaoymin</groupId>
+                <artifactId>knife4j-spring-boot-starter</artifactId>
+                <version>${knife4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.qiniu</groupId>
+                <artifactId>qiniu-java-sdk</artifactId>
+                <version>${qiniu.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

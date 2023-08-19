@@ -25,8 +25,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
                 .requestMatchers(EndpointRequest.toAnyEndpoint()).permitAll()
-                // 放行 rsaPublicKey 请求路径以供 ifamily-gateway 获取
+                // 放行 rsa 公钥请求路径以供 ifamily-gateway 获取完成认证鉴权
                 .antMatchers("/rsa/public").permitAll()
+                // 放行文档资源
+                .antMatchers("/v2/api-docs").permitAll()
                 .anyRequest().authenticated();
     }
 

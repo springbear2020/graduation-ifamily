@@ -35,8 +35,12 @@ public class AuthConstants {
      */
     public static final String PERMISSION_ROLES_MAP_KEY = "auth:permissionRoleNamesMap";
     /**
-     * FIXME 后台管理路径模式匹配
+     * 后台管理路径模式匹配
      */
-    public static final String ADMIN_URL_PATTERN = "/*/admin/**";
+    public static final String ADMIN_URL_PATTERN = "/**/admin/**";
+    /**
+     * 权限校验通用密码
+     */
+    public static final String COMMON_AUTH_PASSWORD = "ifamily";
 
 }
