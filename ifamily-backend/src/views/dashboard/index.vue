@@ -1,12 +1,15 @@
 <template>
   <div class="app-container">
-    <h1>百家谱后台管理首页</h1>
+    <user-info/>
   </div>
 </template>
 
 <script>
+import UserInfo from '@/views/mine/index'
+
 export default {
   name: "Dashboard",
+  components: {UserInfo}
 }
 </script>
 

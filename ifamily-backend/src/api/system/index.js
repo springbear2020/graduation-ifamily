@@ -91,3 +91,24 @@ export function updateRole(data) {
         data
     })
 }
+
+export function listRolesOfAdmin(adminId) {
+    return request({
+        url: `${aclAdminBaseUrl}/role/${adminId}`,
+        method: 'get'
+    })
+}
+
+export function addAdminRole(adminId, roleId) {
+    return request({
+        url: `${aclAdminBaseUrl}/role/${adminId}/${roleId}`,
+        method: 'post',
+    })
+}
+
+export function removeAdminRole(adminId, roleId) {
+    return request({
+        url: `${aclAdminBaseUrl}/role/${adminId}/${roleId}`,
+        method: 'delete',
+    })
+}

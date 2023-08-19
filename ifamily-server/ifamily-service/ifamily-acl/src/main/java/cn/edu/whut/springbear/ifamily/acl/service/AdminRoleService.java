@@ -34,4 +34,22 @@ public interface AdminRoleService extends IService<AdminRoleDO> {
      */
     List<Long> listAdminIdsOfRole(Long roleId);
 
+    /**
+     * 添加管理员角色
+     *
+     * @param adminId 管理员 ID
+     * @param roleId  角色 ID
+     * @return [true]成功
+     */
+    boolean addAdminRole(Long adminId, Long roleId);
+
+    /**
+     * 移除管理员角色
+     *
+     * @param adminId 管理员 ID
+     * @param roleId  角色 ID
+     * @return [true]成功
+     */
+    boolean removeAdminRole(Long adminId, Long roleId);
+
 }

@@ -45,8 +45,18 @@ const mutations = {
 const actions = {
     generateRoutes({commit}, menuPatterns) {
         return new Promise(resolve => {
-            // filter out routes in `asyncRoutes` that match any ant matching rules in `menuPatterns`
-            const accessibleRoutes = filterAsyncRoutes(asyncRoutes, menuPatterns)
+            let accessibleRoutes = []
+            if (menuPatterns.length === 0) {
+                /*
+                 * ensure the `*` route generated for the 404 not found page redirection,
+                 * must ensure the `*` route is the last one in the `asyncRoutes`
+                 */
+                accessibleRoutes.push(asyncRoutes[asyncRoutes.length - 1])
+            } else {
+                // filter out routes in `asyncRoutes` that match any ant matching rules in `menuPatterns`
+                accessibleRoutes = filterAsyncRoutes(asyncRoutes, menuPatterns);
+            }
+
             commit('SET_ROUTES', accessibleRoutes)
             resolve(accessibleRoutes)
         })

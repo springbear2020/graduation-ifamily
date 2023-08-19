@@ -20,6 +20,9 @@ module.exports = defineConfig({
     transpileDependencies: true,
     lintOnSave: false,
     productionSourceMap: false,
+    devServer: {
+        port: 8081
+    },
     configureWebpack: {
         // provide the app's title in webpack's name field, so that it can be accessed in index.html to inject the correct title.
         name: defaultSettings.title || 'Vue Element Admin',

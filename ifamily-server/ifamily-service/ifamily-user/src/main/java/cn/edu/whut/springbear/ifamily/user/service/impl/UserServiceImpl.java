@@ -197,6 +197,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
         userDO.setPhone(DesensitizedUtil.mobilePhone(userDO.getPhone()));
         UserVO userVO = new UserVO();
         BeanUtils.copyProperties(userDO, userVO);
+
+        // 设置用户拥有的角色名称列表
+        userVO.setRoles(userDTO.getRoles());
+
         return userVO;
     }
 

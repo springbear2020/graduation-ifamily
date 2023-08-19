@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import store from '@/store'
 import {getToken} from "@/utils/auth";
 import {Notify} from "vant";
+import {filterAsyncRoutes} from "@/utils/permission";
 
 Vue.use(VueRouter)
 
@@ -96,38 +97,6 @@ export const constantRoutes = [
         path: '/family/memorabilia',
         component: () => import('@/views/family/memorabilia'),
     },
-    {
-        path: '/family/admin',
-        component: () => import('@/views/family/admin'),
-    },
-    {
-        path: '/family/admin/info/form/:type',
-        component: () => import('@/views/family/admin/info/form'),
-    },
-    {
-        path: '/family/admin/member',
-        component: () => import('@/views/family/admin/member'),
-    },
-    {
-        path: '/family/admin/member/add',
-        component: () => import('@/views/family/admin/member/add'),
-    },
-    {
-        path: '/family/admin/member/edit',
-        component: () => import('@/views/family/admin/member/edit'),
-    },
-    {
-        path: '/family/admin/notice/form',
-        component: () => import('@/views/family/admin/notice/form'),
-    },
-    {
-        path: '/family/admin/album/form',
-        component: () => import('@/views/family/admin/album/form'),
-    },
-    {
-        path: '/family/admin/memorabilia/form',
-        component: () => import('@/views/family/admin/memorabilia/form'),
-    },
     /// home ===========================================================================================================
     {
         path: '/',
@@ -153,6 +122,65 @@ const createRouter = () => new VueRouter({
     scrollBehavior: () => ({y: 0}),
     routes: constantRoutes
 })
+
+export const asyncRoutes = [
+    {
+        path: '/family/admin',
+        component: () => import('@/views/family/admin'),
+        meta: {
+            roles: ['GENEALOGY_CREATOR', 'GENEALOGY_ADMIN']
+        }
+    },
+    {
+        path: '/family/admin/info/form/:type',
+        component: () => import('@/views/family/admin/info/form'),
+        meta: {
+            roles: ['GENEALOGY_CREATOR', 'GENEALOGY_ADMIN']
+        }
+    },
+    {
+        path: '/family/admin/member',
+        component: () => import('@/views/family/admin/member'),
+        meta: {
+            roles: ['GENEALOGY_CREATOR', 'GENEALOGY_ADMIN']
+        }
+    },
+    {
+        path: '/family/admin/member/add',
+        component: () => import('@/views/family/admin/member/add'),
+        meta: {
+            roles: ['GENEALOGY_CREATOR', 'GENEALOGY_ADMIN']
+        }
+    },
+    {
+        path: '/family/admin/member/edit',
+        component: () => import('@/views/family/admin/member/edit'),
+        meta: {
+            roles: ['GENEALOGY_CREATOR', 'GENEALOGY_ADMIN']
+        }
+    },
+    {
+        path: '/family/admin/notice/form',
+        component: () => import('@/views/family/admin/notice/form'),
+        meta: {
+            roles: ['GENEALOGY_CREATOR', 'GENEALOGY_ADMIN']
+        }
+    },
+    {
+        path: '/family/admin/album/form',
+        component: () => import('@/views/family/admin/album/form'),
+        meta: {
+            roles: ['GENEALOGY_CREATOR', 'GENEALOGY_ADMIN']
+        }
+    },
+    {
+        path: '/family/admin/memorabilia/form',
+        component: () => import('@/views/family/admin/memorabilia/form'),
+        meta: {
+            roles: ['GENEALOGY_CREATOR', 'GENEALOGY_ADMIN']
+        }
+    },
+]
 
 const router = createRouter()
 
@@ -184,9 +212,15 @@ router.beforeEach((to, from, next) => {
         let uid = store.state.user.user.id
 
         if (!uid) {
-            store.dispatch('user/currentUser').then(() => {
+            store.dispatch('user/currentUser').then(({roles}) => {
+                // 根据用户角色列表生成异步路由
+                if (roles && roles.length > 0) {
+                    const accessRoutes = filterAsyncRoutes(asyncRoutes, roles)
+                    router.addRoutes(accessRoutes)
+                }
+
                 // 用户信息获取成功，放行
-                next()
+                next();
             }).catch(() => {
                 // 用户信息获取失败，当前令牌已过期，尝试刷新令牌
                 store.dispatch('user/refreshUserToken').then(() => {

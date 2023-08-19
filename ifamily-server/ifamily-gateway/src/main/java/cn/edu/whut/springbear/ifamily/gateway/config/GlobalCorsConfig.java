@@ -5,9 +5,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.reactive.CorsWebFilter;
 import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
-import org.springframework.web.util.pattern.PathPatternParser;
-
-import java.util.Arrays;
 
 /**
  * @author Spring-_-Bear
@@ -18,17 +15,17 @@ public class GlobalCorsConfig {
 
     @Bean
     public CorsWebFilter corsWebFilter() {
-        CorsConfiguration config = new CorsConfiguration();
-        // 配置允许访问的域名
-        config.setAllowedOriginPatterns(Arrays.asList("http://localhost:8080", "http://10.129.190.209:8080"));
-        // 允许所有请求方法跨域调用
-        config.addAllowedMethod("*");
-        // 放行全部原始头信息
-        config.addAllowedHeader("*");
-        // 允许跨越发送 Cookie
-        config.setAllowCredentials(true);
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource(new PathPatternParser());
-        source.registerCorsConfiguration("/**", config);
+        CorsConfiguration corsConfig = new CorsConfiguration();
+        // 允许所有域名访问
+        corsConfig.addAllowedOrigin("*");
+        // 允许所有HTTP方法
+        corsConfig.addAllowedMethod("*");
+        // 允许所有请求头
+        corsConfig.addAllowedHeader("*");
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", corsConfig);
+
         return new CorsWebFilter(source);
     }
 

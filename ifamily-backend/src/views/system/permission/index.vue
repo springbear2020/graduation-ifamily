@@ -5,11 +5,11 @@
     <!-- data table -->
     <el-table :data="permissionList" style="width: 100%; margin-top:20px;" border>
       <el-table-column align="center" label="#" width="50" type="index"/>
-      <el-table-column label="权限名称" width="220" prop="name" sortable autofocus/>
+      <el-table-column label="权限名称" prop="name" sortable autofocus/>
       <el-table-column label="权限描述" prop="description" sortable/>
-      <el-table-column label="权限路径" width="220" prop="path" sortable/>
+      <el-table-column label="权限路径" prop="path" sortable/>
 
-      <el-table-column align="center" label="权限状态" width="220" sortable>
+      <el-table-column align="center" label="权限状态" sortable>
         <template slot-scope="scope">
             <span>
               <el-tag type="danger" v-if="scope.row.status">已禁用</el-tag>
@@ -18,10 +18,10 @@
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="创建时间" width="220" prop="created" sortable/>
-      <el-table-column align="center" label="修改时间" width="220" prop="modified" sortable/>
+      <el-table-column align="center" label="创建时间" prop="created" sortable/>
+      <el-table-column align="center" label="修改时间" prop="modified" sortable/>
 
-      <el-table-column align="center" label="操作" width="220">
+      <el-table-column align="center" label="操作">
         <template slot-scope="scope">
           <el-button type="warning" size="small" @click="openEditDialog(scope)">编辑</el-button>
           <el-button type="danger" size="small" @click="deletePermission(scope)">删除</el-button>

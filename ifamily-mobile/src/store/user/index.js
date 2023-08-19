@@ -47,7 +47,7 @@ export default {
             return new Promise((resolve, reject) => {
                 getCurrentUser().then(user => {
                     commit('SET_USER', user)
-                    resolve()
+                    resolve(user)
                 }).catch(err => {
                     reject(err)
                 })

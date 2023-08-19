@@ -11,11 +11,16 @@ import cn.edu.whut.springbear.ifamily.backend.service.feign.AuthFeignService;
 import cn.edu.whut.springbear.ifamily.common.api.CommonResult;
 import cn.edu.whut.springbear.ifamily.common.api.ResultCodeEnum;
 import cn.edu.whut.springbear.ifamily.common.constant.AuthConstants;
+import cn.edu.whut.springbear.ifamily.common.enumerate.AssertEnum;
+import cn.edu.whut.springbear.ifamily.common.exception.IncorrectConditionException;
 import cn.edu.whut.springbear.ifamily.common.pojo.dto.UserDTO;
+import cn.edu.whut.springbear.ifamily.common.pojo.query.PageParam;
+import cn.edu.whut.springbear.ifamily.common.pojo.vo.AdminUserVO;
 import cn.edu.whut.springbear.ifamily.common.pojo.vo.RoleUserVO;
 import cn.edu.whut.springbear.ifamily.common.util.WebUtils;
 import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.BeanUtils;
@@ -94,7 +99,7 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, AdminDO> implemen
         AdminBO adminBO = new AdminBO();
         BeanUtils.copyProperties(adminDO, adminBO);
 
-        // 查询管理员对应的角色名称集合
+        // 查询管理员对应的菜单路径集合
         List<String> adminRoles = this.adminRoleFeignService.listMenuPathsOfAdmin(userDTO.getId());
         adminBO.setMenus(adminRoles);
 
@@ -121,6 +126,38 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, AdminDO> implemen
         }
 
         return resultList;
+    }
+
+    @Override
+    public List<AdminUserVO> pageData(PageParam pageQuery) {
+        Page<AdminDO> page = this.page(new Page<>(pageQuery.getCurrent(), pageQuery.getSize()));
+        if (page == null || page.getRecords().isEmpty()) {
+            return null;
+        }
+
+        List<AdminUserVO> resultList = new ArrayList<>();
+        // DO -> VO
+        List<AdminDO> adminDOList = page.getRecords();
+        for (AdminDO adminDO : adminDOList) {
+            AdminUserVO adminUserVO = new AdminUserVO();
+            BeanUtils.copyProperties(adminDO, adminUserVO);
+            resultList.add(adminUserVO);
+        }
+
+        return resultList;
+    }
+
+    @Override
+    public boolean updateStatus(Long adminId, Integer newStatus) {
+        AdminDO adminDO = new AdminDO();
+        adminDO.setId(adminId);
+        if (AssertEnum.YES.getCode().equals(newStatus) || AssertEnum.NO.getCode().equals(newStatus)) {
+            adminDO.setStatus(newStatus);
+        } else {
+            throw new IncorrectConditionException("账户禁用状态不合法");
+        }
+
+        return this.updateById(adminDO);
     }
 
 }

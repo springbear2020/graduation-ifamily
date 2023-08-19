@@ -21,18 +21,18 @@ class AdminServiceTest {
     @Test
     void create() {
         AdminDO userDO = new AdminDO();
-        userDO.setId(1L);
-        userDO.setUsername("backend");
-        userDO.setPassword(BCrypt.hashpw("backend"));
+        userDO.setUsername("admin");
+        userDO.setPassword(BCrypt.hashpw("admin"));
         userDO.setNickname("Spring-_-Bear");
-        userDO.setAvatar("");
+        userDO.setAvatar("https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif");
+        userDO.setSignature("路漫漫其修远兮，吾将上下而求索。");
         userDO.setStatus(0);
         Date date = new Date();
         userDO.setLastLogin(date);
         userDO.setCreated(date);
         userDO.setModified(date);
         userDO.setDeleted(0);
-        System.out.println(this.adminService.save(userDO));
+        this.adminService.save(userDO);
     }
 
 }

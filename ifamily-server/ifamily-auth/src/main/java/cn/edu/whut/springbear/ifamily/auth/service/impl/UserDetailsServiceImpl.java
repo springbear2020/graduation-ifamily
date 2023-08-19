@@ -45,7 +45,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             throw new OAuth2Exception(GlobalMessageConstants.INCORRECT_CLIENT_ID);
         }
 
-        if (userDTO.getId() == null) {
+        if (userDTO == null || userDTO.getId() == null) {
             throw new OAuth2Exception(GlobalMessageConstants.USERNAME_NOT_EXISTS);
         }
 

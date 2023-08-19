@@ -2,6 +2,7 @@ package cn.edu.whut.springbear.ifamily.acl.controller.admin;
 
 import cn.edu.whut.springbear.ifamily.acl.pojo.bo.RoleBO;
 import cn.edu.whut.springbear.ifamily.acl.pojo.query.RoleQuery;
+import cn.edu.whut.springbear.ifamily.acl.service.AdminRoleService;
 import cn.edu.whut.springbear.ifamily.acl.service.RoleService;
 import cn.edu.whut.springbear.ifamily.common.api.CommonResult;
 import cn.hutool.core.collection.CollUtil;
@@ -24,6 +25,7 @@ import java.util.List;
 public class RoleAdminController {
 
     private final RoleService roleService;
+    private final AdminRoleService adminRoleService;
 
     @ApiOperation("查询角色列表")
     @GetMapping
@@ -51,6 +53,27 @@ public class RoleAdminController {
     public CommonResult<Object> edit(@Validated @RequestBody RoleQuery roleQuery) {
         boolean updateResult = this.roleService.edit(roleQuery);
         return updateResult ? CommonResult.success() : CommonResult.failed("请求更新角色失败");
+    }
+
+    @ApiOperation("查询管理员对应的角色名称集合")
+    @GetMapping("/{adminId}")
+    public CommonResult<Object> rolesOfAdmin(@PathVariable Long adminId) {
+        List<String> roles = this.roleService.listRoleNamesOfAdmin(adminId);
+        return CollUtil.isEmpty(roles) ? CommonResult.failed("管理员角色列表无数据") : CommonResult.success(roles);
+    }
+
+    @ApiOperation("添加管理员角色")
+    @PostMapping("/{adminId}/{roleId}")
+    public CommonResult<Object> addAdminRole(@PathVariable Long adminId, @PathVariable Long roleId) {
+        boolean saveResult = this.adminRoleService.addAdminRole(adminId, roleId);
+        return saveResult ? CommonResult.success() : CommonResult.failed("请求添加管理员角色失败");
+    }
+
+    @ApiOperation("移除管理员角色")
+    @DeleteMapping("/{adminId}/{roleId}")
+    public CommonResult<Object> removeAdminRole(@PathVariable Long adminId, @PathVariable Long roleId) {
+        boolean removeResult = this.adminRoleService.removeAdminRole(adminId, roleId);
+        return removeResult ? CommonResult.success() : CommonResult.failed("请求移除管理员角色失败");
     }
 
 }

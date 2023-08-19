@@ -6,6 +6,8 @@ Vue.use(Router)
 import Layout from '@/components/layout/Layout'
 
 import systemRoutes from "@/router/modules/system";
+import userRoutes from "@/router/modules/user";
+import dataRoutes from "@/router/modules/data";
 
 /**
  * Note: sub-menu only appear when route children.length >= 1
@@ -92,8 +94,9 @@ export const constantRoutes = [
  * Async routes, need to grant the authorities, but except the `{path: '*', redirect: '/404', hidden: true}`
  */
 export const asyncRoutes = [
+    dataRoutes,
+    userRoutes,
     systemRoutes,
-
     // error 404 page must be placed at the end, can't move it to the constant routes
     {path: '*', redirect: '/404', hidden: true}
 ]

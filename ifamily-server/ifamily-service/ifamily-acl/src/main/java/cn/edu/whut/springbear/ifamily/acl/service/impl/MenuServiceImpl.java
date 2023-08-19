@@ -65,7 +65,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, MenuDO> implements 
         // 批量查询未禁用菜单列表集合
         QueryWrapper<MenuDO> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("status", AssertEnum.NO.getCode()).in("id", rolesMenuIds);
-        List<MenuDO> adminMenus = this.list();
+        List<MenuDO> adminMenus = this.list(queryWrapper);
         if (CollUtil.isEmpty(adminMenus)) {
             return null;
         }

@@ -19,7 +19,7 @@ public interface PeopleMapper extends BaseMapper<PeopleDO> {
      * @param genealogyId 家族 ID
      * @return 影响的行数
      */
-    @Update("update people set generation = generation + 1 where genealogy_id = #{genealogyId}")
+    @Update("update genealogy_people set generation = generation + 1 where genealogy_id = #{genealogyId}")
     int generationIncreaseOne(@Param("genealogyId") Long genealogyId);
 
 }

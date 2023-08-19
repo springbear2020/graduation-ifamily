@@ -13,7 +13,7 @@
 <script>
 import path from "path";
 import {findMatched} from "@/utils/ant-matcher";
-import {asyncRoutes} from "@/router";
+import {constantRoutes, asyncRoutes} from "@/router";
 
 export default {
   name: "RouteTree",
@@ -35,7 +35,7 @@ export default {
     }
   },
   mounted() {
-    this.treeRoutes = this.simplifyRoutes(asyncRoutes)
+    this.treeRoutes = this.simplifyRoutes(constantRoutes.concat(asyncRoutes))
     this.checkedNodes = this.generateTreeCheckedArr(this.treeRoutes)
   },
   methods: {

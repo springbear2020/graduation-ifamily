@@ -30,6 +30,9 @@ export default {
         this.$store.dispatch('user/logout')
         this.$store.commit('genealogy/CLEAR_STATE')
         this.$router.replace('/user/login')
+        this.$nextTick(() => {
+          window.location.reload()
+        })
       }).catch(() => {
       })
     }

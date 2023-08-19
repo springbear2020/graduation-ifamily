@@ -60,4 +60,19 @@ public class AdminRoleServiceImpl extends ServiceImpl<AdminRoleMapper, AdminRole
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public boolean addAdminRole(Long adminId, Long roleId) {
+        AdminRoleDO adminRoleDO = new AdminRoleDO();
+        adminRoleDO.setAdminId(adminId);
+        adminRoleDO.setRoleId(roleId);
+        return this.save(adminRoleDO);
+    }
+
+    @Override
+    public boolean removeAdminRole(Long adminId, Long roleId) {
+        UpdateWrapper<AdminRoleDO> updateWrapper = new UpdateWrapper<>();
+        updateWrapper.eq("admin_id", adminId).eq("role_id", roleId);
+        return this.remove(updateWrapper);
+    }
+
 }

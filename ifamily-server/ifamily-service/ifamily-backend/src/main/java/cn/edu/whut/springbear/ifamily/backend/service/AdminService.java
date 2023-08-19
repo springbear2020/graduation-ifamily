@@ -5,6 +5,8 @@ import cn.edu.whut.springbear.ifamily.backend.pojo.po.AdminDO;
 import cn.edu.whut.springbear.ifamily.backend.pojo.query.LoginQuery;
 import cn.edu.whut.springbear.ifamily.common.api.CommonResult;
 import cn.edu.whut.springbear.ifamily.common.pojo.dto.UserDTO;
+import cn.edu.whut.springbear.ifamily.common.pojo.query.PageParam;
+import cn.edu.whut.springbear.ifamily.common.pojo.vo.AdminUserVO;
 import cn.edu.whut.springbear.ifamily.common.pojo.vo.RoleUserVO;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -46,5 +48,22 @@ public interface AdminService extends IService<AdminDO> {
      * @return 管理员信息集合
      */
     List<RoleUserVO> listInBatchIds(List<Long> adminIds);
+
+    /**
+     * 查询管理员用户分页数据
+     *
+     * @param pageQuery 分页条件
+     * @return 管理员用户分页数据
+     */
+    List<AdminUserVO> pageData(PageParam pageQuery);
+
+    /**
+     * 更新管理员账号禁用状态
+     *
+     * @param adminId   管理员 ID
+     * @param newStatus 新禁用状态：[0]启用 [1]禁用
+     * @return 更新成功
+     */
+    boolean updateStatus(Long adminId, Integer newStatus);
 
 }

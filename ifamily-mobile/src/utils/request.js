@@ -9,11 +9,9 @@ import store from '@/store'
 nprogress.configure({showSpinner: false})
 
 const service = axios.create({
-    baseURL: 'http://10.128.184.117:8888',
+    baseURL: 'http://10.129.190.209:8888',
     timeout: 10000
 })
-
-let timer = undefined
 
 /**
  * 请求拦截器

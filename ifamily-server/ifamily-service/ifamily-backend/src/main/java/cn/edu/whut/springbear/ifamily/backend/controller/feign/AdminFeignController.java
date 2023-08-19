@@ -18,7 +18,7 @@ import java.util.List;
  * @author Spring-_-Bear
  * @since 23/04/12 16:33
  */
-@Api(tags = "后台管理员调用接口")
+@Api(tags = "管理员调用接口")
 @AllArgsConstructor
 @RestController
 @RequestMapping("/backend/feign")

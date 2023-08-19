@@ -29,9 +29,9 @@ public class LoginLogServiceImpl extends ServiceImpl<LoginLogMapper, LoginLogDO>
         String ipAddress = WebUtils.getRequestIp(request);
         loginLogDO.setIp(ipAddress);
         // 解析 IP 归属地：先使用百度地图 API，解析失败使用淘宝公共 API 解析
-///        String location = WebUtils.baiduParseIpLocation(ipAddress);
-///        location = "未知地点".equals(location) ? WebUtils.taobaoParseIpLocation(ipAddress) : location;
-        loginLogDO.setLocation("湖北省武汉市");
+        String location = WebUtils.baiduParse(ipAddress);
+        location = "未知地点".equals(location) ? WebUtils.taobaoParse(ipAddress) : location;
+        loginLogDO.setLocation(location);
         // 从请求头中获取用户设备信息
         String device = WebUtils.userAgent(request);
         loginLogDO.setDevice(device);

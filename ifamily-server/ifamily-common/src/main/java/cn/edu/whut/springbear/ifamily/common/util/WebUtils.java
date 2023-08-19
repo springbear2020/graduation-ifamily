@@ -71,15 +71,19 @@ public final class WebUtils {
             return DEFAULT_LOCATION;
         }
 
-        String url = "https://api.map.baidu.com/location/ip?ak=IPhSgYKe4YCEn2KfYyQwdp3S8RtqrvV4&coor=bd09ll&ip=" + ip;
-        // 尝试与百度服务器建立一个 GET 连接，获得其响应的 json 数据字符串
-        String responseStr = HttpRequest.get(url).execute().body();
-        // 将响应的 json 字符串解析为 json 对象
-        JSONObject responseJson = JSONUtil.parseObj(responseStr);
-        // 从响应的 json 对象中获取含有地址信息的 json 对象
-        JSONObject addressJson = JSONUtil.parseObj(responseJson.getObj("content"));
-        // 获取 IP 地址，默认为 “未知地点”
-        return addressJson.getStr("address", DEFAULT_LOCATION);
+        try {
+            String url = "https://api.map.baidu.com/location/ip?ak=IPhSgYKe4YCEn2KfYyQwdp3S8RtqrvV4&coor=bd09ll&ip=" + ip;
+            // 尝试与百度服务器建立一个 GET 连接，获得其响应的 json 数据字符串
+            String responseStr = HttpRequest.get(url).execute().body();
+            // 将响应的 json 字符串解析为 json 对象
+            JSONObject responseJson = JSONUtil.parseObj(responseStr);
+            // 从响应的 json 对象中获取含有地址信息的 json 对象
+            JSONObject addressJson = JSONUtil.parseObj(responseJson.getObj("content"));
+            // 获取 IP 地址，默认为 “未知地点”
+            return addressJson.getStr("address", DEFAULT_LOCATION);
+        } catch (Exception e) {
+            return DEFAULT_LOCATION;
+        }
     }
 
     /**
@@ -91,16 +95,20 @@ public final class WebUtils {
         }
 
         String url = "https://ip.taobao.com/outGetIpInfo?accessKey=alibaba-inc&ip=" + ip;
-        // 尝试与淘宝服务器建立一个 GET 连接，获得其响应的 json 数据字符串
-        String responseStr = HttpRequest.get(url).execute().body();
-        // 将响应的 json 字符串解析为 json 对象
-        JSONObject responseJson = JSONUtil.parseObj(responseStr);
-        // 从响应的 json 对象中获取含有地址信息的 json 对象
-        JSONObject addressJson = JSONUtil.parseObj(responseJson.getObj("data"));
-        String country = addressJson.getStr("country", "未知国家");
-        String region = addressJson.getStr("region", "未知地区");
-        String city = addressJson.getStr("city", "未知城市");
-        return country + "/" + region + "/" + city;
+        try {
+            // 尝试与淘宝服务器建立一个 GET 连接，获得其响应的 json 数据字符串
+            String responseStr = HttpRequest.get(url).execute().body();
+            // 将响应的 json 字符串解析为 json 对象
+            JSONObject responseJson = JSONUtil.parseObj(responseStr);
+            // 从响应的 json 对象中获取含有地址信息的 json 对象
+            JSONObject addressJson = JSONUtil.parseObj(responseJson.getObj("data"));
+            String country = addressJson.getStr("country", "未知国家");
+            String region = addressJson.getStr("region", "未知地区");
+            String city = addressJson.getStr("city", "未知城市");
+            return country + "/" + region + "/" + city;
+        } catch (Exception e) {
+            return DEFAULT_LOCATION;
+        }
     }
 
     /**

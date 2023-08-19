@@ -5,10 +5,10 @@
     <!-- data table -->
     <el-table :data="roleDetailsList" style="width: 100%; margin-top:20px;" border>
       <el-table-column align="center" label="#" width="50" type="index"/>
-      <el-table-column label="角色名称" width="220" prop="role.name" sortable autofocus/>
+      <el-table-column label="角色名称" prop="role.name" sortable autofocus/>
       <el-table-column label="角色描述" prop="role.description" sortable/>
 
-      <el-table-column align="center" label="角色状态" width="220" sortable>
+      <el-table-column align="center" label="角色状态" sortable>
         <template slot-scope="scope">
             <span>
               <el-tag type="danger" v-if="scope.row.role.status">已禁用</el-tag>
@@ -17,10 +17,10 @@
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="创建时间" width="220" prop="role.created" sortable/>
-      <el-table-column align="center" label="修改时间" width="220" prop="role.modified" sortable/>
+      <el-table-column align="center" label="创建时间" prop="role.created" sortable/>
+      <el-table-column align="center" label="修改时间" prop="role.modified" sortable/>
 
-      <el-table-column align="center" label="操作" width="220">
+      <el-table-column align="center" label="操作">
         <template slot-scope="scope">
           <el-button size="small" @click="openResourceDrawer(scope)">详情</el-button>
           <el-button type="warning" size="small" @click="openEditDialog(scope)">编辑</el-button>
