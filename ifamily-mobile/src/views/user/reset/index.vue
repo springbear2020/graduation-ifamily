@@ -56,13 +56,13 @@ export default {
       return this.type === '0' ? '用户注册' : (this.type === '1' ? '忘记密码' : '修改密码')
     },
     dstRoute() {
-      return this.type === '2' ? '/mine/settings/security' : '/user/login'
+      return this.type === '2' ? '/mine/security' : '/user/login'
     }
   },
   methods: {
     // 用户注册或重置密码
     handleRegisterOrReset(data) {
-      console.log(data)
+      this.$toast('注册或重置密码')
       this.$router.replace('/user/login')
     }
   }

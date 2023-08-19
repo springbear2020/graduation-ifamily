@@ -9,14 +9,16 @@
     </van-nav-bar>
 
     <van-pull-refresh v-model="isRefreshing" success-text="刷新成功" @refresh="onRefresh">
-      <van-cell-group v-for="i in 2" :key="i">
-        <!-- 头像、姓名、时间 -->
-        <portrait-desc :person="person" @click.native="$toast('查看人员信息')"/>
-        <!-- 图片列表 -->
-        <van-cell :border="false">
-          <image-list :data-list="imgList"/>
-        </van-cell>
-      </van-cell-group>
+      <div v-for="i in 2" :key="i">
+        <van-cell-group>
+          <!-- 头像、姓名、时间 -->
+          <portrait-desc :person="person" @click-image="$toast('查看信息')"/>
+          <!-- 图片列表 -->
+          <van-cell :border="false">
+            <image-list :data-list="imgList"/>
+          </van-cell>
+        </van-cell-group>
+      </div>
     </van-pull-refresh>
 
     <!-- 家族图片上传动作面板 -->

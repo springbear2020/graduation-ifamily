@@ -1,8 +1,8 @@
 <template>
   <div>
-    <van-nav-bar title="消息" @click-right="$toast('好友列表')">
+    <van-nav-bar title="消息" @click-right="$toast('清除未读消息')">
       <template #right>
-        <van-icon name="contact" size="20"/>
+        <van-icon name="sweep" color="#1989fa" class="iconfont" class-prefix="icon" size="20"/>
       </template>
     </van-nav-bar>
 

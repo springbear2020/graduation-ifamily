@@ -25,7 +25,7 @@
       <van-empty description="无内容"/>
     </van-action-sheet>
     <!-- 树节点点击操作面板 -->
-    <van-action-sheet v-model="showPeopleSheet" cancel-text="取消" description="光头勇">
+    <van-action-sheet v-model="showPeopleSheet" cancel-text="取消" :description="peopleName">
       <van-grid square :border="false">
         <van-grid-item icon="add-o" text="添加亲人" to="/family/manage/members/add/0"/>
         <van-grid-item icon="delete-o" text="移除此人" @click="removeFamilyPeople"/>
@@ -38,7 +38,7 @@
 
 <script>
 import FamilyTree from '@/views/family/tree/family-tree';
-import stone from '@/assets/json/stone-story.json'
+import stone from '@/assets/json/stone.json'
 
 export default {
   name: "index",
@@ -58,9 +58,11 @@ export default {
       showPeopleSheet: false,
       // [true]全部节点折叠 [false]!全部节点折叠
       isAllFold: true,
-      rotate: 0,
       // [0]家族 [1]列表成员 [2]成员管理
-      type: '0'
+      type: '0',
+      peopleName: '',
+      // 树节点旋转角度值
+      rotate: 0,
     }
   },
   mounted() {
@@ -101,6 +103,7 @@ export default {
   },
   methods: {
     clickPeopleNode(node) {
+      this.peopleName = node.name
       this.showPeopleSheet = true
     },
     onSelect(action, index) {
@@ -152,9 +155,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-.van-action-sheet__gap {
-  height: 0;
-}
-</style>

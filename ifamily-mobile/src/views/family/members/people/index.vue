@@ -1,9 +1,13 @@
 <template>
   <div>
-    <van-nav-bar title="人员信息" left-arrow @click-left="$router.replace(backRoute)"
-                 @click-right="$router.push(toRoute)">
+    <van-nav-bar title="人员信息" left-arrow
+                 @click-left="$router.replace(backRoute)"
+                 @click-right="$router.push(toRoute)"
+    >
       <template #right>
+        <!-- 人员家族树定位 -->
         <van-icon v-if="type === '1' || type === '2'" name="aim" size="20"/>
+        <!-- 编辑人员信息 -->
         <van-icon v-else-if="type === '3'" name="edit" size="20"/>
       </template>
     </van-nav-bar>
@@ -60,7 +64,7 @@
 
     <!-- 家庭关系 -->
     <van-cell-group>
-      <family-relationship :add-button="false"/>
+      <family-relationship :add-button="false" class="family-relationships"/>
       <van-cell title="备注" :border="false" label="备注与其父母亲的特殊关系，如养子、养女、继子、继女等" class="family-member-remarks"/>
     </van-cell-group>
 

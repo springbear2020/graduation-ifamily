@@ -9,7 +9,7 @@
     <div v-for="i in 10" :key="i">
       <van-cell-group>
         <portrait-desc :person="person" @click.native="$toast('查看人员')"/>
-        <van-cell class="cell-top"
+        <van-cell class="cell-value-top"
                   value="族谱作为一个记载以血缘关系为主体的家族世代繁衍和重要人物事迹的特殊图书体裁。"
         />
       </van-cell-group>
@@ -42,7 +42,7 @@ export default {
 </script>
 
 <style scoped>
-.cell-top {
+.cell-value-top {
   padding-top: 0;
 }
 </style>

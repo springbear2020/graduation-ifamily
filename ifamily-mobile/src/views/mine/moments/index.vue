@@ -1,7 +1,9 @@
 <template>
   <div>
-    <van-nav-bar title="我的动态" left-arrow @click-left="$router.replace('/mine')"
-                 @click-right="$router.push('/mine/moments/post')">
+    <van-nav-bar title="我的动态" left-arrow
+                 @click-left="$router.replace('/mine')"
+                 @click-right="$router.push('/mine/moments/post')"
+    >
       <template #right>
         <van-icon name="guide-o" size="20"/>
       </template>
@@ -11,7 +13,7 @@
     <van-pull-refresh success-text="刷新成功" v-model="isRefreshing" @refresh="onRefresh">
       <van-list isFinished-text="没有更多了" error-text="请求失败，点击重新加载"
                 v-model="isLoading" :isFinished="isFinished" @load="onLoad" :error.sync="error">
-        <social-moments :data-list="momentList" @post-comment="handlePostComment"/>
+        <social-moments :data-list="momentList" @post-comment="handlePostComment" :permission-icon="true"/>
       </van-list>
     </van-pull-refresh>
   </div>

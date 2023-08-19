@@ -1,19 +1,26 @@
 <template>
   <div>
-    <van-nav-bar title="发布动态" left-arrow @click-left="$router.replace('/mine/moments')" @click-right="$toast('发布成功')">
+    <van-nav-bar title="发布动态" left-arrow
+                 @click-left="$router.replace('/mine/moments')"
+                 @click-right="$toast('发布成功')"
+    >
       <template #right>
         <van-icon name="passed" size="20"/>
       </template>
     </van-nav-bar>
 
-    <van-field placeholder="分享新鲜事..." type="textarea" maxlength="1000" rows="5" autofocus show-word-limit
-               v-model="content"/>
+    <van-cell-group>
+      <van-field placeholder="分享新鲜事..." type="textarea" maxlength="1000" rows="5" autofocus show-word-limit
+                 v-model="content"/>
+    </van-cell-group>
 
-    <van-uploader v-model="fileList" :multiple="true"/>
+    <van-cell-group>
+      <van-uploader v-model="fileList" :multiple="true"/>
+    </van-cell-group>
 
     <van-cell-group>
       <van-cell title="权限设置" icon="eye-o" is-link :value="actions[selectedIndex].name"
-                @click="showPermissionSheet = true"
+                @click="showPermissionSheet = true" :border="false"
       />
       <van-cell title="定时发表" icon="clock-o" is-link @click="showDatetimePicker = true" :value="datetimeStr"/>
     </van-cell-group>
@@ -59,6 +66,6 @@ export default {
 
 <style scoped>
 .van-uploader {
-  padding: 10px;
+  padding: 8px;
 }
 </style>

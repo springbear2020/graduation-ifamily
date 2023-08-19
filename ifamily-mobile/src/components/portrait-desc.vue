@@ -1,9 +1,9 @@
 <template>
   <!-- 头像、标题、内容、更多 -->
-  <van-cell :border="false" center class="flex-cell-title">
+  <van-cell center class="flex-cell-container" :border="false">
     <template #title>
       <!-- 头像 -->
-      <van-image round width="50" height="50" :src="person.portrait"/>
+      <van-image round width="50" height="50" :src="person.portrait" @click="$emit('click-image')"/>
       <!-- 标题、内容 -->
       <div class="portrait-title-container">
         <p class="title">{{ person.name }}</p>

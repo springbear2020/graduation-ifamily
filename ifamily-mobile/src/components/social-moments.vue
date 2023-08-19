@@ -2,7 +2,7 @@
   <div>
     <div v-for="moment in dataList" :key="moment.id" class="van-hairline--bottom">
       <!-- 头像、标题、内容、更多 -->
-      <portrait-desc :person="moment" @click.native="$toast('查看用户信息')"/>
+      <portrait-desc :person="moment" @click-image="$toast('点击头像')"/>
 
       <!-- 文本内容、图片列表、行为图标 -->
       <van-cell class="text-content-top">
@@ -12,11 +12,21 @@
           <!-- 图片列表 -->
           <image-list :data-list="moment.imgList"/>
           <!-- 行为图标 -->
-          <div class="behavior-icon">
-            <van-icon name="good-job" size="20" v-if="goodJob" @click="cancelThumbsUp"/>
-            <van-icon name="good-job-o" size="20" v-else @click="thumbsUp"/>
-            <van-icon name="comment-o" size="20" @click="giveComment = true"/>
-            <van-icon name="share-o" size="20" @click="showShareSheet = true"/>
+          <div>
+            <div class="permission-icon" v-show="permissionIcon">
+              <!-- 仅自己可见 -->
+              <van-icon name="closed-eye" size="20" v-if="moment.permission === '0'"/>
+              <!-- 家庭成员可见 -->
+              <van-icon name="browsing-history-o" size="20" v-else-if="moment.permission === '1'"/>
+              <!-- 家族成员可见 -->
+              <van-icon name="eye-o" size="20" v-else-if="moment.permission === '2'"/>
+            </div>
+            <div class="behavior-icon">
+              <van-icon name="good-job" size="20" v-if="goodJob" @click="cancelThumbsUp"/>
+              <van-icon name="good-job-o" size="20" v-else @click="thumbsUp"/>
+              <van-icon name="comment-o" size="20" @click="handleComment"/>
+              <van-icon name="share-o" size="20" @click="showShareSheet = true"/>
+            </div>
           </div>
         </template>
       </van-cell>
@@ -82,6 +92,10 @@ export default {
     dataList: {
       type: Array,
       required: true
+    },
+    permissionIcon: {
+      type: Boolean,
+      default: false
     }
   },
   methods: {
@@ -97,14 +111,28 @@ export default {
       this.$toast(option.name);
       this.showShareSheet = false;
     },
+    handleComment() {
+      this.$toast('评论')
+      this.giveComment = true
+    }
   }
 }
 </script>
 
 <style scoped>
+.text-content-top {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
 .text-content {
   margin-top: 0;
   margin-bottom: 5px;
+}
+
+.permission-icon {
+  float: left;
+  padding: 15px 0;
 }
 
 .behavior-icon {
@@ -130,10 +158,5 @@ export default {
 
 /deep/ .van-share-sheet__options {
   justify-content: center
-}
-
-.text-content-top {
-  padding-top: 0;
-  padding-bottom: 0;
 }
 </style>

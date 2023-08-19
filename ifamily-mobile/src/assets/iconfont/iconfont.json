@@ -8,16 +8,9 @@
     {
       "icon_id": "22830564",
       "name": "SWEEP",
-      "font_class": "SWEEP",
+      "font_class": "sweep",
       "unicode": "ea00",
       "unicode_decimal": 59904
-    },
-    {
-      "icon_id": "1111736",
-      "name": "exit",
-      "font_class": "exit",
-      "unicode": "e7cb",
-      "unicode_decimal": 59339
     },
     {
       "icon_id": "90846",
@@ -39,13 +32,6 @@
       "font_class": "jiaohuan",
       "unicode": "e618",
       "unicode_decimal": 58904
-    },
-    {
-      "icon_id": "6360825",
-      "name": "bell",
-      "font_class": "bell",
-      "unicode": "e672",
-      "unicode_decimal": 58994
     }
   ]
 }

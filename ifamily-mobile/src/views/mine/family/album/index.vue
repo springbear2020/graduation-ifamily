@@ -1,20 +1,24 @@
 <template>
   <div>
-    <van-nav-bar title="家庭相册" left-arrow @click-left="$router.replace('/mine')"
-                 @click-right="showUploadActionSheet = true">
+    <van-nav-bar title="家庭相册" left-arrow
+                 @click-left="$router.replace('/mine')"
+                 @click-right="showUploadActionSheet = true"
+    >
       <template #right>
         <van-icon name="upgrade" size="20"/>
       </template>
     </van-nav-bar>
 
-    <van-cell-group v-for="i in 5" :key="i">
-      <!-- 头像、姓名、时间 -->
-      <portrait-desc :person="person" @click.native="$toast('查看人员')"/>
-      <!-- 图片列表 -->
-      <van-cell :border="false">
-        <image-list :data-list="imgList"/>
-      </van-cell>
-    </van-cell-group>
+    <div v-for="i in 5" :key="i">
+      <van-cell-group>
+        <!-- 头像、姓名、时间 -->
+        <portrait-desc :person="person" @click-image="$toast('查看人员')"/>
+        <!-- 图片列表 -->
+        <van-cell :border="false">
+          <image-list :data-list="imgList"/>
+        </van-cell>
+      </van-cell-group>
+    </div>
 
     <!-- 家庭图片上传动作面板 -->
     <van-action-sheet v-model="showUploadActionSheet" title="上传照片">
@@ -52,3 +56,13 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+/deep/ .van-uploader__preview {
+  margin: 0 0 8px 8px;
+}
+
+/deep/ .van-uploader__upload {
+  margin: 0 0 8px 8px;
+}
+</style>

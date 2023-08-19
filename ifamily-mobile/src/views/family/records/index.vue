@@ -37,3 +37,13 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.van-step__title h3 {
+  margin: 5px 0;
+}
+
+.van-step__title p {
+  margin: 1px 0;
+}
+</style>

@@ -10,7 +10,7 @@
     </van-nav-bar>
 
     <family-info-card v-for="i in 10" :key="i" :me-created="i === 3 || i ===1 " :default-family="i === 1"
-                      @click.native="$router.replace('/family')"
+                      @click.native="setDefaultFamily"
     />
   </div>
 </template>
@@ -20,6 +20,12 @@ import FamilyInfoCard from "@/views/family/list/family-info-card";
 
 export default {
   name: "index",
-  components: {FamilyInfoCard}
+  components: {FamilyInfoCard},
+  methods: {
+    setDefaultFamily() {
+      this.$toast('设为默认家庭')
+      this.$router.replace('/family')
+    }
+  }
 }
 </script>

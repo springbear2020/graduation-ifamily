@@ -7,7 +7,7 @@
     </van-nav-bar>
 
     <!-- 家族概况卡片 -->
-    <family-info-card @click.native="$router.push('/family/info')" :disabled="true"/>
+    <family-info-card @click.native="$router.push('/family/info')"/>
 
     <!-- 家族操作宫格 -->
     <van-grid :column-num="3">

@@ -36,16 +36,12 @@ let router = new VueRouter({
             meta: {footerShow: true},
         },
         {
-            path: '/mine/settings',
-            component: () => import('@/views/mine/settings'),
+            path: '/mine/about',
+            component: () => import('@/views/mine/about'),
         },
         {
-            path: '/mine/settings/security',
-            component: () => import('@/views/mine/settings/security'),
-        },
-        {
-            path: '/mine/relatives',
-            component: () => import('@/views/mine/relatives'),
+            path: '/mine/family',
+            component: () => import('@/views/mine/family'),
         },
         {
             path: '/mine/family/album',
@@ -58,6 +54,22 @@ let router = new VueRouter({
         {
             path: '/mine/moments/post',
             component: () => import('@/views/mine/moments/post'),
+        },
+        {
+            path: '/mine/memorial',
+            component: () => import('@/views/mine/memorial'),
+        },
+        {
+            path: '/mine/security',
+            component: () => import('@/views/mine/security'),
+        },
+        {
+            path: '/mine/security/form/:type',
+            component: () => import('@/views/mine/security/form'),
+        },
+        {
+            path: '/mine/security/devices',
+            component: () => import('@/views/mine/security/devices'),
         },
         // family
         {

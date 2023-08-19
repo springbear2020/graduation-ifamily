@@ -10,8 +10,7 @@
     </van-search>
 
     <!-- 家族成员 -->
-    <van-cell-group>
-      <van-cell is-link center @click="memberManageSheet = true" class="flex-cell-title">
+      <van-cell is-link center @click="showManageSheet = true" class="flex-cell-container" v-for="i in 5" :key="i">
         <template #title>
           <van-image round width="50" height="50" src="https://img01.yzcdn.cn/vant/cat.jpeg"/>
           <p class="name-container">
@@ -23,10 +22,9 @@
           <van-tag color="#28a745">健在</van-tag>
         </template>
       </van-cell>
-    </van-cell-group>
 
     <!-- 成员管理操作面板 -->
-    <van-action-sheet v-model="memberManageSheet" cancel-text="取消" description="光头勇">
+    <van-action-sheet v-model="showManageSheet" cancel-text="取消" description="光头勇">
       <van-grid :gutter="8" square :border="false">
         <van-grid-item icon="add-o" text="添加亲人" to="/family/manage/members/add/1"/>
         <van-grid-item icon="delete-o" text="移除此人" @click="removeFamilyPeople"/>
@@ -43,7 +41,7 @@ export default {
   data() {
     return {
       memberName: '',
-      memberManageSheet: false
+      showManageSheet: false
     }
   },
   methods: {
@@ -53,7 +51,7 @@ export default {
         message: '您确定要删除《光头勇》这个家族成员吗？',
       }).then(() => {
         this.$toast.success('删除成功')
-        this.memberManageSheet = false
+        this.showManageSheet = false
       }).catch(() => {
         // on cancel
       });
@@ -63,10 +61,6 @@ export default {
 </script>
 
 <style scoped>
-.name-container {
-  margin-left: 10px;
-}
-
 .iconfont {
   margin-left: 2px;
 }
