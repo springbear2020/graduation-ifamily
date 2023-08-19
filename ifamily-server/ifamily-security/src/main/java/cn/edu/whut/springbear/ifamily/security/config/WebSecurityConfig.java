@@ -7,15 +7,12 @@ import cn.edu.whut.springbear.ifamily.security.access.RestfulUnauthorizedEntryPo
 import cn.edu.whut.springbear.ifamily.security.access.intercept.DynamicSecurityFilter;
 import cn.edu.whut.springbear.ifamily.security.access.intercept.JwtAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -70,11 +67,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         // 配置不需要权限控制的路径，直接放行
         List<String> urls = this.whitelistResourcePathConfig.getUrls();
         web.ignoring().antMatchers(urls.toArray(new String[0]));
-    }
-
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
     }
 
 }

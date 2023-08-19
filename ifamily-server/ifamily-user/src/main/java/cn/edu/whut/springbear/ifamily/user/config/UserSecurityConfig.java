@@ -9,7 +9,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -41,13 +44,16 @@ public class UserSecurityConfig {
     public DynamicPermissionProvider dynamicPermissionProvider() {
         return () -> {
             List<PermissionDO> permissionsList = this.permissionService.listAll();
-            if (permissionsList.isEmpty()) {
-                return null;
-            }
+            permissionsList = permissionsList == null ? new ArrayList<>() : permissionsList;
             Map<String, ConfigAttribute> map = new ConcurrentHashMap<>(permissionsList.size());
             permissionsList.forEach(p -> map.put(p.getPath(), new org.springframework.security.access.SecurityConfig(p.getId() + ":" + p.getName())));
             return map;
         };
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 
 }

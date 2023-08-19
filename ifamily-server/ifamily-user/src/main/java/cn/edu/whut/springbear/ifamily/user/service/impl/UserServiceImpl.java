@@ -24,6 +24,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
@@ -40,6 +41,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
 
     @Autowired
     private HttpServletRequest request;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
     @Autowired
     private PermissionService permissionService;
     @Autowired
@@ -63,16 +66,17 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
 
     @Override
     public String login(String account, String password) {
-        // 验证账户和密码正确性
         QueryWrapper<UserDO> queryWrapper = new QueryWrapper<>();
-        // select * from user where password = #{password} and (phone = #{account} or username = #{account} or email = #{email});
-        queryWrapper.eq("password", password)
-                .and(q -> q.eq("phone", account).or().eq("username", account).or().eq("email", account));
+        queryWrapper.eq("phone", account).or().eq("username", account).or().eq("email", account);
         UserDO user = this.baseMapper.selectOne(queryWrapper);
         if (user == null) {
-            throw new IllegalArgumentException("用户信息不存在或密码错误");
+            throw new IllegalArgumentException(UserMessageConstants.USER_NOT_EXISTS);
         }
 
+        // 验证密码正确性
+        if (!this.passwordEncoder.matches(password, user.getPassword())) {
+            throw new IllegalStateException("账号密码错误");
+        }
         // 检查用户账号状态
         if (EnableStatusEnum.DISABLE.getCode().equals(user.getStatus())) {
             throw new IllegalStateException("禁止登录，用户状态异常");
@@ -99,6 +103,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
         BeanUtils.copyProperties(userQuery, userDO);
         // 新增用户时将 id 置空，由服务器生成
         userDO.setId(null);
+        // 用户密码加密
+        userDO.setPassword(passwordEncoder.encode(userDO.getPassword()));
         userDO.setCreated(new Date());
         userDO.setModified(new Date());
         userDO.setLastLogin(new Date());

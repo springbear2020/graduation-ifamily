@@ -43,24 +43,24 @@ public final class WebUtils {
         if (invalidIp(ipAddress)) {
             ipAddress = request.getHeader("HTTP_X_FORWARDED_FOR");
         }
-
+        // 获取客户端的真实 IP
         if (invalidIp(ipAddress)) {
-            // 从本地访问时根据网卡获取本机局域网 IP
             ipAddress = request.getRemoteAddr();
-
-            if ("127.0.0.1".equals(ipAddress) || "0:0:0:0:0:0:0:1".equals(ipAddress)) {
-                try {
-                    ipAddress = InetAddress.getLocalHost().getHostAddress();
-                } catch (UnknownHostException e) {
-                    e.printStackTrace();
-                }
-            }
         }
 
         // 通过多个代理转发的情况，第一个 IP 为客户端真实 IP，多个 IP 会按照 ',' 分割
         if (ipAddress != null && ipAddress.length() > 15) {
             if (ipAddress.indexOf(",") > 0) {
                 ipAddress = ipAddress.substring(0, ipAddress.indexOf(","));
+            }
+        }
+
+        // 从本地访问时根据网卡获取本机局域网 IP
+        if ("127.0.0.1".equals(ipAddress) || "0:0:0:0:0:0:0:1".equals(ipAddress)) {
+            try {
+                ipAddress = InetAddress.getLocalHost().getHostAddress();
+            } catch (UnknownHostException e) {
+                e.printStackTrace();
             }
         }
 
@@ -71,6 +71,10 @@ public final class WebUtils {
      * 使用百度地图 API 解析 IP 归属地
      */
     public static String baiduParseIpLocation(String ip) {
+        if (invalidIp(ip)) {
+            return "未知地点";
+        }
+
         String url = BAIDU_MAP_URL + ip;
         // 尝试与百度服务器建立一个 GET 连接，获得其响应的 json 数据字符串
         String responseStr = HttpRequest.get(url).execute().body();
@@ -86,6 +90,10 @@ public final class WebUtils {
      * 使用淘宝公共 API 解析 IP 归属地
      */
     public static String taobaoParseIpLocation(String ip) {
+        if (invalidIp(ip)) {
+            return "未知地点";
+        }
+
         String url = TAOBAO_URL + ip;
         // 尝试与淘宝服务器建立一个 GET 连接，获得其响应的 json 数据字符串
         String responseStr = HttpRequest.get(url).execute().body();

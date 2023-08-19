@@ -45,13 +45,14 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(Exception.class)
     public CommonResult<String> exception(Exception e) {
-        if (e instanceof HttpRequestMethodNotSupportedException) {
-            // 405
-            return CommonResult.methodNotAllowed(e.getMessage());
-        } else if (e instanceof MissingServletRequestParameterException) {
+        if (e instanceof MissingServletRequestParameterException) {
             // 400
             return CommonResult.badRequest(e.getMessage());
+        } else if (e instanceof HttpRequestMethodNotSupportedException) {
+            // 405
+            return CommonResult.methodNotAllowed(e.getMessage());
         }
+
         log.error(e.getMessage());
         return CommonResult.serverInternalError(e.getMessage());
     }
