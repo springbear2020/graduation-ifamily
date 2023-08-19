@@ -2,7 +2,7 @@
   <div>
     <van-nav-bar title="家族成员" left-arrow @click-left="$router.replace('/family')" @click-right="showPopover = true">
       <template #right>
-        <van-popover v-if="generations" placement="bottom-end" trigger="click"
+        <van-popover v-if="generations && generations.length > 0" placement="bottom-end" trigger="click"
                      v-model="showPopover" :actions="actions" @select="onSelect">
           <template #reference>
             <van-icon name="filter-o" size="20"/>
@@ -12,7 +12,7 @@
     </van-nav-bar>
 
     <!-- 搜索框与搜索条件面包屑 -->
-    <form v-if="generations">
+    <form v-if="generations && generations.length > 0">
       <van-search shape="round" placeholder="请输入家族人员姓名" clearable
                   @cancel="formData.name = undefined" v-model.trim="formData.name"
       />
@@ -55,7 +55,7 @@
       </div>
     </van-index-bar>
 
-    <van-empty class="empty" v-if="!generations" description="空空如也~"/>
+    <van-empty class="empty" v-if="!generations || generations.length === 0" description="空空如也~"/>
   </div>
 </template>
 

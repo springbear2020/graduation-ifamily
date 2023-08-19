@@ -5,7 +5,6 @@ import cn.edu.whut.springbear.ifamily.common.pojo.dto.UserDTO;
 import cn.edu.whut.springbear.ifamily.user.pojo.po.UserDO;
 import cn.edu.whut.springbear.ifamily.user.pojo.query.LoginQuery;
 import cn.edu.whut.springbear.ifamily.user.pojo.query.ResetQuery;
-import cn.edu.whut.springbear.ifamily.user.pojo.query.UserQuery;
 import cn.edu.whut.springbear.ifamily.user.pojo.vo.UserVO;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -51,8 +50,12 @@ public interface UserService extends IService<UserDO> {
 
     /**
      * 更新用户简单资料：头像地址、用户昵称、用户签名
+     *
+     * @param type    类型：[1]用户昵称 [2]个性签名 [3]头像地址
+     * @param userId  用户 ID
+     * @param content 需要更新的新内容
      */
-    boolean updateSimpleProfile(UserQuery userQuery);
+    boolean updateSimpleProfile(Integer type, Long userId, String content);
 
     /**
      * 更新用户名

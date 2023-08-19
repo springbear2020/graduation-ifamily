@@ -45,7 +45,7 @@ export default {
     handleSave(formData) {
       this.$api.people.updatePeople(formData).then(() => {
         // 跳转到家族人员信息页
-        this.$router.replace(`/family/member/info/0?pid=${formData.id}`)
+        this.$router.replace(this.dstRoute)
         this.$toast.success('更新成功')
         // 清空仓库家族数据
         this.$store.dispatch('genealogy/logout')

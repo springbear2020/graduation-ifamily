@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
  * @author Spring-_-Bear
  * @since 23/04/11 14:49
  */
-@FeignClient("ifamily-admin")
+@FeignClient("ifamily-backend")
 public interface AdminFeignService {
 
     /**
@@ -18,7 +18,7 @@ public interface AdminFeignService {
      * @param username 用户名
      * @return UserDTO
      */
-    @GetMapping("/admin/feign")
+    @GetMapping("/backend/feign")
     UserDTO loadAdminByUsername(@RequestParam String username);
 
 }

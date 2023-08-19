@@ -93,9 +93,9 @@ export default {
     },
     userRegister() {
       const {account, password, code} = this.formData
-      this.$api.user.register({account, password, code}).then((token) => {
+      this.$api.user.register({account, password, code}).then((res) => {
         // 注册成功，设置用户令牌信息
-        this.$store.dispatch('user/signIn', token)
+        this.$store.dispatch('user/signIn', res)
         this.$router.replace('/home')
       }).catch(err => {
         this.$toast({message: err.data || err.desc, position: 'bottom'})
@@ -107,7 +107,7 @@ export default {
         // 退出登录，清除仓库信息
         this.$store.dispatch('user/logout')
         this.$store.dispatch('genealogy/logout')
-        this.$toast('重置成功，即将前往登录页');
+        this.$toast.success('重置成功\n正在前往登录');
         setTimeout(() => {
           this.$router.replace('/user/login')
         }, 2000)

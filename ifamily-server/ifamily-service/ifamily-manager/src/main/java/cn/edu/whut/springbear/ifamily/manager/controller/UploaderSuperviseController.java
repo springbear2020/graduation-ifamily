@@ -23,7 +23,7 @@ import java.util.Map;
  * @since 23/03/26 16:30
  */
 @AllArgsConstructor
-@Api(tags = "文件上传监督管理接口")
+@Api(tags = "文件上传监督接口")
 @RestController
 @RequestMapping("/manager/supervise/uploader")
 public class UploaderSuperviseController {

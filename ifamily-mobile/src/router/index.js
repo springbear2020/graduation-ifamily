@@ -96,6 +96,10 @@ export const constantRoutes = [
         path: '/family/revision',
         component: () => import('@/views/family/revision'),
     },
+    {
+        path: '/family/notice',
+        component: () => import('@/views/family/notice'),
+    },
 
     // *****************************************************************************************************************
 
@@ -106,11 +110,6 @@ export const constantRoutes = [
     {
         path: '/family/album',
         component: () => import('@/views/family/album'),
-    },
-
-    {
-        path: '/family/notice',
-        component: () => import('@/views/family/notice'),
     },
     {
         path: '/family/manage',
@@ -206,7 +205,7 @@ router.beforeEach((to, from, next) => {
     if (!token) {
         token = getToken()
         if (token) {
-            store.dispatch('user/signIn', token).then(() => {})
+            store.commit('user/SET_TOKEN', token)
         }
     }
 
@@ -218,14 +217,19 @@ router.beforeEach((to, from, next) => {
             store.dispatch('user/getUser').then(() => {
                 next()
             }).catch(() => {
-                // token 已过期，退出登录，跳转到登录页面
-                store.dispatch('genealogy/logout').then(() => {
-                    store.dispatch('user/logout').then(() => {
-                        Notify({
-                            type: 'danger',
-                            message: '身份令牌已失效，即将前往登录页',
-                            duration: 3000,
-                            onClose: () => next('/user/login')
+                // 用户信息获取失败，令牌已过期，尝试刷新令牌
+                store.dispatch('user/refreshUserToken').then(() => {
+                    next()
+                }).catch(() => {
+                    // 请求刷新令牌失败，退出登录
+                    store.dispatch('genealogy/logout').then(() => {
+                        store.dispatch('user/logout').then(() => {
+                            Notify({
+                                type: 'danger',
+                                message: '身份令牌已失效，即将前往登录页',
+                                duration: 3000,
+                                onClose: () => next('/user/login')
+                            })
                         })
                     })
                 })

@@ -1,7 +1,7 @@
 import request from "@/utils/request";
 
-const apiBaseUrl = '/api/user'
-const superviseBaseUrl = '/supervise/user'
+// 开放接口 =============================================================================================================
+const apiBaseUrl = '/ifamily-user/user/api'
 
 export function login(data) {
     return request({
@@ -27,13 +27,16 @@ export function register(data) {
     })
 }
 
+// 监督接口 =============================================================================================================
+
+const superviseBaseUrl = '/ifamily-user/user/supervise'
+
 export function getUser() {
     return request({
         url: `${superviseBaseUrl}`,
         method: 'get'
     })
 }
-
 
 /**
  * 用户账号注销
@@ -78,5 +81,24 @@ export function updateUserPrivacy(content, extra, type) {
         url: `${superviseBaseUrl}/privacy/${type}`,
         method: 'put',
         params: {content, extra}
+    })
+}
+
+// 认证接口 =============================================================================================================
+
+/**
+ * 刷新用户令牌
+ * @param refreshToken 刷新令牌
+ */
+export function refreshToken(refreshToken) {
+    return request({
+        url: '/ifamily-auth/oauth/token',
+        method: 'post',
+        params: {
+            'client_id': 'mobile-app',
+            'client_secret': 'ifamily',
+            'grant_type': 'refresh_token',
+            'refresh_token': refreshToken,
+        }
     })
 }

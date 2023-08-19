@@ -16,7 +16,7 @@
         <van-grid-item icon="cluster-o" text="家族树谱" to="/family/tree/0"/>
         <van-grid-item icon="friends-o" text="家族成员" to="/family/member"/>
         <van-grid-item icon="setting-o" text="家族管理"/>
-        <van-grid-item icon="volume-o" text="家族公告"/>
+        <van-grid-item icon="volume-o" text="家族公告" to="/family/notice"/>
         <van-grid-item icon="photo-o" text="家族相册"/>
         <van-grid-item icon="video-o" text="家族视频"/>
         <van-grid-item icon="clock-o" text="家族历史"/>
@@ -31,7 +31,7 @@
 
     <!-- 设置用户家族资料 -->
     <van-popup v-model="showPopup" position="top" :close-on-click-overlay="false"
-               @opened="$toast({message: `检测到《${defaultGenealogy.title}》家族中不存在您的个人信息，请填写并保存您的家族信息`, position: 'bottom'})">
+               @opened="$toast({message: `检测到《${defaultGenealogy.title}》家族中不存在您的个人信息，请填写并保存您的家族个人信息`, position: 'bottom'})">
       <van-nav-bar title="您的资料"/>
       <member-form @save="saveUserPeople" @hidden-form="$router.replace('/')"/>
     </van-popup>
@@ -87,6 +87,8 @@ export default {
     },
     saveUserPeople(formData) {
       this.$api.people.saveUserPeople(formData).then(() => {
+        // 查询最新的家族信息
+        this.$store.dispatch('genealogy/logout')
         this.$toast.success('保存成功');
         this.showPopup = false
       }).catch(err => {

@@ -1,0 +1,13 @@
+package cn.edu.whut.springbear.ifamily.genealogy.mapper;
+
+import cn.edu.whut.springbear.ifamily.genealogy.pojo.po.GenealogyDO;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.springframework.stereotype.Repository;
+
+/**
+ * @author Spring-_-Bear
+ * @since 23/03/28 15:56
+ */
+@Repository
+public interface GenealogyMapper extends BaseMapper<GenealogyDO> {
+}

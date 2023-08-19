@@ -14,9 +14,10 @@
 
     <modules>
         <module>ifamily-acl</module>
-        <module>ifamily-admin</module>
+        <module>ifamily-backend</module>
         <module>ifamily-user</module>
         <module>ifamily-manager</module>
+        <module>ifamily-genealogy</module>
     </modules>
 
     <dependencies>

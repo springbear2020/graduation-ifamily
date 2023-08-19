@@ -1,14 +1,14 @@
 <template>
   <div>
     <van-nav-bar title="用户登录" :right-text="rightText"
-                 @click-right="formData.loginType = formData.loginType === '0' ? '1' : '0'"
+                 @click-right="formData.loginType = formData.loginType === '1' ? '2' : '1'"
     />
 
     <logo-pattern/>
 
     <van-form @submit="handleLogin">
       <van-field size="large" type="text" label="账号" autofocus
-                 :rules="[{ required: true }]" v-if="formData.loginType === '0'"
+                 :rules="[{ required: true }]" v-if="formData.loginType === '1'"
                  placeholder="UID / 手机 / 邮箱" v-model.trim="formData.account"
       />
 
@@ -20,7 +20,7 @@
       <!-- 验证码框 -->
       <van-field size="large" type="number" name="code" label="验证码" placeholder="验证码" maxlength="6"
                  :rules="[{ required: true, pattern: /^\d{6}$/, message: '验证码为 6 位长度数字' }]"
-                 v-model.trim="formData.code" v-if="formData.loginType === '1'"
+                 v-model.trim="formData.code" v-if="formData.loginType === '2'"
       >
         <template #button>
           <van-button size="small" type="primary" @click.prevent="handleSendCode"
@@ -69,8 +69,8 @@ export default {
         account: undefined,
         password: undefined,
         code: undefined,
-        // [0]密码登录 [1]验证码登录
-        loginType: '0',
+        // [1]密码登录 [2]验证码登录
+        loginType: '1',
       },
       agree: false,
       passwordFieldType: 'password'
@@ -78,7 +78,7 @@ export default {
   },
   computed: {
     rightText() {
-      return this.formData.loginType === '0' ? '验证码登录' : (this.formData.loginType === '1' ? '密码登录' : '');
+      return this.formData.loginType === '1' ? '验证码登录' : (this.formData.loginType === '2' ? '密码登录' : '');
     },
     rightIcon() {
       return this.passwordFieldType === 'password' ? 'closed-eye' : 'eye-o';

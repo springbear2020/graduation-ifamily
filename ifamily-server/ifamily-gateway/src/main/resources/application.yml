@@ -34,16 +34,22 @@ spring:
             - Path=/ifamily-user/**
           filters:
             - StripPrefix=1
-        - id: ifamily-admin
-          uri: lb://ifamily-admin
+        - id: ifamily-backend
+          uri: lb://ifamily-backend
           predicates:
-            - Path=/ifamily-admin/**
+            - Path=/ifamily-backend/**
           filters:
             - StripPrefix=1
         - id: ifamily-manager
           uri: lb://ifamily-manager
           predicates:
             - Path=/ifamily-manager/**
+          filters:
+            - StripPrefix=1
+        - id: ifamily-genealogy
+          uri: lb://ifamily-genealogy
+          predicates:
+            - Path=/ifamily-genealogy/**
           filters:
             - StripPrefix=1
   security:

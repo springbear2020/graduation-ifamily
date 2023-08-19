@@ -23,7 +23,7 @@ export default {
       finished: false,
       formData: {
         current: 1,
-        size: 20
+        size: 10
       },
       loginLogList: []
     }

@@ -87,23 +87,47 @@ export function mergeNonNullValues(obj) {
  * @param dateStr 日期字符串
  * @returns {string} 计算后的字符串
  */
-export function computedDate(dateStr) {
+export function weekDate(dateStr) {
     const date = new Date(dateStr)
     const now = new Date();
     const diff = (now - date) / (1000 * 60 * 60 * 24);
 
     if (diff < 1) {
         return '今天';
-    } else if (diff < 2) {
-        return '昨天';
     } else if (diff < 7) {
-        const days = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
+        const days = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
         return days[date.getDay()];
     } else {
         return dateStr
     }
 }
 
+/**
+ * 计算朋友圈动态格式时间
+ * @param dateStr 时间字符串
+ * @returns {string} 计算后的字符串
+ */
+export function momentDate(dateStr) {
+    const date = new Date(dateStr)
+    const now = new Date();
+    const diff = (now - date) / (1000 * 60 * 60 * 24);
+
+    // 今年内
+    if (date.getFullYear() === now.getFullYear()) {
+        if (diff < 1) {
+            return '今天 ' + dayjs(date).format('HH:mm')
+        } else if (diff < 2) {
+            return '昨天 ' + dayjs(date).format('HH:mm')
+        } else if (diff < 3) {
+            return '前天 ' + dayjs(date).format('HH:mm')
+        } else {
+            return dayjs(date).format('MM月DD日 HH:mm')
+        }
+    } else {
+        return dayjs(date).format('YYYY年MM月DD日 HH:mm')
+    }
+
+}
 
 /*
  * 移除 params、data 中的 ''、null、undefined

@@ -1,5 +1,5 @@
-import {login, getUser} from '@/api/user'
-import {setToken, removeToken} from "@/utils/auth";
+import {login, getUser, refreshToken} from '@/api/user'
+import {setToken, removeToken, setRefreshToken, removeRefreshToken, getRefreshToken} from "@/utils/auth";
 
 export default {
     namespaced: true,
@@ -23,13 +23,15 @@ export default {
     actions: {
         logout({commit}) {
             removeToken()
+            removeRefreshToken()
             commit('CLEAR_STATE')
         },
         login({commit}, params) {
             return new Promise((resolve, reject) => {
-                login(params).then(token => {
-                    setToken(token)
-                    commit('SET_TOKEN', token);
+                login(params).then(res => {
+                    setToken(res.accessToken)
+                    setRefreshToken(res.refreshToken)
+                    commit('SET_TOKEN', res.accessToken);
                     resolve()
                 }).catch(err => {
                     reject(err)
@@ -46,9 +48,27 @@ export default {
                 })
             })
         },
-        signIn({commit}, token) {
-            setToken(token)
-            commit('SET_TOKEN', token)
+        signIn({commit}, res) {
+            setToken(res.accessToken)
+            setRefreshToken(res.refreshToken)
+            commit('SET_TOKEN', res.accessToken)
+        },
+        refreshUserToken({commit}) {
+            return new Promise((resolve, reject) => {
+                const token = getRefreshToken()
+                if (token) {
+                    // 请求认证服务器刷新用户令牌
+                    refreshToken(token).then(res => {
+                        setToken(res.accessToken)
+                        setRefreshToken(res.refreshToken)
+                        commit('SET_TOKEN', res.accessToken)
+                    }).catch(err => {
+                        reject(err)
+                    })
+                } else {
+                    reject('empty refresh token')
+                }
+            })
         }
     }
 }

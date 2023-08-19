@@ -16,7 +16,6 @@ import cn.edu.whut.springbear.ifamily.user.pojo.po.UserDO;
 import cn.edu.whut.springbear.ifamily.user.pojo.po.UsernameLogDO;
 import cn.edu.whut.springbear.ifamily.user.pojo.query.LoginQuery;
 import cn.edu.whut.springbear.ifamily.user.pojo.query.ResetQuery;
-import cn.edu.whut.springbear.ifamily.user.pojo.query.UserQuery;
 import cn.edu.whut.springbear.ifamily.user.pojo.vo.UserVO;
 import cn.edu.whut.springbear.ifamily.user.service.LoginLogService;
 import cn.edu.whut.springbear.ifamily.user.service.UserService;
@@ -35,6 +34,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
@@ -221,14 +221,44 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
     }
 
     @Override
-    public boolean updateSimpleProfile(UserQuery userQuery) {
+    public boolean updateSimpleProfile(Integer type, Long userId, String content) {
         UserDO userDO = new UserDO();
-        BeanUtils.copyProperties(userQuery, userDO);
+        userDO.setId(userId);
+
+        final int wordsLimit = 30;
+        // 类型：[1]用户昵称 [2]个性签名 [3]头像地址
+        switch (type) {
+            case 1:
+                if (!StringUtils.hasLength(content) || content.length() > wordsLimit) {
+                    throw new IncorrectConditionException("请填写用户昵称, 长度不大于 30");
+                }
+                userDO.setNickname(content);
+                break;
+            case 2:
+                if (!StringUtils.hasLength(content) || content.length() > wordsLimit) {
+                    throw new IncorrectConditionException("请填写个性签名, 长度不大于 30");
+                }
+                userDO.setSignature(content);
+                break;
+            case 3:
+                if (!ReUtil.isMatch(RegExpConstants.URL_PATTERN, content)) {
+                    throw new IncorrectConditionException("用户头像图片地址不合法");
+                }
+                userDO.setAvatar(content);
+                break;
+            default:
+                throw new IncorrectConditionException("类型：[1]用户昵称 [2]个性签名 [3]头像地址");
+        }
+
         return this.updateById(userDO);
     }
 
     @Override
     public boolean updateUsername(Long userId, String username, String password) {
+        if (!ReUtil.isMatch(RegExpConstants.USERNAME_PATTERN, username)) {
+            throw new IncorrectConditionException("用户名以字母开头，可包含数字、字母、下划线和连字符，长度限 5 至 20 位");
+        }
+
         UserDO user = this.getById(userId);
         if (user == null) {
             throw new IncorrectConditionException(UserMessageConstants.USER_NOT_EXISTS);
@@ -262,16 +292,20 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
         }
 
         // 保存用户最新的用户名修改记录
-        this.usernameLogService.create(user.getUsername(), username, user.getId());
+        boolean update = this.usernameLogService.create(user.getUsername(), username, user.getId());
         // 更新用户名
         UserDO userDO = new UserDO();
         userDO.setUsername(username);
         userDO.setId(user.getId());
-        return this.updateById(userDO);
+        return update && this.updateById(userDO);
     }
 
     @Override
     public boolean updateEmail(Long userId, String email, String code) {
+        if (!ReUtil.isMatch(RegExpConstants.EMAIL_PATTERN, email)) {
+            throw new IncorrectConditionException("请输入正确格式的邮箱地址");
+        }
+
         UserDO user = this.getById(userId);
         if (user == null) {
             throw new IncorrectConditionException(UserMessageConstants.USER_NOT_EXISTS);
@@ -296,6 +330,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
 
     @Override
     public boolean updatePhone(Long userId, String phone, String code) {
+        if (!ReUtil.isMatch(RegExpConstants.PHONE_PATTERN, phone)) {
+            throw new IncorrectConditionException("请输入正确格式的手机号");
+        }
+
         UserDO user = this.getById(userId);
         if (user == null) {
             throw new IncorrectConditionException(UserMessageConstants.USER_NOT_EXISTS);
@@ -362,8 +400,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
         params.put("grant_type", "password");
         params.put("client_id", AuthConstants.CLIENT_MOBILE_ID);
         params.put("client_secret", AuthConstants.COMMON_AUTH_PASSWORD);
-        // grant_type != refresh_token 时 refresh_token 可填写任意值，但不能为空
-        params.put("refresh_token", AuthConstants.COMMON_AUTH_PASSWORD);
         params.put("username", username);
         params.put("password", password);
         return params;

@@ -56,7 +56,7 @@ export default {
         this.$store.dispatch('user/logout')
         this.$store.dispatch('genealogy/logout')
         this.$router.replace('/user/login')
-        this.$toast('UID 修改成功，请重新登录')
+        this.$toast.success('UID 修改成功\n请重新登录')
       }).catch(err => {
         this.$toast({message: err.data || err.desc, position: 'bottom'})
       })

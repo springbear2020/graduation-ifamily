@@ -16,11 +16,7 @@
         <van-field label="姓氏" placeholder="姓氏" required :border="false" v-model.trim="formData.surname"
                    :rules="[{ required: true, pattern: /^.{1,30}$/, message: '请填写人员姓氏, 长度不大于 30' }]">
           <template #button>
-            <van-button size="small" type="warning"
-                        @click.prevent="formData.surname = '佚'; formData.name = '佚名';
-                        formData.generationName = formData.generationName ? formData.generationName : '佚'"
-            >已失考
-            </van-button>
+            <van-button size="small" type="warning" @click.prevent="unknown">人员已失考？</van-button>
           </template>
         </van-field>
         <van-field label="姓名" placeholder="姓氏 + 名字" required :border="false" v-model.trim="formData.name"
@@ -264,6 +260,11 @@ export default {
     resetForm() {
       // 表单恢复初始状态
       this.formData = this.$options.data().formData
+    },
+    unknown() {
+      this.formData.surname = '佚';
+      this.formData.name = '无名氏';
+      this.formData.generationName = this.formData.generationName ? this.formData.generationName : '佚'
     }
   }
 }

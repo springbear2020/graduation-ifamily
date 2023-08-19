@@ -53,9 +53,13 @@ export const code = {
                 this.$toast({message: err.data || err.desc, position: 'bottom'})
             })
         },
-        // TODO 发送手机验证码
+        // 发送手机验证码
         sendPhoneVerifyCode() {
-            this.$toast({message: '手机验证码服务暂不可用\n请使用邮箱验证码', position: 'bottom'})
+            this.$api.manager.sendPhoneCode({phone: this.formData.account}).then(() => {
+                this.$toast.success('发送成功');
+            }).catch(err => {
+                this.$toast({message: err.data || err.desc, position: 'bottom'})
+            })
         },
         // 锁定获取验证码按钮
         lockButton() {

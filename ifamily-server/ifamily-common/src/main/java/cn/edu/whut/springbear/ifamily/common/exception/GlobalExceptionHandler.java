@@ -1,6 +1,7 @@
 package cn.edu.whut.springbear.ifamily.common.exception;
 
 import cn.edu.whut.springbear.ifamily.common.api.CommonResult;
+import cn.edu.whut.springbear.ifamily.common.constant.MessageConstants;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -18,21 +19,12 @@ import javax.validation.ValidationException;
 public class GlobalExceptionHandler {
 
     /**
-     * 500
-     */
-    @ExceptionHandler(Exception.class)
-    public CommonResult<String> exception(Exception e) {
-        log.error(e.getMessage());
-        return CommonResult.serverInternalError(e.getMessage());
-    }
-
-    /**
      * 503
      */
     @ExceptionHandler(SystemServiceException.class)
-    public CommonResult<String> sqlExecution(SystemServiceException e) {
+    public CommonResult<String> systemService(SystemServiceException e) {
         log.error(e.getMessage());
-        return CommonResult.serviceUnavailable(e.getMessage());
+        return CommonResult.serviceUnavailable(MessageConstants.SYSTEM_EXCEPTION);
     }
 
     /**
@@ -64,7 +56,16 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(ValidationException.class)
     public CommonResult<String> handleValidationException(ValidationException e) {
-        return CommonResult.preconditionFailed(e.getCause().getMessage());
+        return CommonResult.failed(e.getCause().getMessage());
+    }
+
+    /**
+     * 500
+     */
+    @ExceptionHandler(Exception.class)
+    public CommonResult<String> exception(Exception e) {
+        log.error(e.getMessage());
+        return CommonResult.serverInternalError(MessageConstants.SYSTEM_EXCEPTION);
     }
 
 }

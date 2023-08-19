@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
  * @since 23/03/19 19:45
  */
 @AllArgsConstructor
-@Api(tags = "用户开放服务接口")
+@Api(tags = "用户开放接口")
 @RestController
 @RequestMapping("/user/api")
 public class UserApiController {

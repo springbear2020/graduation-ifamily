@@ -26,7 +26,7 @@ import java.util.Map;
  * @author Spring-_-Bear
  * @since 23/04/11 15:21
  */
-@Api(tags = "开放认证接口")
+@Api(tags = "认证开放接口")
 @RestController
 @AllArgsConstructor
 public class AuthController {
@@ -38,11 +38,11 @@ public class AuthController {
     @PostMapping("/oauth/token")
     public CommonResult<Object> postAccessToken(
             @ApiParam("授权类型：password 或 refresh_token") @RequestParam("grant_type") String grantType,
-            @ApiParam("客户端类型：mobile-app 或 admin-app") @RequestParam("client_id") String clientId,
+            @ApiParam("客户端类型：mobile-app 或 backend-app") @RequestParam("client_id") String clientId,
             @ApiParam("客户端密钥") @RequestParam("client_secret") String clientSecret,
-            @ApiParam("刷新令牌：grant_type != refresh_token 时可填写任意值，但不能为空") @RequestParam("refresh_token") String refreshToken,
-            @ApiParam("用户名") @RequestParam("username") String username,
-            @ApiParam("密码") @RequestParam("password") String password,
+            @ApiParam("刷新令牌") @RequestParam(value = "refresh_token", required = false) String refreshToken,
+            @ApiParam("用户名") @RequestParam(value = "username", required = false) String username,
+            @ApiParam("密码") @RequestParam(value = "password", required = false) String password,
             HttpServletRequest request) throws HttpRequestMethodNotSupportedException {
 
         // 收集、转换请求参数

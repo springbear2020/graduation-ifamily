@@ -2,19 +2,15 @@ package cn.edu.whut.springbear.ifamily.user.controller;
 
 import cn.edu.whut.springbear.ifamily.common.api.CommonResult;
 import cn.edu.whut.springbear.ifamily.common.constant.MessageConstants;
-import cn.edu.whut.springbear.ifamily.common.constant.RegExpConstants;
 import cn.edu.whut.springbear.ifamily.common.pojo.query.PageQuery;
-import cn.edu.whut.springbear.ifamily.user.pojo.query.UserQuery;
 import cn.edu.whut.springbear.ifamily.user.pojo.vo.LoginLogVO;
 import cn.edu.whut.springbear.ifamily.user.pojo.vo.UserVO;
 import cn.edu.whut.springbear.ifamily.user.service.LoginLogService;
 import cn.edu.whut.springbear.ifamily.user.service.UserService;
-import cn.hutool.core.util.ReUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.AllArgsConstructor;
-import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,7 +21,7 @@ import java.util.List;
  * @since 23/03/21 10:26
  */
 @AllArgsConstructor
-@Api(tags = "用户监督管理接口")
+@Api(tags = "用户监督接口")
 @RestController
 @RequestMapping("/user/supervise")
 public class UserSuperviseController {
@@ -60,38 +56,8 @@ public class UserSuperviseController {
             @ApiParam("需要保存的新内容") @RequestParam("content") String content,
             @ApiParam("操作类型：[1]用户昵称 [2]个性签名 [3]头像地址") @PathVariable("type") Integer type) {
 
-        UserQuery userQuery = new UserQuery();
         UserVO current = this.userService.current();
-        userQuery.setId(current.getId());
-
-        final int wordsLimit = 30;
-        switch (type) {
-            case 1:
-                // 用户昵称
-                if (!StringUtils.hasLength(content) || content.length() > wordsLimit) {
-                    return CommonResult.failed("请填写用户昵称, 长度不大于 30");
-                }
-                userQuery.setNickname(content);
-                break;
-            case 2:
-                // 个性签名
-                if (!StringUtils.hasLength(content) || content.length() > wordsLimit) {
-                    return CommonResult.failed("请填写个性签名, 长度不大于 30");
-                }
-                userQuery.setSignature(content);
-                break;
-            case 3:
-                // 头像地址
-                if (!ReUtil.isMatch(RegExpConstants.URL_PATTERN, content)) {
-                    return CommonResult.failed("用户头像图片地址不合法");
-                }
-                userQuery.setAvatar(content);
-                break;
-            default:
-                return CommonResult.failed("类型：[1]用户昵称 [2]个性签名 [3]头像地址");
-        }
-
-        boolean updateResult = this.userService.updateSimpleProfile(userQuery);
+        boolean updateResult = this.userService.updateSimpleProfile(type, current.getId(), content);
         return updateResult ? CommonResult.success() : CommonResult.failed(MessageConstants.SYSTEM_EXCEPTION);
     }
 
@@ -111,26 +77,15 @@ public class UserSuperviseController {
 
         UserVO current = this.userService.current();
         boolean updateResult;
+        // 操作类型：[1]用户名 [2]邮箱 [3]手机
         switch (type) {
             case 1:
-                // 用户名
-                if (!ReUtil.isMatch(RegExpConstants.USERNAME_PATTERN, content)) {
-                    return CommonResult.failed("用户名格式：以字母开头，可包含数字、字母、下划线和连字符，长度限 5 至 20 位");
-                }
                 updateResult = this.userService.updateUsername(current.getId(), content, extra);
                 break;
             case 2:
-                // 邮箱
-                if (!ReUtil.isMatch(RegExpConstants.EMAIL_PATTERN, content)) {
-                    return CommonResult.failed("请输入正确格式的邮箱地址");
-                }
                 updateResult = this.userService.updateEmail(current.getId(), content, extra);
                 break;
             case 3:
-                // 手机号
-                if (!ReUtil.isMatch(RegExpConstants.PHONE_PATTERN, content)) {
-                    return CommonResult.failed("请输入正确格式的手机号");
-                }
                 updateResult = this.userService.updatePhone(current.getId(), content, extra);
                 break;
             default:

@@ -1,19 +1,18 @@
 <template>
-  <!-- 头像、标题、内容、更多 -->
   <van-cell center class="flex-cell-container" :border="false">
+    <!-- 头像、标题、内容 -->
     <template #title>
-      <!-- 头像 -->
-      <van-image round width="50" height="50" :src="person.portrait" @click="$emit('click-image')"/>
-      <!-- 标题、内容 -->
+      <van-image round width="50" height="50" :src="person.portrait"/>
       <div class="portrait-title-container">
-        <p class="title">{{ person.name }}</p>
-        <p class="van-ellipsis">{{ person.content }}</p>
+        <p >{{ person.name }}</p>
+        <p class="content">{{ person.content }}</p>
       </div>
     </template>
+
     <!-- 更多 -->
     <template #right-icon>
       <van-popover placement="bottom-end" trigger="click"
-                   v-model="showPopover" :actions="actions" @select="(action)=>$toast(action.text)">
+                   v-model="showPopover" :actions="actions" @select="action => $emit('moreOperation', action)">
         <template #reference>
           <van-icon name="ellipsis" size="20" v-show="more" @click.stop="showPopover = true"/>
         </template>
@@ -40,11 +39,28 @@ export default {
       showPopover: false,
       actions: [
         {text: '编辑', icon: 'edit'},
-        {text: '删除', icon: 'delete-o'},
-        {text: '举报', icon: 'warn-o'},
+        {text: '删除', icon: 'delete-o'}
       ],
     }
   },
 }
 </script>
 
+<style scoped>
+.flex-cell-container .van-cell__title {
+  display: flex;
+}
+
+.portrait-title-container {
+  margin-left: 8px;
+}
+
+.portrait-title-container p {
+  margin: 0 0;
+}
+
+.portrait-title-container .content {
+  color: #969799;
+  font-size: 12px;
+}
+</style>

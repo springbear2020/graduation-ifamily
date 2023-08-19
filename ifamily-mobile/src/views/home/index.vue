@@ -71,7 +71,6 @@ export default {
 </script>
 
 <style scoped>
-/* TODO remove after the images' url is added */
 .my-swipe .van-swipe-item {
   color: #fff;
   font-size: 20px;

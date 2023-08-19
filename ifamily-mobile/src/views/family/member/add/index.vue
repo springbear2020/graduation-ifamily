@@ -102,12 +102,11 @@ export default {
   methods: {
     handleSave(formData) {
       if (!(this.relativeType >= 1 && this.relativeType <= 5)) {
-        this.$toast({message: '添加亲人：[1]生父 [2]生母 [3]配偶 [4]子女 [5]同胞'})
+        this.$toast({message: '添加亲人：[1]生父 [2]生母 [3]配偶 [4]子女 [5]同胞', position: 'bottom'})
         return
       }
-      formData.type = this.relativeType
 
-      this.$api.people.addRelatives(formData).then(() => {
+      this.$api.people.addRelatives(formData, {relativeType: this.relativeType}).then(() => {
         this.$toast.success(`${this.subTitle}成功`);
         this.showForm = false
         // 清空表单数据

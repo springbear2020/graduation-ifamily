@@ -1,6 +1,8 @@
 import request from "@/utils/request";
 
-const superviseBaseUrl = '/supervise/genealogy'
+// 监督接口 =============================================================================================================
+
+const superviseBaseUrl = '/ifamily-genealogy/genealogy/supervise'
 
 export function createGenealogy(data) {
     return request({
@@ -24,26 +26,14 @@ export function setDefaultGenealogyOfUser(genealogyId) {
     })
 }
 
+// 管理接口 =============================================================================================================
+
+const adminBaseUrl = '/ifamily-genealogy/genealogy/admin'
+
 export function updateDefaultGenealogy(data) {
     return request({
-        url: `${superviseBaseUrl}`,
+        url: `${adminBaseUrl}`,
         method: 'put',
         data
-    })
-}
-
-export function listVisitorLog(params) {
-    return request({
-        url: `${superviseBaseUrl}/visitor`,
-        method: 'get',
-        params
-    })
-}
-
-export function listRevisionLog(params) {
-    return request({
-        url: `${superviseBaseUrl}/revision`,
-        method: 'get',
-        params
     })
 }

@@ -1,6 +1,8 @@
 import request from "@/utils/request";
 
-const superviseBaseUrl = '/supervise/genealogy/people'
+// 监督接口 =============================================================================================================
+
+const superviseBaseUrl = '/ifamily-genealogy/genealogy/people/supervise'
 
 export function currentUserPeople() {
     return request({
@@ -9,9 +11,21 @@ export function currentUserPeople() {
     })
 }
 
+export function saveUserPeople(data) {
+    return request({
+        url: `${superviseBaseUrl}/current`,
+        method: 'post',
+        data
+    })
+}
+
+// 管理接口 =============================================================================================================
+
+const adminBaseUrl = '/ifamily-genealogy/genealogy/people/admin'
+
 export function getGenealogyPeopleDetails(params) {
     return request({
-        url: `${superviseBaseUrl}/details`,
+        url: `${adminBaseUrl}/details`,
         method: 'get',
         params
     })
@@ -19,7 +33,7 @@ export function getGenealogyPeopleDetails(params) {
 
 export function getPeopleById(params) {
     return request({
-        url: `${superviseBaseUrl}`,
+        url: `${adminBaseUrl}`,
         method: 'get',
         params
     })
@@ -27,7 +41,7 @@ export function getPeopleById(params) {
 
 export function updatePeople(data) {
     return request({
-        url: `${superviseBaseUrl}`,
+        url: `${adminBaseUrl}`,
         method: 'put',
         data
     })
@@ -35,24 +49,17 @@ export function updatePeople(data) {
 
 export function removePeople(params) {
     return request({
-        url: `${superviseBaseUrl}`,
+        url: `${adminBaseUrl}`,
         method: 'delete',
         params
     })
 }
 
-export function addRelatives(data) {
+export function addRelatives(data, params) {
     return request({
-        url: `${superviseBaseUrl}`,
+        url: `${adminBaseUrl}`,
         method: 'post',
-        data
-    })
-}
-
-export function saveUserPeople(data) {
-    return request({
-        url: `${superviseBaseUrl}/current`,
-        method: 'post',
-        data
+        data,
+        params
     })
 }

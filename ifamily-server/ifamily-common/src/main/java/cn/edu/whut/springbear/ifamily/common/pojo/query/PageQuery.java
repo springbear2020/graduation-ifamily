@@ -20,7 +20,7 @@ public class PageQuery {
     private Integer current;
 
     @ApiModelProperty("每页显示的数量")
-    @Range(min = 1L, max = 20L, message = "每页显示的数量值范围是：[1, 20]")
+    @Range(min = 1L, max = 10L, message = "每页显示的数量值范围是：[1, 10]")
     @NotNull(message = "每页显示的数量值不能为空")
     private Integer size;
 

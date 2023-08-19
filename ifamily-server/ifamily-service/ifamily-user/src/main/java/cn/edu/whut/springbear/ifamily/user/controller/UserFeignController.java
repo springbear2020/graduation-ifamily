@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author Spring-_-Bear
  * @since 23/03/26 20:56
  */
-@Api(tags = "用户服务调用接口")
+@Api(tags = "用户调用接口")
 @AllArgsConstructor
 @RestController
 @RequestMapping("/user/feign")

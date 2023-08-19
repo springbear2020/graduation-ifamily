@@ -17,7 +17,7 @@ import java.util.List;
  * @author Spring-_-Bear
  * @since 23/04/12 20:31
  */
-@Api(tags = "用户角色服务调用接口")
+@Api(tags = "用户角色调用接口")
 @AllArgsConstructor
 @RestController
 @RequestMapping("/acl/feign/role")

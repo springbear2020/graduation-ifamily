@@ -1,6 +1,6 @@
 import request from "@/utils/request";
 
-const superviseBaseUrl = '/supervise/genealogy/member'
+const superviseBaseUrl = '/ifamily-genealogy/genealogy/member/supervise'
 
 export function memberTreeOfGenealogy() {
     return request({

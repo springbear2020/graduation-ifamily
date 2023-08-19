@@ -9,7 +9,7 @@ public class AuthConstants {
     /**
      * 后台管理
      */
-    public static final String CLIENT_ADMIN_ID = "admin-app";
+    public static final String CLIENT_ADMIN_ID = "backend-app";
     /**
      * 移动应用
      */
@@ -37,7 +37,7 @@ public class AuthConstants {
     /**
      * 后台管理路径模式匹配
      */
-    public static final String ADMIN_URL_PATTERN = "/**/admin/**";
+    public static final String ADMIN_URL_PATTERN = "/**/backend/**";
     /**
      * 权限校验通用密码
      */

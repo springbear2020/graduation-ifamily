@@ -9,9 +9,9 @@
           <van-steps direction="vertical" active-color="#1989fa">
             <van-step v-for="(item, index) in revision.list" :key="index">
               <h3>{{ formatDate(item.operationDate) }}</h3>
-              <p v-for="(log, logIndex) in item.dateLogs" :key="logIndex" class="van-hairline--bottom">
-                {{ log.operator.name }}
-                {{ operationType(log.operationType) }}
+              <p v-for="(log, logIndex) in item.dateLogs" :key="logIndex">
+                <span class="operator">{{ log.operator.name }}</span>&nbsp;
+                <span :class="`operation-type-${log.operationType}`">{{ operationType(log.operationType) }}</span>&nbsp;
                 {{ `${log.operatedPeopleList.join("、")}` }}
               </p>
             </van-step>
@@ -21,8 +21,8 @@
 
       <!-- 访问记录 -->
       <van-tab title="访问记录">
-        <van-steps direction="vertical">
-          <van-list finished-text="没有更多了" :finished="visitor.finished" v-model="visitor.loading" @load="loadVisitor">
+        <van-list finished-text="没有更多了" :finished="visitor.finished" v-model="visitor.loading" @load="loadVisitor">
+          <van-steps direction="vertical">
             <van-step v-for="(item, index) in visitor.list" :key="index">
               <h3>{{ formatDate(item.visitedDate) }}</h3>
               <div v-for="people in item.visitors" class="visitor-container">
@@ -30,8 +30,8 @@
                 <p>{{ people.name }}</p>
               </div>
             </van-step>
-          </van-list>
-        </van-steps>
+          </van-steps>
+        </van-list>
       </van-tab>
     </van-tabs>
   </div>
@@ -39,7 +39,7 @@
 
 <script>
 import SexTag from '@/components/tag/sex-tag'
-import {computedDate} from "@/utils/converter";
+import {weekDate} from "@/utils/converter";
 
 export default {
   name: "index",
@@ -69,7 +69,7 @@ export default {
   },
   methods: {
     loadRevision() {
-      this.$api.genealogy.listRevisionLog(this.revision.formData).then(revisionList => {
+      this.$api.record.listRevisionLog(this.revision.formData).then(revisionList => {
         revisionList.forEach(item => {
           this.revision.list.push(item)
         })
@@ -80,7 +80,7 @@ export default {
       })
     },
     loadVisitor() {
-      this.$api.genealogy.listVisitorLog(this.visitor.formData).then(visitorList => {
+      this.$api.record.listVisitorLog(this.visitor.formData).then(visitorList => {
         visitorList.forEach(item => {
           this.visitor.list.push(item)
         })
@@ -109,7 +109,7 @@ export default {
       }
     },
     formatDate(dateStr) {
-      return computedDate(dateStr)
+      return weekDate(dateStr)
     }
   }
 }
@@ -131,5 +131,25 @@ export default {
 
 .visitor-container .van-image {
   padding: 2px;
+}
+
+.operator {
+  font-weight: bold;
+}
+
+.operation-type-1 {
+  color: #07c160;
+}
+
+.operation-type-2 {
+  color: #ee0a24;
+}
+
+.operation-type-3 {
+  color: #ff976a;
+}
+
+.operation-type-4 {
+  color: #323233;
 }
 </style>

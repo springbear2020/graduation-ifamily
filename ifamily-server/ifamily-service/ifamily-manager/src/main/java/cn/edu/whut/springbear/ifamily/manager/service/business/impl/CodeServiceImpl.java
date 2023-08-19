@@ -1,6 +1,7 @@
 package cn.edu.whut.springbear.ifamily.manager.service.business.impl;
 
 import cn.edu.whut.springbear.ifamily.common.constant.RedisConstants;
+import cn.edu.whut.springbear.ifamily.common.constant.RegExpConstants;
 import cn.edu.whut.springbear.ifamily.common.enumerate.AssertEnum;
 import cn.edu.whut.springbear.ifamily.common.exception.IncorrectConditionException;
 import cn.edu.whut.springbear.ifamily.common.exception.SystemServiceException;
@@ -10,6 +11,7 @@ import cn.edu.whut.springbear.ifamily.manager.pojo.po.CodeLogDO;
 import cn.edu.whut.springbear.ifamily.manager.service.CodeLogService;
 import cn.edu.whut.springbear.ifamily.manager.service.business.CodeService;
 import cn.hutool.core.util.RandomUtil;
+import cn.hutool.core.util.ReUtil;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -50,6 +52,10 @@ public class CodeServiceImpl implements CodeService {
 
     @Override
     public boolean sendEmailCode(String email) {
+        if (!ReUtil.isMatch(RegExpConstants.EMAIL_PATTERN, email)) {
+            throw new IncorrectConditionException("请输入正确格式的邮箱地址");
+        }
+
         // 限制今日验证码发送次数
         List<CodeLogDO> codeLogDOList = this.codeLogService.listByDateAndReceiver(email, new Date());
         if (codeLogDOList != null && codeLogDOList.size() >= CodeConstants.MAX_SEND_TIMES) {
@@ -100,6 +106,9 @@ public class CodeServiceImpl implements CodeService {
 
     @Override
     public boolean sendPhoneCode(String phone) {
+        if (!ReUtil.isMatch(RegExpConstants.PHONE_PATTERN, phone)) {
+            throw new IncorrectConditionException("请输入正确格式的手机号");
+        }
         // TODO 手机验证码发送功能待实现
         return false;
     }
