@@ -111,6 +111,10 @@ export const constantRoutes = [
         path: '/family/member/add/:type',
         component: () => import('@/views/family/member/add'),
     },
+    {
+        path: '/family/member',
+        component: () => import('@/views/family/member'),
+    },
 
     // *****************************************************************************************************************
 
@@ -122,10 +126,7 @@ export const constantRoutes = [
         path: '/family/album',
         component: () => import('@/views/family/album'),
     },
-    {
-        path: '/family/member',
-        component: () => import('@/views/family/member'),
-    },
+
     {
         path: '/family/tree/:type',
         component: () => import('@/views/family/tree'),
@@ -211,13 +212,6 @@ router.beforeEach((to, from, next) => {
     }
 
     if (token) {
-        const toPath = to.path;
-
-        // 已登录且前往用户登录、注册、找回密码页面，跳转到首页
-        if (toPath === '/user/login' || toPath === '/user/reset/0' || toPath === '/user/reset/1') {
-            next('/')
-        }
-
         // 是否存在用户信息，不存在则派发 action 查询用户信息
         let uid = store.state.user.user.id
         if (!uid) {
@@ -226,15 +220,23 @@ router.beforeEach((to, from, next) => {
                 next()
             }).catch(() => {
                 // token 已过期，退出登录，跳转到登录页面
-                store.dispatch('user/logout').then(() => {
-                    Notify({
-                        type: 'danger',
-                        message: '身份令牌已失效，即将前往登录页',
-                        duration: 3000,
-                        onClose: () => next('/user/login')
+                store.dispatch('genealogy/logout').then(() => {
+                    store.dispatch('user/logout').then(() => {
+                        Notify({
+                            type: 'danger',
+                            message: '身份令牌已失效，即将前往登录页',
+                            duration: 3000,
+                            onClose: () => next('/user/login')
+                        })
                     })
                 })
             })
+        }
+
+        const toPath = to.path;
+        // 已登录且前往用户登录、注册、找回密码页面，跳转到首页
+        if (toPath === '/user/login' || toPath === '/user/reset/0' || toPath === '/user/reset/1') {
+            next('/')
         }
 
         // 已登录，其它情况一律放行

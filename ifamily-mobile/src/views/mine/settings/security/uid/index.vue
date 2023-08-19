@@ -2,7 +2,7 @@
   <div>
     <van-nav-bar title="UID" left-arrow @click-left="$router.replace('/mine/settings/security')"/>
 
-    <van-empty description="UID 是百家谱的唯一凭证，一年只能修改一次" :image="require('@/assets/img/ifamily-160x160.png')">
+    <van-empty description="UID 是百家谱的唯一凭证，一年只能修改一次" :image="require('@/assets/img/uid.png')">
       <van-form @submit="handleUpdate">
         <van-field type="text" label="UID" placeholder="UID" clearable
                    v-model.trim="username"

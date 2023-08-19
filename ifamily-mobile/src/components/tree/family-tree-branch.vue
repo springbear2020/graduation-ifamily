@@ -4,23 +4,23 @@
       <tr>
         <td :colspan="Array.isArray(tree.children) ? tree.children.length * 2 : 1"
             :class="{'extend': Array.isArray(tree.children) && tree.children.length && tree.extend}">
-          <div :class="{'couple': true, 'mate': tree.mate}">
+          <div :class="{'couple': true, 'mate': tree.mates}">
             <!-- 当前节点 -->
             <div class="person" @click="$emit('click-node', tree)"
                  :class="[Array.isArray(tree.class) ? tree.class : [], `pid-${tree.id}`]">
               <div class="avatar">
-                <img :src="tree.portrait || 'img/male.jpg'" alt="img"/>
+                <img :src="tree.portrait || defaultPortrait(tree.gender)" alt="img"/>
               </div>
               <div class="name">{{ tree.name }}</div>
             </div>
 
             <!-- 伴侣节点 -->
-            <template v-if="Array.isArray(tree.mate) && tree.mate.length">
-              <div class="person" v-for="(mate, mateIndex) in tree.mate" :key="tree.name+mateIndex"
+            <template v-if="Array.isArray(tree.mates) && tree.mates.length">
+              <div class="person" v-for="(mate, mateIndex) in tree.mates" :key="tree.name+mateIndex"
                    :class="[Array.isArray(mate.class) ? mate.class : [],`pid-${mate.id}`]"
                    @click="$emit('click-node', mate)">
                 <div class="avatar">
-                  <img :src="mate.portrait || 'img/female.jpg'" alt="img"/>
+                  <img :src="mate.portrait || defaultPortrait(tree.gender)" alt="img"/>
                 </div>
                 <div class="name">{{ mate.name }}</div>
               </div>
@@ -50,7 +50,12 @@
 <script>
 export default {
   name: "family-tree-branch",
-  props: ['tree', 'single']
+  props: ['tree', 'single'],
+  methods: {
+    defaultPortrait(gender) {
+      return gender === 0 ? 'img/male.jpg' : 'img/female.jpg'
+    }
+  }
 }
 </script>
 

@@ -9,18 +9,22 @@ export default {
     },
     getters: {},
     mutations: {
+        CLEAR_STATE(state) {
+            state.token = ''
+            state.user = {}
+        },
         SET_TOKEN(state, token) {
             state.token = token
         },
         SET_USER(state, user) {
             state.user = user
         },
-        CLEAR_STATE(state) {
-            state.token = ''
-            state.user = {}
-        }
     },
     actions: {
+        logout({commit}) {
+            removeToken()
+            commit('CLEAR_STATE')
+        },
         login({commit}, params) {
             return new Promise((resolve, reject) => {
                 login(params).then(token => {
@@ -31,10 +35,6 @@ export default {
                     reject(err)
                 })
             })
-        },
-        logout({commit}) {
-            removeToken()
-            commit('CLEAR_STATE')
         },
         getUser({commit}) {
             return new Promise((resolve, reject) => {

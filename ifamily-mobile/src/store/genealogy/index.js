@@ -1,13 +1,21 @@
 import {listGenealogiesOfUser} from "@/api/genealogy";
-import {memberTreeOfGenealogy} from "@/api/genealogy/member";
+import {memberTreeOfGenealogy, listGenerationMember} from "@/api/genealogy/member";
 import {currentUserPeople} from "@/api/genealogy/people";
 
 export default {
     namespaced: true,
     state: {
+        // 家族列表
         genealogyList: [],
+        // 家族树谱
         tree: {},
-        userPeople: {}
+        // 我的资料
+        userPeople: {},
+        // 世代成员
+        memberMap: {
+            generations: [],
+            members: {}
+        }
     },
     getters: {
         defaultGenealogy(state) {
@@ -16,13 +24,14 @@ export default {
         }
     },
     mutations: {
-        SET_GENEALOGY_LIST(state, list) {
-            state.genealogyList = list
-        },
         CLEAR_STATE(state) {
             state.genealogyList = []
             state.tree = {}
             state.userPeople = {}
+            state.memberMap = {}
+        },
+        SET_GENEALOGY_LIST(state, list) {
+            state.genealogyList = list
         },
         SET_GENEALOGY_TREE(state, tree) {
             state.tree = tree
@@ -32,9 +41,15 @@ export default {
         },
         REMOVE_TREE(state) {
             state.tree = {}
-        }
+        },
+        SET_GENERATION_MEMBER(state, memberMap) {
+            state.memberMap = memberMap
+        },
     },
     actions: {
+        logout({commit}) {
+            commit('CLEAR_STATE')
+        },
         listGenealogyList({commit}) {
             return new Promise((resolve, reject) => {
                 listGenealogiesOfUser().then(list => {
@@ -45,13 +60,10 @@ export default {
                 })
             })
         },
-        logout({commit}) {
-            commit('CLEAR_STATE')
-        },
         getGenealogyTree({commit}) {
             return new Promise((resolve, reject) => {
                 memberTreeOfGenealogy().then(tree => {
-                    // 为祖先节点添加 root-node 样式名称使得其居中展示
+                    // 为祖先节点添加 root-node 样式名称使得初始化页面时其居中展示
                     tree.class = ['root-node']
                     commit('SET_GENEALOGY_TREE', tree)
                     resolve()
@@ -65,6 +77,15 @@ export default {
                 currentUserPeople().then(people => {
                     commit('SET_USER_PEOPLE', people)
                     resolve()
+                }).catch(err => {
+                    reject(err)
+                })
+            })
+        },
+        generationMembers({commit}, params) {
+            return new Promise((resolve, reject) => {
+                listGenerationMember(params).then(memberMap => {
+                    commit("SET_GENERATION_MEMBER", memberMap)
                 }).catch(err => {
                     reject(err)
                 })

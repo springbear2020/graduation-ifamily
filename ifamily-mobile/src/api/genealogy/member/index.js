@@ -17,9 +17,10 @@ export function listMemberByName(params) {
     })
 }
 
-export function listGenerationMember() {
+export function listGenerationMember(params) {
     return request({
         url: `${superviseBaseUrl}/generation`,
-        method: 'get'
+        method: 'get',
+        params
     })
 }

@@ -16,10 +16,11 @@ export function getGenealogyPeopleDetails(peopleId) {
     })
 }
 
-export function getPeopleById(peopleId) {
+export function getPeopleById(params) {
     return request({
-        url: `${superviseBaseUrl}/${peopleId}`,
+        url: `${superviseBaseUrl}`,
         method: 'get',
+        params
     })
 }
 

@@ -29,9 +29,9 @@
                  v-model.trim="formData.ancestryAddress" @click="showAreaSheet = true; areaType = '1'"/>
 
       <!-- 简介、字辈歌 -->
-      <van-field rows="2" autosize label="家族简介" type="textarea" maxlength="100" size="large" placeholder="家族简介"
+      <van-field rows="2" autosize label="家族简介" type="textarea" maxlength="1000" size="large" placeholder="家族简介"
                  v-model.trim="formData.introduction" show-word-limit clearable/>
-      <van-field rows="2" autosize label="字辈歌" type="textarea" maxlength="100" size="large" placeholder="字辈歌"
+      <van-field rows="2" autosize label="字辈歌" type="textarea" maxlength="1000" size="large" placeholder="字辈歌"
                  v-model.trim="formData.generationSong" show-word-limit clearable/>
 
       <div class="block-button-container">
@@ -65,7 +65,7 @@ export default {
       type: '0',
       showAreaSheet: false,
       areaList: [],
-      fullAddress: undefined,
+      fullAddress: '',
       // [0]家族地址 [1]家族祖籍
       areaType: '0',
       fileList: [],

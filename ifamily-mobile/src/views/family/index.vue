@@ -14,7 +14,7 @@
       <!-- 家族操作宫格 -->
       <van-grid :column-num="3" :gutter="8">
         <van-grid-item icon="cluster-o" text="家族树谱" to="/family/tree/0"/>
-        <van-grid-item icon="friends-o" text="家族成员"/>
+        <van-grid-item icon="friends-o" text="家族成员" to="/family/member"/>
         <van-grid-item icon="setting-o" text="家族管理"/>
         <van-grid-item icon="volume-o" text="家族公告"/>
         <van-grid-item icon="photo-o" text="家族相册"/>

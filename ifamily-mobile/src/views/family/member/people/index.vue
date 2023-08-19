@@ -74,7 +74,7 @@
 import SexTag from '@/components/tag/sex-tag'
 import DescTag from '@/components/tag/desc-tag'
 import FamilyRelationship from '@/components/business/family-relationship'
-import {convert} from "@/utils/date-converter"
+import {solarToLunar} from "@/utils/converter"
 import {peopleInfo} from "@/mixin/people-info";
 
 export default {
@@ -84,7 +84,7 @@ export default {
   mounted() {
     // [0] 家族树谱
     let type = this.$route.params.type
-    if (!(type === '0')) {
+    if (!(type === '0' || type === '1')) {
       type = '0'
     }
     this.type = type
@@ -97,14 +97,16 @@ export default {
       let dst = '/'
       if (this.type === '0') {
         dst = `/family/tree/0?pid=${this.$route.query.pid}`
+      } else if (this.type === '1') {
+        dst = `/family/member`
       }
       return dst;
     },
     birthdate() {
-      return this.me.birthdate ? convert(this.me.birthdate, this.me.lunarBirthdate) : ''
+      return this.me.birthdate ? solarToLunar(this.me.birthdate, this.me.lunarBirthdate) : ''
     },
     deathDate() {
-      return this.me.deathDate ? convert(this.me.deathDate, this.me.lunarDeathDate) : ''
+      return this.me.deathDate ? solarToLunar(this.me.deathDate, this.me.lunarDeathDate) : ''
     }
   },
 }

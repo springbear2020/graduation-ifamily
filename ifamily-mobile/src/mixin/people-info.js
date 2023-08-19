@@ -15,12 +15,7 @@ export const peopleInfo = {
             return this.people.me ? this.people.me : {}
         },
         defaultPortrait() {
-            let portrait = this.me.portrait
-            if (!portrait || portrait.length === 0) {
-                // 根据性别决定展示的默认肖像
-                portrait = this.me.gender === 0 ? 'img/male.jpg' : 'img/female.jpg'
-            }
-            return portrait
+            return this.me.gender === 0 ? 'img/male.jpg' : 'img/female.jpg'
         },
         age() {
             if (!this.me.birthdate) {

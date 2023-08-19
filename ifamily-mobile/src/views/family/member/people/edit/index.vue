@@ -56,7 +56,7 @@ export default {
         return
       }
 
-      this.$api.people.getPeopleById(pid).then(people => {
+      this.$api.people.getPeopleById({peopleId: pid}).then(people => {
         this.people = people
       }).catch(err => {
         this.$toast({message: err.data || err.desc, position: 'bottom'})

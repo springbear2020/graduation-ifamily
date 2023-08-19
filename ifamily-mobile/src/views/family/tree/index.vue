@@ -45,8 +45,7 @@
 <script>
 import FamilyTree from '@/components/tree/family-tree';
 import MemberForm from "@/components/basis/member-form";
-import ContactCard from "@/components/business/contact-card";
-import {listMemberByName} from "@/api/genealogy/member";
+import ContactCard from "@/components/basis/contact-card";
 
 export default {
   name: "index",
