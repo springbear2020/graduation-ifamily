@@ -45,7 +45,7 @@
       <!-- 生于、出生地 -->
       <van-cell-group>
         <van-field readonly clickable name="birthdate" label="生于" placeholder="点击选择出生日期"
-                   v-model="formData.birthdate" @click="dateType = '1'; showDatetimePicker = true"
+                   v-model="formData.birthdate" @click="dateType = '0'; showDatetimePicker = true"
                    :border="false"/>
         <van-field name="birthplace" readonly clickable label="出生地" placeholder="点击选择省市区"
                    v-model="formData.birthplace" @click="areaType = '2'; showAreaPopup = true"
@@ -62,7 +62,7 @@
         <div v-show="!formData.alive">
           <van-field readonly clickable name="dieDate" label="逝于" placeholder="点击选择逝世日期"
                      v-model="formData.dieDate" :border="false"
-                     @click="dateType = '2'; showDatetimePicker = true"/>
+                     @click="dateType = '1'; showDatetimePicker = true"/>
           <van-field name="burialPlace" readonly clickable label="埋葬地" placeholder="点击选择省市区"
                      @click="areaType = '3'; showAreaPopup = true" v-model="formData.burialPlace"
                      :border="false"/>
@@ -113,7 +113,7 @@ export default {
   data() {
     return {
       // TODO [Vant bug]当 minDate 的 year 小于 100 时 [minYear, maxYear] 间的年份不能正常渲染
-      // [1]出生日期 [2]逝世日期
+      // [0]出生日期 [1]逝世日期
       dateType: '1',
       minDate: new Date(100, 0, 1),
       curDate: new Date(),
@@ -153,9 +153,9 @@ export default {
     },
     confirmDate() {
       const dateStr = dayjs(this.selectedDate).format('YYYY-MM-DD')
-      if (this.dateType === '1') {
+      if (this.dateType === '0') {
         this.formData.birthdate = dateStr
-      } else {
+      } else if (this.dateType === '1') {
         this.formData.dieDate = dateStr
       }
       this.showDatetimePicker = false

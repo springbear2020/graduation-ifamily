@@ -3,19 +3,19 @@
     <!-- [0]male -->
     <van-tag color="#007bff" size="medium"
              :class="{'right': right, 'bottom': bottom}" v-if="sex === 0">
-      <van-icon name="manager-o" size="16"/>&nbsp;{{ name }}
+      <van-icon name="manager-o"/>&nbsp;{{ name }}
     </van-tag>
 
     <!-- [1]female -->
     <van-tag color="#e83e8c" size="medium"
              :class="{'right': right, 'bottom': bottom}" v-else-if="sex === 1">
-      <van-icon name="manager-o" size="16"/>&nbsp;{{ name }}
+      <van-icon name="manager-o"/>&nbsp;{{ name }}
     </van-tag>
 
     <!-- known -->
     <van-tag size="medium"
              :class="{'right': right, 'bottom': bottom}" v-else>
-      <van-icon name="circle" color="#6c757d" size="16"/>&nbsp;{{ name }}
+      <van-icon name="circle" color="#6c757d"/>&nbsp;{{ name }}
     </van-tag>
   </span>
 </template>

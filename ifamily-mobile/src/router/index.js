@@ -14,6 +14,15 @@ let router = new VueRouter({
             path: '/404',
             component: () => import('@/views/404')
         },
+        // user
+        {
+            path: '/user/login',
+            component: () => import('@/views/user/login'),
+        },
+        {
+            path: '/user/reset/:type',
+            component: () => import('@/views/user/reset'),
+        },
         // home
         {
             path: '/home',
@@ -29,14 +38,6 @@ let router = new VueRouter({
             path: '/mine',
             component: () => import('@/views/mine'),
             meta: {footerShow: true},
-        },
-        {
-            path: '/mine/login',
-            component: () => import('@/views/mine/login'),
-        },
-        {
-            path: '/mine/password/:type',
-            component: () => import('@/views/mine/password'),
         },
         {
             path: '/mine/settings',
@@ -69,7 +70,7 @@ let router = new VueRouter({
             component: () => import('@/views/family/members'),
         },
         {
-            path: '/family/members/people',
+            path: '/family/members/people/:type',
             component: () => import('@/views/family/members/people'),
         },
         {
@@ -89,7 +90,7 @@ let router = new VueRouter({
             component: () => import('@/views/family/manage/members'),
         },
         {
-            path: '/family/manage/members/add',
+            path: '/family/manage/members/add/:type',
             component: () => import('@/views/family/manage/members/add'),
         },
         {
@@ -99,10 +100,6 @@ let router = new VueRouter({
         {
             path: '/family/manage/seniority',
             component: () => import('@/views/family/manage/seniority'),
-        },
-        {
-            path: '/family/manage/notice',
-            component: () => import('@/views/family/manage/notice'),
         },
         {
             path: '/family/manage/access',

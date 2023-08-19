@@ -1,6 +1,6 @@
 <template>
   <div>
-    <van-nav-bar left-arrow title="404 Not Found" @click-left="backHome"/>
+    <van-nav-bar left-arrow title="页面不存在" @click-left="$router.replace('/')"/>
 
     <van-empty description="您访问的页面不存在" image="https://img01.yzcdn.cn/vant/custom-empty-image.png"/>
   </div>
@@ -8,11 +8,6 @@
 
 <script>
 export default {
-  name: "index",
-  methods: {
-    backHome() {
-      this.$router.replace('/')
-    }
-  }
+  name: "index"
 }
 </script>

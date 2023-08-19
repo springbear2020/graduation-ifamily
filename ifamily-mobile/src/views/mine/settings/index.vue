@@ -1,6 +1,6 @@
 <template>
   <div>
-    <van-nav-bar title="设置" left-arrow @click-left="backMine" @click-right="handleUserLogout">
+    <van-nav-bar title="设置" left-arrow @click-left="$router.replace('/mine')" @click-right="$toast.fail('退出登录')">
       <template #right>
         <van-icon name="exit" color="#1989fa" class="iconfont" class-prefix="icon" size="20"/>
       </template>
@@ -25,14 +25,6 @@
 
 <script>
 export default {
-  name: "index",
-  methods: {
-    backMine() {
-      this.$router.replace('/mine')
-    },
-    handleUserLogout() {
-      this.$toast.fail('退出登录')
-    }
-  }
+  name: "index"
 }
 </script>

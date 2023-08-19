@@ -1,28 +1,28 @@
 <template>
   <div>
-    <van-nav-bar title="家族信息" left-arrow @click-left="backFamily"/>
+    <van-nav-bar title="家族信息" left-arrow @click-left="$router.replace('/family')"/>
 
     <!-- 家族照片 -->
     <div class="flex-container">
-      <van-image class="cover" width="100" height="100" :src="url" @click="viewImage"/>
+      <van-image class="cover" width="100" height="100" :src="url" @click="previewImage"/>
     </div>
 
     <!-- 家族成员概况 -->
     <van-grid direction="horizontal" :border="false" :column-num="5">
       <van-grid-item>
-        <desc-tag title="男" content="323" color="#007bff" @click.native="handleViewConditionalMember"/>
+        <desc-tag title="男" content="323" color="#007bff" @click.native="$toast.success('查看家族成员')"/>
       </van-grid-item>
       <van-grid-item>
-        <desc-tag title="女" content="200" color="#e83e8c" @click.native="handleViewConditionalMember"/>
+        <desc-tag title="女" content="200" color="#e83e8c" @click.native="$toast.success('查看家族成员')"/>
       </van-grid-item>
       <van-grid-item>
-        <desc-tag title="总" content="523" color="#fd7e14" @click.native="handleViewConditionalMember"/>
+        <desc-tag title="总" content="523" color="#fd7e14" @click.native="$toast.success('查看家族成员')"/>
       </van-grid-item>
       <van-grid-item>
-        <desc-tag title="生" content="423" color="#28a745" @click.native="handleViewConditionalMember"/>
+        <desc-tag title="生" content="423" color="#28a745" @click.native="$toast.success('查看家族成员')"/>
       </van-grid-item>
       <van-grid-item>
-        <desc-tag title="逝" content="100" color="#6c757d" @click.native="handleViewConditionalMember"/>
+        <desc-tag title="逝" content="100" color="#6c757d" @click.native="$toast.success('查看家族成员')"/>
       </van-grid-item>
     </van-grid>
 
@@ -50,17 +50,17 @@
     <van-cell-group>
       <van-cell title="管理员" name="3" :border="false">
         <template #label>
-          <people-tag name="光头勇" @click.native="handleViewManager"/>
-          <people-tag name="光头勇" :sex="1" @click.native="handleViewManager"/>
-          <people-tag name="光头勇" @click.native="handleViewManager"/>
-          <people-tag name="光头勇" @click.native="handleViewManager"/>
-          <people-tag name="光头勇" :sex="1" @click.native="handleViewManager"/>
-          <people-tag name="光头勇" @click.native="handleViewManager"/>
-          <people-tag name="光头勇" :sex="1" @click.native="handleViewManager"/>
+          <people-tag name="光头勇" @click.native="$toast.success('查看管理员')"/>
+          <people-tag name="光头勇" :sex="1" @click.native="$toast.success('查看管理员')"/>
+          <people-tag name="光头勇" @click.native="$toast.success('查看管理员')"/>
+          <people-tag name="光头勇" @click.native="$toast.success('查看管理员')"/>
+          <people-tag name="光头勇" :sex="1" @click.native="$toast.success('查看管理员')"/>
+          <people-tag name="光头勇" @click.native="$toast.success('查看管理员')"/>
+          <people-tag name="光头勇" :sex="1" @click.native="$toast.success('查看管理员')"/>
         </template>
       </van-cell>
       <van-cell title="创建者" :border="false">
-        <people-tag name="光头勇" @click.native="handleViewManager" :right="false" :bottom="false"/>
+        <people-tag name="光头勇" @click.native="$toast.success('查看管理员')" :right="false" :bottom="false"/>
       </van-cell>
       <van-cell title="创建时间" value="2023-02-12 16:02"/>
     </van-cell-group>
@@ -79,16 +79,7 @@ export default {
     }
   },
   methods: {
-    backFamily() {
-      this.$router.replace('/family')
-    },
-    handleViewManager() {
-      this.$toast.success('查看管理员');
-    },
-    handleViewConditionalMember() {
-      this.$toast.success('查看特定条件家族成员');
-    },
-    viewImage() {
+    previewImage() {
       let images = []
       images.push(this.url)
       ImagePreview({images})

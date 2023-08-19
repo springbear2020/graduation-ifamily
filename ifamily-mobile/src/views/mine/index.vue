@@ -1,18 +1,14 @@
 <template>
   <div>
-    <van-nav-bar title="我的" @click-right="settings">
+    <van-nav-bar title="我的" @click-right="$router.push('/mine/settings')">
       <template #right>
         <van-icon name="setting-o" size="20"/>
       </template>
     </van-nav-bar>
 
-    <!-- 头像、昵称、个性签名 -->
+    <!-- 头像、昵称、签名 -->
     <van-card centered title="你不懂我&我不怪你" desc="长相思兮长相忆，短相思兮无穷极。"
-              thumb="https://img01.yzcdn.cn/vant/leaf.jpg">
-      <template #footer>
-        <van-button to="/mine/login" type="primary" plain size="mini">登录/注册</van-button>
-      </template>
-    </van-card>
+              thumb="https://img01.yzcdn.cn/vant/leaf.jpg"/>
 
     <!-- 个人中心宫格 -->
     <van-grid :column-num="3">
@@ -33,11 +29,6 @@
 
 <script>
 export default {
-  name: "index",
-  methods: {
-    settings() {
-      this.$router.push('/mine/settings')
-    }
-  }
+  name: "index"
 }
 </script>

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <van-nav-bar title="家族管理" left-arrow @click-left="backFamily" @click-right="deleteFamily">
+    <van-nav-bar title="家族管理" left-arrow @click-left="$router.replace('/family')" @click-right="deleteFamily">
       <template #right>
         <van-icon name="delete-o" size="20"/>
       </template>
@@ -12,7 +12,6 @@
       <van-cell title="字辈管理" is-link to="/family/manage/seniority"/>
       <van-cell title="访问控制" is-link to="/family/manage/access"/>
       <van-cell title="权限设置" is-link to="/family/manage/permission"/>
-      <van-cell title="公告管理" is-link to="/family/manage/notice"/>
     </van-cell-group>
   </div>
 </template>
@@ -24,9 +23,6 @@ export default {
   name: "index",
   components: {FamilyInfoCard},
   methods: {
-    backFamily() {
-      this.$router.replace('/family')
-    },
     deleteFamily() {
       this.$dialog.confirm({
         title: '删除家族',

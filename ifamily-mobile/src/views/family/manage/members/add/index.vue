@@ -1,12 +1,12 @@
 <template>
   <div>
-    <van-nav-bar title="添加亲人" left-arrow @click-left="backFamilyTree"/>
+    <van-nav-bar title="添加亲人" left-arrow @click-left="back"/>
 
     <!-- 头像、姓名 -->
     <van-grid :border="false" :column-num="1">
       <van-grid-item>
         <template #icon>
-          <van-image round height="100" width="100" :src="url" @click="viewImage"/>
+          <van-image round height="100" width="100" :src="url" @click="previewImage"/>
         </template>
         <template #text>
           <p class="portrait-name">冯勇贤</p>
@@ -27,13 +27,13 @@
           <van-button type="primary" plain size="mini" icon="add-o" @click="addRelatives(3)">添加</van-button>
         </p>
         <p>子女：
-          <people-tag :name="'冯学慧'" :sex="3" :right="true" :bottom="true" @click.native="handleViewPeople"/>
-          <people-tag :name="'刘纯洲'" :sex="1" :right="true" :bottom="true" @click.native="handleViewPeople"/>
-          <people-tag :name="'冯学良'" :sex="0" :right="true" :bottom="true" @click.native="handleViewPeople"/>
+          <people-tag :name="'冯学慧'" :sex="3" :right="true" :bottom="true" @click.native="$toast.success('查看人员信息')"/>
+          <people-tag :name="'刘纯洲'" :sex="1" :right="true" :bottom="true" @click.native="$toast.success('查看人员信息')"/>
+          <people-tag :name="'冯学良'" :sex="0" :right="true" :bottom="true" @click.native="$toast.success('查看人员信息')"/>
           <van-button type="primary" plain size="mini" icon="add-o" @click="addRelatives(4)">添加</van-button>
         </p>
         <p>同胞：
-          <people-tag :name="'冯世元'" :sex="0" :right="true" @click.native="handleViewPeople"/>
+          <people-tag :name="'冯世元'" :sex="0" :right="true" @click.native="$toast.success('查看人员信息')"/>
           <van-button type="primary" plain size="mini" icon="add-o" @click="addRelatives(5)">添加</van-button>
         </p>
       </template>
@@ -41,7 +41,7 @@
 
     <!-- 信息表单 -->
     <div v-show="showForm">
-      <van-divider :style="{color: '#1989fa', borderColor: '#1989fa'}"> {{ title }}</van-divider>
+      <van-divider :style="{color: '#1989fa', borderColor: '#1989fa'}"> {{ subTitle }}</van-divider>
       <member-form @submit-form-data="receiveFormData"/>
     </div>
   </div>
@@ -56,44 +56,41 @@ export default {
   components: {MemberForm},
   data() {
     return {
-      title: '',
+      // [0]家谱树 [1]成员管理
+      type: '0',
       showForm: false,
       url: 'https://img01.yzcdn.cn/vant/cat.jpeg',
-      // [1]父亲 [2]母亲 [3]配偶 [4]子女 [5]同胞
-      addType: '1'
+      subTitle: '',
     }
   },
+  mounted() {
+    this.type = this.$route.params.type
+  },
   methods: {
-    backFamilyTree() {
-      this.$router.replace('/family/tree')
-    },
-    handleViewPeople() {
-      this.$toast.success('查看人员信息')
-    },
     addRelatives(type) {
-      this.addType = type
+      // [1]父亲 [2]母亲 [3]配偶 [4]子女 [5]同胞
       switch (type) {
         case 1:
-          this.title = '添加父亲';
+          this.subTitle = '添加父亲';
           break;
         case 2:
-          this.title = '添加母亲';
+          this.subTitle = '添加母亲';
           break;
         case 3:
-          this.title = '添加配偶';
+          this.subTitle = '添加配偶';
           break;
         case 4:
-          this.title = '添加子女';
+          this.subTitle = '添加子女';
           break;
         case 5:
-          this.title = '添加同胞';
+          this.subTitle = '添加同胞';
           break;
         default:
-          this.title = '添加亲人'
+          this.subTitle = '添加亲人'
       }
       this.showForm = true
     },
-    viewImage() {
+    previewImage() {
       let images = []
       images.push(this.url)
       ImagePreview({images})
@@ -101,6 +98,13 @@ export default {
     receiveFormData(formData) {
       console.log(formData)
       this.$toast.success('添加成功')
+    },
+    back() {
+      if (this.type === '0') {
+        this.$router.replace('/family/tree')
+      } else if (this.type === '1') {
+        this.$router.replace('/family/manage/members')
+      }
     }
   }
 }

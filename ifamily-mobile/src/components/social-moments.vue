@@ -1,49 +1,55 @@
 <template>
   <div>
-    <van-cell-group v-for="moment in dataList" :key="moment.id">
-      <!-- 头像、姓名、时间、更多 -->
-      <portrait-desc :person="moment" @click.native="viewUserPersonal" :more="true" @more-operation="moreOperation"/>
+    <div v-for="moment in dataList" :key="moment.id">
+      <van-cell-group>
+        <!-- 头像、姓名、时间、更多 -->
+        <portrait-desc :person="moment" :more="true"
+                       @click.native="$toast.success('查看用户信息')"
+                       @more-operation="$toast.fail('管理成员动态')"
+        />
 
-      <!-- 文本内容、图片列表、操作图标 -->
-      <van-cell class="cell-top">
-        <template #default>
-          <p class="text-content">{{ moment.desc }}</p>
+        <!-- 文本内容、图片列表、操作图标 -->
+        <van-cell class="cell-top">
+          <template #default>
+            <p class="text-content">{{ moment.description }}</p>
 
-          <image-list :data-list="moment.photoList"/>
+            <image-list :data-list="moment.imgList"/>
 
-          <div class="behavior-icon">
-            <van-icon name="good-job" size="20" v-if="goodJob" @click="cancelThumbsUp"/>
-            <van-icon name="good-job-o" size="20" v-else @click="thumbsUp"/>
-            <van-icon name="chat-o" size="20" @click="giveComment = true"/>
-            <van-icon name="share-o" size="20" @click="showShare = true"/>
-          </div>
-        </template>
-      </van-cell>
+            <div class="behavior-icon">
+              <van-icon name="good-job" size="20" v-if="goodJob" @click="cancelThumbsUp"/>
+              <van-icon name="good-job-o" size="20" v-else @click="thumbsUp"/>
+              <van-icon name="chat-o" size="20" @click="giveComment = true"/>
+              <van-icon name="share-o" size="20" @click="showShare = true"/>
+            </div>
+          </template>
+        </van-cell>
 
-      <!-- 点赞列表、评论列表、评论框 -->
-      <van-cell>
-        <template #default>
-          <p class="like-list">
-            <van-icon name="good-job" size="16" v-if="goodJob"/>
-            <van-icon name="good-job-o" size="16" v-else/>&nbsp;
-            <span v-for="people in moment.likeList" :key="people.id">{{ people.name }}，</span>
-          </p>
-
-          <div class="comments-list">
-            <p v-for="comment in moment.commentsList" :key="comment.id">
-              {{ comment.source }} 回复 {{ comment.target }}：{{ comment.content }}
+        <!-- 点赞列表、评论列表、评论框 -->
+        <van-cell>
+          <template #default>
+            <p class="like-list">
+              <van-icon name="good-job" size="16" v-if="goodJob"/>
+              <van-icon name="good-job-o" size="16" v-else/>&nbsp;
+              <span v-for="people in moment.likeList" :key="people.id">{{ people.name }}，</span>
             </p>
-          </div>
 
-          <van-field class="comments-box" placeholder="说点什么吧..." left-icon="smile-comment-o"
-                     v-model="comment" @click-right-icon="$emit('post-comment', moment, comment)" v-show="giveComment">
-            <template #right-icon>
-              <van-icon name="guide-o" size="16"/>
-            </template>
-          </van-field>
-        </template>
-      </van-cell>
-    </van-cell-group>
+            <div class="comment-list">
+              <p v-for="comment in moment.commentList" :key="comment.id">
+                {{ comment.source }} 回复 {{ comment.target }}：{{ comment.content }}
+              </p>
+            </div>
+
+            <van-field class="comment-box" placeholder="说点什么吧..." left-icon="smile-comment-o"
+                       v-model="comment" @click-right-icon="$emit('post-comment', moment, comment)"
+                       v-show="giveComment">
+              <template #right-icon>
+                <van-icon name="guide-o" size="16"/>
+              </template>
+            </van-field>
+          </template>
+        </van-cell>
+      </van-cell-group>
+    </div>
 
     <!-- 动态分享面板 -->
     <van-share-sheet title="立即分享给好友" v-model="showShare" :options="options" @select="onSelect"/>
@@ -83,12 +89,6 @@ export default {
     }
   },
   methods: {
-    viewUserPersonal() {
-      this.$toast.success('查看用户信息')
-    },
-    moreOperation() {
-      this.$toast.fail('更多操作')
-    },
     thumbsUp() {
       this.$toast.success('点赞')
       this.goodJob = true
@@ -123,11 +123,11 @@ export default {
   margin: 0;
 }
 
-.comments-list p {
+.comment-list p {
   margin: 0;
 }
 
-.comments-box {
+.comment-box {
   padding: 5px 5px;
   background-color: #f7f8fa;
 }

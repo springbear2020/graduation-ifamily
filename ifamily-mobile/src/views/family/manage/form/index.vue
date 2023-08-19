@@ -1,6 +1,8 @@
 <template>
   <div>
-    <van-nav-bar :title="title" left-arrow @click-left="backFamilyList" @click-right="handleCreateFamily">
+    <van-nav-bar :title="type === '0' ? '创建家族' : '编辑家族'" left-arrow
+                 @click-left="back" @click-right="handleCreateOrEdit"
+    >
       <template #right>
         <van-icon name="passed" size="20"/>
       </template>
@@ -17,14 +19,14 @@
       <van-field required label="家族姓氏" placeholder="家族姓氏" clearable v-model="formData.surname"/>
       <!-- 地址、祖籍 -->
       <van-field label="家族地址" readonly clickable name="area" placeholder="点击选择省市区" required
-                 v-model="formData.familyAddress" @click="showAreaPopup = true; areaType = '1'"/>
+                 v-model="formData.familyAddress" @click="showAreaPopup = true; areaType = '0'"/>
       <van-field label="家族祖籍" readonly clickable name="area" placeholder="点击选择省市区"
-                 v-model="formData.familyAncestry" @click="showAreaPopup = true; areaType = '2'"/>
+                 v-model="formData.familyAncestry" @click="showAreaPopup = true; areaType = '1'"/>
       <!-- 简介、字辈歌 -->
-      <van-field v-model="formData.introduction" rows="2" label="家族简介" type="textarea" maxlength="100"
+      <van-field v-model="formData.introduction" rows="2" autosize label="家族简介" type="textarea" maxlength="100"
                  placeholder="家族简介" show-word-limit clearable/>
-      <van-field v-model="formData.generationSong" rows="2" label="字辈歌" type="textarea" maxlength="100"
-                 placeholder="字辈谱" show-word-limit clearable/>
+      <van-field v-model="formData.generationSong" rows="2" autosize label="字辈歌" type="textarea" maxlength="100"
+                 placeholder="字辈歌" show-word-limit clearable/>
     </van-form>
 
     <!-- 地址选择弹出层 -->
@@ -48,12 +50,13 @@ export default {
   name: "index",
   data() {
     return {
-      title: '创建家族',
+      // [0]创建家族 [1]编辑家族
+      type: '0',
       showAreaPopup: false,
       areaList: [],
       fullAddress: '',
-      // [1]家族地址 [2]家族祖籍
-      areaType: '1',
+      // [0]家族地址 [1]家族祖籍
+      areaType: '0',
       imgList: [{url: 'https://res.dps.cn/template/thn/202109/8107a70605b27e46979a6958c442e640.jpg'}],
       formData: {
         cover: '',
@@ -68,27 +71,30 @@ export default {
   },
   mounted() {
     this.areaList = areaList
-    // [1]编辑家族 [2]创建家族
-    this.title = this.$route.params.type === '1' ? '编辑家族' : '创建家族'
+    this.type = this.$route.params.type
   },
   methods: {
-    backFamilyList() {
-      this.$router.replace('/family/list')
-    },
     confirmArea(area) {
       area = area.filter((item) => !!item).map((item) => item.name).join('/')
       area = this.fullAddress.trim() ? area + "/" + this.fullAddress : area;
-      if (this.areaType === '1') {
+      if (this.areaType === '0') {
         this.formData.familyAddress = area
-      } else {
+      } else if(this.areaType === '1') {
         this.formData.familyAncestry = area
       }
       this.showAreaPopup = false;
     },
-    handleCreateFamily() {
+    handleCreateOrEdit() {
       console.log(this.formData)
       this.formData.cover = this.imgList[0].url
-      this.$toast.success('创建家族成功')
+      this.$toast.success('操作成功')
+    },
+    back() {
+      if (this.type === '0') {
+        this.$router.replace('/family/list')
+      } else if (this.type === '1') {
+        this.$router.replace('/family/manage')
+      }
     }
   }
 }

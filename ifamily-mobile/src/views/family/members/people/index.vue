@@ -1,6 +1,9 @@
 <template>
   <div>
-    <van-nav-bar title="人员信息" left-arrow @click-left="backMembers" @click-right="handleLocatePeople">
+    <van-nav-bar title="人员信息" left-arrow
+                 @click-left="back"
+                 @click-right="$toast.fail('家族树定位')"
+    >
       <template #right>
         <van-icon name="aim" size="20"/>
       </template>
@@ -10,7 +13,7 @@
     <van-grid :border="false" :column-num="1">
       <van-grid-item>
         <template #icon>
-          <van-image round height="100" width="100" :src="url" @click="viewImage"/>
+          <van-image round height="100" width="100" :src="url" @click="previewImage"/>
         </template>
         <template #text>
           <p class="name">冯勇贤
@@ -40,14 +43,14 @@
       </van-grid-item>
     </van-grid>
 
-    <!-- 手机、现居地 -->
+    <!-- 手机、常住地 -->
     <van-cell-group>
-      <van-cell :border="false" center title="手机" label="13898564256" is-link @click="handleStarPeople">
+      <van-cell :border="false" center title="手机" label="13898564256" is-link @click="$toast.success('添加联系人')">
         <template #right-icon>
           <van-icon name="like-o" size="20"/>
         </template>
       </van-cell>
-      <van-cell :border="false" title="现居地" label="湖北省/武汉市/洪山区/洪山街道武汉理工大学南湖校区智园"/>
+      <van-cell :border="false" title="常住地" label="湖北省/武汉市/洪山区/洪山街道武汉理工大学南湖校区智园"/>
     </van-cell-group>
     <!-- 生于、出生地 -->
     <van-cell-group>
@@ -61,21 +64,22 @@
     </van-cell-group>
 
     <!-- 家庭关系 -->
-    <van-cell title="家庭关系">
+    <van-cell title="家庭关系" :border="false" class="family-relationships">
       <template #label>
         <p>父亲：
-          <people-tag :name="'冯世元'" @click.native="handleViewPeople"/>
+          <people-tag :name="'冯世元'" @click.native="$toast.success('查看人员信息')"/>
         </p>
         <p>母亲：</p>
         <p>配偶：</p>
         <p>子女：
-          <people-tag :name="'冯学慧'" :sex="3" @click.native="handleViewPeople"/>
-          <people-tag :name="'刘纯洲'" :sex="1" @click.native="handleViewPeople"/>
-          <people-tag :name="'冯学良'" @click.native="handleViewPeople"/>
+          <people-tag :name="'冯学慧'" :sex="3" @click.native="$toast.success('查看人员信息')"/>
+          <people-tag :name="'刘纯洲'" :sex="1" @click.native="$toast.success('查看人员信息')"/>
+          <people-tag :name="'冯学良'" @click.native="$toast.success('查看人员信息')"/>
         </p>
         <p>同胞：</p>
       </template>
     </van-cell>
+    <van-cell title="备注" label="备注与其父母亲的特殊关系，如养子、养女、继子、继女等" class="family-member-remarks"/>
 
     <!-- 个人动态 -->
     <van-cell title="个人动态">
@@ -93,27 +97,29 @@ export default {
   name: "index",
   data() {
     return {
+      // [0]成员列表 [1]家族树 [2]家族人员管理
+      type: '0',
       url: 'https://img01.yzcdn.cn/vant/cat.jpeg',
     }
   },
+  mounted() {
+    this.type = this.$route.params.type
+  },
   methods: {
-    backMembers() {
-      this.$router.replace('/family/members')
-    },
-    handleLocatePeople() {
-      this.$toast.fail('家族树定位')
-    },
-    handleStarPeople() {
-      this.$toast.success('收藏联系人')
-    },
-    handleViewPeople() {
-      this.$toast.success('查看人员信息')
-    },
-    viewImage() {
+    previewImage() {
       let images = []
       images.push(this.url)
       ImagePreview({images})
     },
+    back() {
+      if (this.type === '0') {
+        this.$router.replace('/family/members')
+      } else if (this.type === '1') {
+        this.$router.replace('/family/tree')
+      } else if (this.type === '3') {
+        this.$router.replace('/family/manage/members')
+      }
+    }
   }
 }
 </script>
@@ -134,5 +140,13 @@ export default {
   color: #969799;
   font-size: 12px;
   line-height: 18px;
+}
+
+.family-relationships {
+  padding-bottom: 0;
+}
+
+.family-member-remarks {
+  padding-top: 0;
 }
 </style>

@@ -22,7 +22,7 @@ export default {
             lineDash: [0, 200],
             lineDashOffset: 0,
             fill: 'transparent',
-            stroke: '#1989FA',
+            stroke: '#6f42c1',
             lineWidth: 1
           },
           keyframeAnimation: {

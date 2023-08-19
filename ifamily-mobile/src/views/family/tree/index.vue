@@ -1,10 +1,10 @@
 <template>
   <div>
-    <van-nav-bar title="家族树谱" left-arrow @click-left="backFamily" @click-right="showPopover = true">
+    <van-nav-bar title="家族树谱" left-arrow @click-left="$router.replace('/family')" @click-right="showPopover = true">
       <template #right>
-        <!-- 右上角操作弹出层 -->
+        <!-- 家族树右上角操作气泡弹出框 -->
         <van-popover placement="bottom-end" trigger="click"
-                     v-model="showPopover" :actions="popoverActions" @select="onSelect">
+                     v-model="showPopover" :actions="actions" @select="onSelect">
           <template #reference>
             <van-icon name="apps-o" size="20"/>
           </template>
@@ -13,23 +13,23 @@
     </van-nav-bar>
 
     <!-- 家族系谱图 -->
-    <FamilyTree :tree="tree" @click-node="handleViewPeople"/>
+    <FamilyTree :tree="tree" @click-node="clickPeopleCard"/>
 
     <!-- 家族成员搜索动作面板 -->
-    <van-action-sheet v-model="memberSearchSheet" title="搜索成员">
-      <van-search v-model="memberName" show-action placeholder="家族成员姓名" @search="onSearch">
+    <van-action-sheet v-model="showSearchSheet" title="搜索成员">
+      <van-search v-model="memberName" show-action placeholder="家族成员姓名" @search="$toast.success('搜索成员')">
         <template #action>
-          <div @click="onSearch">搜索</div>
+          <div @click="$toast.success('搜索成员')">搜索</div>
         </template>
       </van-search>
       <van-empty description="无内容"/>
     </van-action-sheet>
-    <!-- 点击树节点人员操作面板 -->
-    <van-action-sheet v-model="peopleClickSheet" cancel-text="取消" description="光头勇">
+    <!-- 查看人员信息操作面板 -->
+    <van-action-sheet v-model="showPeopleSheet" cancel-text="取消" description="光头勇">
       <van-grid :column-num="3" :gutter="8" square :border="false">
         <van-grid-item icon="cluster-o" text="ta 的关系"/>
-        <van-grid-item icon="manager-o" text="ta 的主页" @click="handlePeopleHomePage"/>
-        <van-grid-item icon="add-o" text="添加亲人" @click="addRelatives"/>
+        <van-grid-item icon="manager-o" text="ta 的主页" @click="$router.push('/family/members/people/1')"/>
+        <van-grid-item icon="add-o" text="添加亲人" @click="$router.push('/family/manage/members/add/0')"/>
       </van-grid>
     </van-action-sheet>
   </div>
@@ -48,18 +48,19 @@ export default {
       // [true]折叠全部节点 [false]展开全部节点
       isAllFold: true,
       showPopover: false,
-      popoverActions: [
+      actions: [
         {text: '展开全部', icon: 'expand-o'},
         {text: '折叠全部', icon: 'shrink'},
         {text: '定位到我', icon: 'aim'},
         {text: '搜索成员', icon: 'search'},
       ],
-      memberSearchSheet: false,
+      showSearchSheet: false,
       memberName: '',
-      peopleClickSheet: false
+      showPeopleSheet: false
     }
   },
   watch: {
+    // TODO 展开一个后不可全部折叠
     isAllFold: {
       immediate: true,
       handler(newVal) {
@@ -77,12 +78,9 @@ export default {
     }
   },
   methods: {
-    handleViewPeople(node) {
+    clickPeopleCard(node) {
       console.log(node)
-      this.peopleClickSheet = true
-    },
-    backFamily() {
-      this.$router.replace('/family')
+      this.showPeopleSheet = true
     },
     onSelect(action, index) {
       switch (index) {
@@ -96,19 +94,10 @@ export default {
           this.$toast.success('定位到我')
           break;
         case 3:
-          this.memberSearchSheet = true
+          this.showSearchSheet = true
           break;
         default:
       }
-    },
-    handlePeopleHomePage() {
-      this.$router.push('/family/members/people')
-    },
-    onSearch() {
-      this.$toast.success('搜索成员')
-    },
-    addRelatives() {
-      this.$router.push('/family/manage/members/add')
     }
   }
 }

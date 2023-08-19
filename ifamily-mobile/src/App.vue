@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <router-view/>
-    <footerTab v-show="$route.meta.footerShow"></footerTab>
+    <footerTab v-show="$route.meta.footerShow"/>
   </div>
 </template>
 

@@ -1,15 +1,16 @@
 <template>
   <div>
-    <van-nav-bar left-arrow title="家族相册" @click-left="backFamily" @click-right="showActionSheet = true">
+    <van-nav-bar left-arrow title="家族相册"
+                 @click-left="$router.replace('/family')" @click-right="showUploadActionSheet = true">
       <template #right>
         <van-icon name="upgrade" size="20"/>
       </template>
     </van-nav-bar>
 
     <van-pull-refresh v-model="isRefreshing" success-text="刷新成功" @refresh="onRefresh">
-      <van-cell-group v-for="i in 10" :key="i">
-        <!-- 头像、标题、时间、更多 -->
-        <portrait-desc :person="person"/>
+      <van-cell-group v-for="i in 2">
+        <!-- 头像、姓名、时间、更多 -->
+        <portrait-desc :person="person" @click.native="$toast.success('查看人员信息')"/>
         <!-- 图片列表 -->
         <van-cell :border="false">
           <image-list :data-list="imgList"/>
@@ -18,9 +19,9 @@
     </van-pull-refresh>
 
     <!-- 家族图片上传动作面板 -->
-    <van-action-sheet v-model="showActionSheet" title="上传照片">
+    <van-action-sheet v-model="showUploadActionSheet" title="上传照片">
       <van-uploader multiple :after-read="afterRead" v-model="fileList"/>
-      <van-button type="primary" block @click="handleUpload">确定</van-button>
+      <van-button type="primary" block @click="$toast.fail('管理员审核')">确定</van-button>
     </van-action-sheet>
   </div>
 </template>
@@ -30,7 +31,6 @@ export default {
   name: "index",
   data() {
     return {
-      active: 0,
       isRefreshing: false,
       imgList: [
         {id: 1, url: 'https://img01.yzcdn.cn/vant/sand.jpg'},
@@ -46,14 +46,11 @@ export default {
         name: '光头勇',
         content: '2023-02-25 12:05:53'
       },
-      showActionSheet: false,
-      fileList: []
+      showUploadActionSheet: false,
+      fileList: [],
     }
   },
   methods: {
-    backFamily() {
-      this.$router.replace('/family')
-    },
     onRefresh() {
       setTimeout(() => {
         this.isRefreshing = false;
@@ -61,9 +58,6 @@ export default {
     },
     afterRead(file) {
       console.log(file)
-    },
-    handleUpload() {
-      this.$toast.success('上传成功')
     }
   }
 }

@@ -4,8 +4,8 @@
     "portrait": "https://img01.yzcdn.cn/vant/cat.jpeg",
     "name": "光头勇",
     "content": "2023-02-23 17:23",
-    "desc": "所以认真才显得格格不入，好像你只想跟我风花雪月过眼云烟，我却想跟你朝朝暮暮岁岁年年。",
-    "photoList": [
+    "description": "所以认真才显得格格不入，好像你只想跟我风花雪月过眼云烟，我却想跟你朝朝暮暮岁岁年年。",
+    "imgList": [
       {
         "id": 1,
         "url": "https://img01.yzcdn.cn/vant/cat.jpeg"
@@ -57,7 +57,7 @@
         "name": "光头勇"
       }
     ],
-    "commentsList": [
+    "commentList": [
       {
         "id": 1,
         "source": "强哥",
@@ -89,8 +89,8 @@
     "portrait": "https://img01.yzcdn.cn/vant/cat.jpeg",
     "name": "光头勇",
     "content": "2023-02-23 17:23",
-    "desc": "所以认真才显得格格不入，好像你只想跟我风花雪月过眼云烟，我却想跟你朝朝暮暮岁岁年年。",
-    "photoList": [
+    "description": "所以认真才显得格格不入，好像你只想跟我风花雪月过眼云烟，我却想跟你朝朝暮暮岁岁年年。",
+    "imgList": [
       {
         "id": 1,
         "url": "https://img01.yzcdn.cn/vant/cat.jpeg"
@@ -142,7 +142,7 @@
         "name": "光头勇"
       }
     ],
-    "commentsList": [
+    "commentList": [
       {
         "id": 1,
         "source": "强哥",

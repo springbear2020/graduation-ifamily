@@ -1,6 +1,6 @@
 <template>
   <div>
-    <van-nav-bar title="编辑成员" left-arrow @click-left="backMemberManagement"/>
+    <van-nav-bar title="编辑成员" left-arrow @click-left="$router.replace('/family/manage/members')"/>
     <member-form @submit-form-data="receiveFormData"/>
   </div>
 </template>
@@ -12,9 +12,6 @@ export default {
   name: "index",
   components: {MemberForm},
   methods: {
-    backMemberManagement() {
-      this.$router.replace('/family/manage/members')
-    },
     receiveFormData(formData) {
       console.log(formData)
       this.$toast.success('编辑成功')

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <van-nav-bar title="主页" @click-right="messageCenter">
+    <van-nav-bar title="主页" @click-right="$router.push('/home/message')">
       <template #right>
         <van-badge content="99+">
           <van-icon name="bell" color="#1989fa" class="iconfont" class-prefix="icon" size="20"/>
@@ -10,45 +10,27 @@
 
     <!-- 轮播图 -->
     <van-swipe :autoplay="3000" indicator-color="white">
-      <van-swipe-item>1</van-swipe-item>
-      <van-swipe-item>2</van-swipe-item>
-      <van-swipe-item>3</van-swipe-item>
-      <van-swipe-item>4</van-swipe-item>
-      <van-swipe-item>5</van-swipe-item>
+      <van-swipe-item v-for="i in 10" :key="i">{{ i }}</van-swipe-item>
     </van-swipe>
 
-    <!-- tab 卡片 -->
-    <van-tabs v-model="active">
-      <van-tab title="广场">
-        <van-pull-refresh v-model="isRefreshing" success-text="刷新成功" @refresh="onRefresh">
-          <van-list isFinished-text="没有更多了" v-model="isLoading" :isFinished="isFinished" @load="onLoad"
-                    :error.sync="error" error-text="请求失败，点击重新加载">
-            <social-moments :data-list="dataList" v-on:post-comment="handlePostComment"/>
-          </van-list>
-        </van-pull-refresh>
-      </van-tab>
-
-      <van-tab title="家族">
-        <van-pull-refresh v-model="isRefreshing" success-text="刷新成功" @refresh="onRefresh">
-          <van-list isFinished-text="没有更多了" v-model="isLoading" :isFinished="isFinished" @load="onLoad"
-                    :error.sync="error" error-text="请求失败，点击重新加载">
-            <social-moments :data-list="dataList" v-on:post-comment="handlePostComment"/>
-          </van-list>
-        </van-pull-refresh>
-      </van-tab>
-    </van-tabs>
+    <!-- 家族动态 -->
+    <van-pull-refresh success-text="刷新成功" v-model="isRefreshing" @refresh="onRefresh">
+      <van-list isFinished-text="没有更多了" error-text="请求失败，点击重新加载"
+                v-model="isLoading" :isFinished="isFinished" @load="onLoad" :error.sync="error">
+        <social-moments :data-list="momentList" @post-comment="handlePostComment"/>
+      </van-list>
+    </van-pull-refresh>
   </div>
 </template>
 
 <script>
-import momentsList from '@/assets/json/moments.json'
+import moments from '@/assets/json/moments.json'
 
 export default {
   name: "index",
   data() {
     return {
-      active: 0,
-      dataList: [],
+      momentList: [],
       isRefreshing: false,
       isLoading: false,
       isFinished: false,
@@ -56,12 +38,9 @@ export default {
     }
   },
   mounted() {
-    this.dataList = momentsList && momentsList.length > 0 ? momentsList : []
+    this.momentList = moments
   },
   methods: {
-    messageCenter() {
-      this.$router.push('/home/message')
-    },
     onRefresh() {
       setTimeout(() => {
         this.isRefreshing = false;
