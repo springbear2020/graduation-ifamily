@@ -2,10 +2,12 @@
   <div class="chart">
     <table v-if="tree.name" class="single">
       <tr>
-        <td :colspan="Array.isArray(tree.children) ? tree.children.length * 2 : 1" :class="{'extend': Array.isArray(tree.children) && tree.children.length && tree.extend}">
+        <td :colspan="Array.isArray(tree.children) ? tree.children.length * 2 : 1"
+            :class="{'extend': Array.isArray(tree.children) && tree.children.length && tree.extend}">
           <div :class="{'couple': true, 'mate': tree.mate}">
             <!-- 当前节点 -->
-            <div class="person" :class="Array.isArray(tree.class) ? tree.class : []" @click="$emit('click-node', tree)">
+            <div class="person" @click="$emit('click-node', tree)"
+                 :class="[Array.isArray(tree.class) ? tree.class : [], `pid-${tree.id}`]">
               <div class="avatar">
                 <img :src="tree.portrait" alt="img"/>
               </div>
@@ -14,7 +16,9 @@
 
             <!-- 伴侣节点 -->
             <template v-if="Array.isArray(tree.mate) && tree.mate.length">
-              <div class="person" v-for="(mate, mateIndex) in tree.mate" :key="tree.name+mateIndex" :class="Array.isArray(mate.class) ? mate.class : []" @click="$emit('click-node', mate)">
+              <div class="person" v-for="(mate, mateIndex) in tree.mate" :key="tree.name+mateIndex"
+                   :class="[Array.isArray(mate.class) ? mate.class : [],`pid-${mate.id}`]"
+                   @click="$emit('click-node', mate)">
                 <div class="avatar">
                   <img :src="mate.portrait" alt="img"/>
                 </div>
@@ -24,7 +28,9 @@
           </div>
 
           <!-- 展开/折叠箭头 -->
-          <div class="arrow" v-if="Array.isArray(tree.children) && tree.children.length" @click="clickArrow(tree, $event)"></div>
+          <div class="arrow" v-if="Array.isArray(tree.children) && tree.children.length"
+               @click="tree.extend = !tree.extend; $emit('center-node', $event.target.previousSibling)">
+          </div>
         </td>
       </tr>
 
@@ -32,7 +38,8 @@
       <tr v-if="Array.isArray(tree.children) && tree.children.length && tree.extend">
         <td v-for="(children, index) in tree.children" :key="index" colspan="2" class="child">
           <family-tree-branch :tree="children" :single="tree.children.length === 1"
-                              @click-node="$emit('click-node', $event)" @click-arrow="$emit('click-arrow', $event)"
+                              @click-node="$emit('click-node', $event)"
+                              @center-node="$emit('center-node', $event)"
           />
         </td>
       </tr>
@@ -43,13 +50,7 @@
 <script>
 export default {
   name: "family-tree-branch",
-  props: ['tree', 'single'],
-  methods: {
-    clickArrow(tree, $event) {
-      tree.extend = !tree.extend
-      this.$emit('click-arrow', $event)
-    }
-  }
+  props: ['tree', 'single']
 }
 </script>
 
@@ -83,7 +84,6 @@ td {
   padding: 10px;
   transform: translate3d(-15px, 0, 0);
   cursor: pointer;
-  background-color: blue;
 }
 
 .arrow:before {
@@ -172,7 +172,6 @@ td {
   box-sizing: border-box;
   text-align: center;
   white-space: nowrap;
-  background-color: green;
 }
 
 .couple .person {
@@ -182,7 +181,7 @@ td {
   width: 6em;
   overflow: hidden;
   white-space: normal;
-  background-color: purple;
+  transition: all 1s;
 }
 
 .couple .person .avatar {

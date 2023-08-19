@@ -1,6 +1,6 @@
 <template>
   <div>
-    <van-nav-bar left-arrow :title="title" @click-left="$router.replace('/user/login')"/>
+    <van-nav-bar left-arrow :title="title" @click-left="back"/>
 
     <!-- echarts 绘制 LOGO 图标文字：百家谱 -->
     <logo-pattern/>
@@ -44,19 +44,32 @@ export default {
       password: '',
       rePassword: '',
       agree: false,
-      title: ''
+      // [0]用户注册 [1]忘记密码 [2]修改密码
+      type: '0'
     };
   },
   mounted() {
-    // [0]用户注册 [1]忘记密码 [2]修改密码
-    const type = this.$route.params.type
-    this.title = type === '0' ? '用户注册' : (type === '1' ? '忘记密码' : '修改密码')
+    this.type = this.$route.params.type
+  },
+  computed: {
+    title() {
+      return this.type === '0' ? '用户注册' : (this.type === '1' ? '忘记密码' : '修改密码')
+    }
   },
   methods: {
     // 用户注册或重置密码
     handleRegisterOrReset(data) {
       console.log(data)
       this.$router.replace('/user/login')
+    },
+    back() {
+      // 修改密码，返回个人账号安全界面
+      if (this.type === '2') {
+        this.$router.replace('/mine/settings/security')
+      } else {
+        // 返回密码登录页面
+        this.$router.replace('/user/login')
+      }
     }
   }
 }

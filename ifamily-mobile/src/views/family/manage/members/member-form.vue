@@ -70,8 +70,8 @@
       </van-cell-group>
 
       <div class="flex-container">
-        <van-button block @click="showForm = false">取消</van-button>
-        <van-button block type="primary" @click="handleAddRelatives">保存</van-button>
+        <van-button block @click="$emit('hidden-form')">取消</van-button>
+        <van-button block type="info" @click="$emit('submit-form-data', formData)">保存</van-button>
       </div>
     </van-form>
 
@@ -112,7 +112,7 @@ export default {
   name: "member-form",
   data() {
     return {
-      // TODO [Vant bug]当 minDate 的 year 小于 100 时 [minYear, maxYear] 间的年份不能正常渲染
+      // FIXME [Vant BUG]while minDate.year < 100, error years between minDate and curDate
       // [0]出生日期 [1]逝世日期
       dateType: '1',
       minDate: new Date(100, 0, 1),
@@ -147,10 +147,6 @@ export default {
     this.areaList = areaList
   },
   methods: {
-    handleAddRelatives() {
-      this.$emit('submit-form-data', this.formData)
-      this.showForm = false
-    },
     confirmDate() {
       const dateStr = dayjs(this.selectedDate).format('YYYY-MM-DD')
       if (this.dateType === '0') {

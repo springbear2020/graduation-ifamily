@@ -1,11 +1,11 @@
 <template>
-  <!-- wrapper高度 = viewport的高度 - 顶部导航栏高度46px - 底部1px占位高度 -->
-  <div ref="wrapper" class="wrapper" :style="{height: `${viewport.h - 47}px`}"
+  <!-- wrapper高度 = viewport的高度 - 顶部导航栏高度46px -->
+  <div ref="wrapper" class="wrapper" :style="{height: `${viewport.h - 46}px`}"
        @mousedown="dragstart" @mousemove="drag" @mouseup="dragend" @mouseleave="dragend"
        @touchstart="dragstart" @touchmove="drag" @touchend="dragend" @touchcancel="dragend" @touchleave="dragend"
   >
-    <div ref="container" class="container" :style="{top: `${position.y}px`, left: `${position.x}px`}">
-      <family-tree-branch :tree="tree" @click-node="$emit('click-node', $event)" @click-arrow="clickArrow"/>
+    <div ref="container" class="container" style="top: 0; left: 0">
+      <family-tree-branch :tree="tree" @click-node="$emit('click-node', $event)" @center-node="centerNode"/>
     </div>
   </div>
 </template>
@@ -21,16 +21,14 @@ export default {
     return {
       mouseChangeDiff: 2,
       preventMouseEvents: false,
-      dragAndDrop: {
+      // wrapper 拖拽点
+      point: {
         dragStarted: false,
-        dragStartX: 0,
-        dragStartY: 0,
-        diffX: 0,
-        diffY: 0,
+        x: 0,
+        y: 0,
         mouseCursor: "default",
       },
-      position: {x: 0, y: 0},
-      // 页面视口的宽度和高度
+      // 视口宽度和高度
       viewport: {w: 0, h: 0},
     };
   },
@@ -42,60 +40,61 @@ export default {
       this.viewport.w = document.documentElement.clientWidth
       this.viewport.h = document.documentElement.clientHeight
     }
-  },
-  computed: {
-    // wrapper 中心点坐标
-    wrapperMiddle() {
-      let wm = {x: 0, y: 0};
-      wm.x = this.viewport.w / 2
-      // (this.viewport.y - 47) / 2 为 wrapper 高度的一半，再减去顶部46px导航栏以减轻视觉误差（视觉上误以为未居中）
-      wm.y = (this.viewport.h - 47) / 2 - 46
-      return wm
-    }
-  },
-  watch: {
-    wrapperMiddle: {
-      immediate: true,
-      deep: true,
-      handler(mid) {
-        // 设置 container 的坐标使得树的根节点居中展示
-        this.position.x = mid.x - 64
-        this.position.y = mid.y - 48
-      }
-    }
+    // 树的根节点居中展示
+    const rootElement = document.getElementsByClassName('root-node')[0]
+    this.centerNode(rootElement)
   },
   methods: {
-    clickArrow($event) {
-      const eventX = $event.clientX
-      const eventY = $event.clientY
-      console.log('event-x: ', eventX, 'event-y: ', eventY)
+    centerNode(element) {
+      this.$nextTick(() => {
+        /*
+         * 计算页面中心点的坐标为 (centerX, centerY)
+         *  - 理论上 centerX = document.body.clientWidth，为使得 element 容器居中展示，需再使 centerX -= width / 2
+         *  - 理论上 centerY = document.body.clientHeight / 2，但因页面顶部导航栏占据高度 46px，为减小视觉上的中心点误差，故再使 centerY -= 46
+         */
+        const {top, left, width} = element.getBoundingClientRect();
+        const centerY = document.body.clientHeight / 2 - 46
+        const centerX = document.body.clientWidth / 2 - width / 2;
+        // 计算 element 容器左上角距页面中心点 (centerX, centerY) 的距离以得出 element 父容器 container 的移动距离
+        const moveY = centerY - top;
+        const moveX = centerX - left;
+        //  根据 container 容器的原始坐标和需要移动的距离计算得到其新位置从而使得 element 居中
+        const containerElement = document.getElementsByClassName('container')[0];
+        const {top: originY, left: originX} = containerElement.style;
+        containerElement.style.top = parseInt(originY) + moveY + 'px';
+        containerElement.style.left = parseInt(originX) + moveX + 'px';
+      })
     },
     dragstart(event) {
       // 设置拖拽点的起始坐标
-      this.dragAndDrop.dragStartX = event.pageX || event.touches[0].pageX;
-      this.dragAndDrop.dragStartY = event.pageY || event.touches[0].pageY;
-      this.dragAndDrop.dragStarted = true;
+      this.point.x = event.pageX || event.touches[0].pageX;
+      this.point.y = event.pageY || event.touches[0].pageY;
+      this.point.dragStarted = true;
+      this.$emit("dragstart", event);
     },
     drag(event) {
-      if (this.dragAndDrop.dragStarted) {
-        // 计算拖拽发生的位移为 diffX 和 diffY
-        this.dragAndDrop.diffX = (event.pageX || event.touches[0].pageX) - this.dragAndDrop.dragStartX;
-        this.dragAndDrop.diffY = (event.pageY || event.touches[0].pageY) - this.dragAndDrop.dragStartY;
-        if (this.dragAndDrop.diffX > this.mouseChangeDiff || this.dragAndDrop.diffX < -this.mouseChangeDiff || this.dragAndDrop.diffY > this.mouseChangeDiff || this.dragAndDrop.diffX < -this.mouseChangeDiff) {
+      if (this.point.dragStarted) {
+        // 计算得到拖拽时发生的位移
+        const moveX = (event.pageX || event.touches[0].pageX) - this.point.x;
+        const moveY = (event.pageY || event.touches[0].pageY) - this.point.y;
+        const {mouseChangeDiff} = this
+        if (moveX > mouseChangeDiff || moveX < -mouseChangeDiff || moveY > mouseChangeDiff || moveX < -mouseChangeDiff) {
           this.preventMouseEvents = true;
-          this.dragAndDrop.mouseCursor = "grabbing";
+          this.point.mouseCursor = "grabbing";
         }
-        // 设置 container 的位置
-        this.position.x += this.dragAndDrop.diffX;
-        this.position.y += this.dragAndDrop.diffY;
+        //  设置 container 的位置实现拖拽移动效果
+        const containerElement = document.getElementsByClassName('container')[0];
+        const {top: originY, left: originX} = containerElement.style;
+        containerElement.style.top = parseInt(originY) + moveY + 'px';
+        containerElement.style.left = parseInt(originX) + moveX + 'px';
         // 更新拖拽点的起始坐标
-        this.dragAndDrop.dragStartX = event.pageX || event.touches[0].pageX;
-        this.dragAndDrop.dragStartY = event.pageY || event.touches[0].pageY;
+        this.point.x = event.pageX || event.touches[0].pageX;
+        this.point.y = event.pageY || event.touches[0].pageY;
       }
     },
     dragend() {
-      this.dragAndDrop.dragStarted = false;
-      this.dragAndDrop.mouseCursor = "default";
+      this.point.dragStarted = false;
+      this.point.mouseCursor = "default";
       setTimeout(() => {
         this.preventMouseEvents = false;
       }, 150);
@@ -111,11 +110,9 @@ export default {
   position: relative;
   width: 100%;
   z-index: 0;
-  background-color: #39a9ed;
 }
 
 .container {
   position: absolute;
-  background-color: red;
 }
 </style>

@@ -11,23 +11,21 @@
 
     <!-- 访问权限单选 -->
     <van-radio-group v-model="whoCanSee">
-      <van-cell-group>
-        <van-cell title="家族成员" clickable @click="whoCanSee = '0'">
-          <template #right-icon>
-            <van-radio name="0"/>
-          </template>
-        </van-cell>
-        <van-cell title="管理员" clickable @click="whoCanSee = '1'">
-          <template #right-icon>
-            <van-radio name="1"/>
-          </template>
-        </van-cell>
-        <van-cell title="创建者" clickable @click="whoCanSee = '2'">
-          <template #right-icon>
-            <van-radio name="2"/>
-          </template>
-        </van-cell>
-      </van-cell-group>
+      <van-cell title="家族成员" clickable @click="whoCanSee = '0'">
+        <template #right-icon>
+          <van-radio name="0"/>
+        </template>
+      </van-cell>
+      <van-cell title="管理员" clickable @click="whoCanSee = '1'">
+        <template #right-icon>
+          <van-radio name="1"/>
+        </template>
+      </van-cell>
+      <van-cell title="创建者" clickable @click="whoCanSee = '2'">
+        <template #right-icon>
+          <van-radio name="2"/>
+        </template>
+      </van-cell>
     </van-radio-group>
 
     <!-- 额外人员、不给谁看 -->
@@ -38,7 +36,13 @@
             <div @click="$toast.success('额外人员')">搜索</div>
           </template>
         </van-search>
-        <portrait-desc :person="person" :more="true" @more-operation="removeMember" v-for="i in 3" :key="i"/>
+        <van-swipe-cell v-for="i in 3">
+          <portrait-desc :person="person" class="van-hairline--top-bottom"/>
+          <!-- 左滑删除 -->
+          <template #right>
+            <van-button square type="danger" text="删除" @click="$toast.fail('移除')"/>
+          </template>
+        </van-swipe-cell>
       </van-collapse-item>
 
       <van-collapse-item title="不给谁看" name="2">
@@ -47,7 +51,13 @@
             <div @click="$toast.success('不给谁看')">搜索</div>
           </template>
         </van-search>
-        <portrait-desc :person="person" :more="true" @more-operation="removeMember" v-for="i in 5" :key="i"/>
+        <van-swipe-cell v-for="i in 5">
+          <portrait-desc :person="person" class="van-hairline--top-bottom"/>
+          <!-- 左滑删除 -->
+          <template #right>
+            <van-button square type="danger" text="删除" @click="$toast.fail('移除')"/>
+          </template>
+        </van-swipe-cell>
       </van-collapse-item>
     </van-collapse>
   </div>
@@ -66,18 +76,6 @@ export default {
         name: '光头勇',
         content: 'UID:05482352'
       },
-    }
-  },
-  methods: {
-    removeMember() {
-      this.$dialog.confirm({
-        title: '移除提示',
-        message: '您确定要移除所选成员吗？',
-      }).then(() => {
-        this.$toast.success('移除成功')
-      }).catch(() => {
-        // on cancel
-      });
     }
   }
 }

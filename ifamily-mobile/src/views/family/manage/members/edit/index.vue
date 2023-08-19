@@ -1,7 +1,7 @@
 <template>
   <div>
     <van-nav-bar title="编辑成员" left-arrow @click-left="$router.replace('/family/manage/members')"/>
-    <member-form @submit-form-data="receiveFormData"/>
+    <member-form @submit-form-data="receiveFormData" @hidden-form="$router.replace('/family/manage/members')"/>
   </div>
 </template>
 

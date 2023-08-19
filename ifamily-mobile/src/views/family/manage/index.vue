@@ -6,13 +6,11 @@
       </template>
     </van-nav-bar>
 
-    <van-cell-group>
-      <van-cell title="家族信息" is-link to="/family/manage/form/1"/>
-      <van-cell title="成员管理" is-link to="/family/manage/members"/>
-      <van-cell title="字辈管理" is-link to="/family/manage/seniority"/>
-      <van-cell title="访问控制" is-link to="/family/manage/access"/>
-      <van-cell title="权限设置" is-link to="/family/manage/permission"/>
-    </van-cell-group>
+    <van-cell title="家族信息" is-link to="/family/manage/form/1"/>
+    <van-cell title="成员管理" is-link to="/family/manage/members"/>
+    <van-cell title="字辈管理" is-link to="/family/manage/seniority"/>
+    <van-cell title="访问控制" is-link to="/family/manage/access"/>
+    <van-cell title="权限设置" is-link to="/family/manage/permission"/>
   </div>
 </template>
 

@@ -14,19 +14,26 @@
         <van-uploader v-model="imgList" class="cover" max-count="1"/>
       </div>
 
-      <!-- 名称、姓氏 -->
-      <van-field required label="家族名称" placeholder="家族名称" clearable autofocus v-model="formData.title"/>
-      <van-field required label="家族姓氏" placeholder="家族姓氏" clearable v-model="formData.surname"/>
-      <!-- 地址、祖籍 -->
-      <van-field label="家族地址" readonly clickable name="area" placeholder="点击选择省市区" required
-                 v-model="formData.familyAddress" @click="showAreaPopup = true; areaType = '0'"/>
-      <van-field label="家族祖籍" readonly clickable name="area" placeholder="点击选择省市区"
-                 v-model="formData.familyAncestry" @click="showAreaPopup = true; areaType = '1'"/>
-      <!-- 简介、字辈歌 -->
-      <van-field v-model="formData.introduction" rows="2" autosize label="家族简介" type="textarea" maxlength="100"
-                 placeholder="家族简介" show-word-limit clearable/>
-      <van-field v-model="formData.generationSong" rows="2" autosize label="字辈歌" type="textarea" maxlength="100"
-                 placeholder="字辈歌" show-word-limit clearable/>
+      <van-cell-group>
+        <!-- 名称、姓氏 -->
+        <van-field required label="家族名称" placeholder="家族名称" clearable autofocus v-model="formData.title"
+                   :border="false"/>
+        <van-field required label="家族姓氏" placeholder="家族姓氏" clearable v-model="formData.surname" :border="false"/>
+      </van-cell-group>
+      <van-cell-group>
+        <!-- 地址、祖籍 -->
+        <van-field label="家族地址" readonly clickable name="area" placeholder="点击选择省市区" required :border="false"
+                   v-model="formData.familyAddress" @click="showAreaPopup = true; areaType = '0'"/>
+        <van-field label="家族祖籍" readonly clickable name="area" placeholder="点击选择省市区" :border="false"
+                   v-model="formData.familyAncestry" @click="showAreaPopup = true; areaType = '1'"/>
+      </van-cell-group>
+      <van-cell-group>
+        <!-- 简介、字辈歌 -->
+        <van-field v-model="formData.introduction" rows="2" autosize label="家族简介" type="textarea" maxlength="100"
+                   placeholder="家族简介" :border="false" show-word-limit clearable/>
+        <van-field v-model="formData.generationSong" rows="2" autosize label="字辈歌" type="textarea" maxlength="100"
+                   placeholder="字辈歌" :border="false" show-word-limit clearable/>
+      </van-cell-group>
     </van-form>
 
     <!-- 地址选择弹出层 -->
@@ -79,7 +86,7 @@ export default {
       area = this.fullAddress.trim() ? area + "/" + this.fullAddress : area;
       if (this.areaType === '0') {
         this.formData.familyAddress = area
-      } else if(this.areaType === '1') {
+      } else if (this.areaType === '1') {
         this.formData.familyAncestry = area
       }
       this.showAreaPopup = false;

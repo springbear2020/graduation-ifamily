@@ -37,8 +37,7 @@
       <van-cell title="家族祖籍" value="湖北省/武汉市/洪山区"/>
     </van-cell-group>
 
-    <!-- 简介、字辈歌 -->
-    <van-collapse v-model="activeNames" :border="false">
+    <van-collapse v-model="activeNames">
       <van-collapse-item title="家族简介" name="1" :border="false">
         众所周知，字辈是中国传承千年的重要起名形式，像老一辈很多人名字都是按家谱起的，父姓+中间的家谱，家长起好最后一个字就好了，这样的起名方式挺简单省事的
       </van-collapse-item>
@@ -62,6 +61,8 @@
       <van-cell title="创建者" :border="false">
         <people-tag name="光头勇" @click.native="$toast.success('查看管理员')" :right="false" :bottom="false"/>
       </van-cell>
+    </van-cell-group>
+    <van-cell-group>
       <van-cell title="创建时间" value="2023-02-12 16:02"/>
     </van-cell-group>
   </div>

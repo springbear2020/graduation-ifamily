@@ -7,7 +7,9 @@ import './assets/iconfont/iconfont.css'
 
 Vue.use(Vant)
 
-Vue.component('logo-pattern', () => import('@/components/logo-pattern'))
+import logoPattern from '@/components/logo-pattern'
+
+Vue.component('logo-pattern',logoPattern)
 Vue.component('people-tag', () => import('@/components/people-tag'))
 Vue.component('desc-tag', () => import('@/components/desc-tag'))
 Vue.component('social-moments', () => import('@/components/social-moments'))

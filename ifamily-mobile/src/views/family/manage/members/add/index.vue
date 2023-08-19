@@ -42,7 +42,7 @@
     <!-- 信息表单 -->
     <div v-show="showForm">
       <van-divider :style="{color: '#1989fa', borderColor: '#1989fa'}"> {{ subTitle }}</van-divider>
-      <member-form @submit-form-data="receiveFormData"/>
+      <member-form @submit-form-data="receiveFormData" @hidden-form="showForm = false"/>
     </div>
   </div>
 </template>
@@ -98,6 +98,7 @@ export default {
     receiveFormData(formData) {
       console.log(formData)
       this.$toast.success('添加成功')
+      this.showForm = false
     },
     back() {
       if (this.type === '0') {

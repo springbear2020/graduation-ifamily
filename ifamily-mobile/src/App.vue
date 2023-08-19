@@ -51,4 +51,8 @@ export default {
 .van-step__title h3 {
   margin: 5px 0;
 }
+
+.van-swipe-cell button {
+  height: 100%;
+}
 </style>

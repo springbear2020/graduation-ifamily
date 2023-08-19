@@ -21,7 +21,7 @@
     <!-- 家族图片上传动作面板 -->
     <van-action-sheet v-model="showUploadActionSheet" title="上传照片">
       <van-uploader multiple :after-read="afterRead" v-model="fileList"/>
-      <van-button type="primary" block @click="$toast.fail('管理员审核')">确定</van-button>
+      <van-button type="info" block @click="$toast.fail('管理员审核')">确定</van-button>
     </van-action-sheet>
   </div>
 </template>
@@ -44,7 +44,7 @@ export default {
       person: {
         portrait: 'https://img01.yzcdn.cn/vant/cat.jpeg',
         name: '光头勇',
-        content: '2023-02-25 12:05:53'
+        content: '2023-02-25 12:05'
       },
       showUploadActionSheet: false,
       fileList: [],

@@ -28,8 +28,7 @@
         <van-cell>
           <template #default>
             <p class="like-list">
-              <van-icon name="good-job" size="16" v-if="goodJob"/>
-              <van-icon name="good-job-o" size="16" v-else/>&nbsp;
+              <van-icon name="good-job" size="16"/>
               <span v-for="people in moment.likeList" :key="people.id">{{ people.name }}，</span>
             </p>
 

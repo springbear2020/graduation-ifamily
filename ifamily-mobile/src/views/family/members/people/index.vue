@@ -36,7 +36,7 @@
         <desc-tag title="健在" content="" color="#28a745"/>
       </van-grid-item>
       <van-grid-item>
-        <desc-tag title="年龄" content="35" color="#6610f2"/>
+        <desc-tag title="年龄" content="35" color="#20c997"/>
       </van-grid-item>
       <van-grid-item>
         <desc-tag title="字辈" content="勇" color="#dc3545"/>
@@ -64,22 +64,24 @@
     </van-cell-group>
 
     <!-- 家庭关系 -->
-    <van-cell title="家庭关系" :border="false" class="family-relationships">
-      <template #label>
-        <p>父亲：
-          <people-tag :name="'冯世元'" @click.native="$toast.success('查看人员信息')"/>
-        </p>
-        <p>母亲：</p>
-        <p>配偶：</p>
-        <p>子女：
-          <people-tag :name="'冯学慧'" :sex="3" @click.native="$toast.success('查看人员信息')"/>
-          <people-tag :name="'刘纯洲'" :sex="1" @click.native="$toast.success('查看人员信息')"/>
-          <people-tag :name="'冯学良'" @click.native="$toast.success('查看人员信息')"/>
-        </p>
-        <p>同胞：</p>
-      </template>
-    </van-cell>
-    <van-cell title="备注" label="备注与其父母亲的特殊关系，如养子、养女、继子、继女等" class="family-member-remarks"/>
+    <van-cell-group>
+      <van-cell title="家庭关系" :border="false" class="family-relationships">
+        <template #label>
+          <p>父亲：
+            <people-tag :name="'冯世元'" @click.native="$toast.success('查看人员信息')"/>
+          </p>
+          <p>母亲：</p>
+          <p>配偶：</p>
+          <p>子女：
+            <people-tag :name="'冯学慧'" :sex="3" @click.native="$toast.success('查看人员信息')"/>
+            <people-tag :name="'刘纯洲'" :sex="1" @click.native="$toast.success('查看人员信息')"/>
+            <people-tag :name="'冯学良'" @click.native="$toast.success('查看人员信息')"/>
+          </p>
+          <p>同胞：</p>
+        </template>
+      </van-cell>
+      <van-cell title="备注" :border="false" label="备注与其父母亲的特殊关系，如养子、养女、继子、继女等" class="family-member-remarks"/>
+    </van-cell-group>
 
     <!-- 个人动态 -->
     <van-cell title="个人动态">

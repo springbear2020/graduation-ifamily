@@ -11,9 +11,9 @@
 
     <!-- 家族操作宫格 -->
     <van-grid square :gutter="8" :column-num="4">
-      <van-grid-item icon="cluster-o" text="家族树谱" to="/family/tree"/>
       <van-grid-item icon="friends-o" text="家族成员" to="/family/members"/>
       <van-grid-item icon="photo-o" text="家族相册" to="/family/album"/>
+      <van-grid-item icon="cluster-o" text="家族树谱" to="/family/tree"/>
       <van-grid-item icon="setting-o" text="家族管理" to="/family/manage"/>
     </van-grid>
 
@@ -21,7 +21,7 @@
       <!-- 修谱日志 -->
       <van-tab title="修谱日志">
         <van-pull-refresh success-text="刷新成功" v-model="isRefreshing" @refresh="onRefresh">
-          <van-steps direction="vertical" center active-color="#ff976a">
+          <van-steps direction="vertical" center active-color="#343a40">
             <van-step v-for="i in 10">
               <h3>2016-07-12 12:40</h3>
               <p>光头勇添加了光头强</p>
@@ -35,7 +35,7 @@
       <van-tab title="家族公告">
         <van-pull-refresh success-text="刷新成功" v-model="isRefreshing" @refresh="onRefresh">
           <van-cell-group v-for="i in 10">
-            <portrait-desc :person="person"/>
+            <portrait-desc :person="person" @click.native="$toast.success('查看人员')"/>
             <van-cell class="cell-top"
                       value="族谱作为一个记载以血缘关系为主体的家族世代繁衍和重要人物事迹的特殊图书体裁。"
             />
@@ -45,7 +45,7 @@
       <!-- 访问记录 -->
       <van-tab title="访问记录">
         <van-pull-refresh success-text="刷新成功" v-model="isRefreshing" @refresh="onRefresh">
-          <van-steps direction="vertical" center active-color="#1989fa">
+          <van-steps direction="vertical" center active-color="#343a40">
             <van-step v-for="i in 10">
               <h3>2016-07-12 12:40</h3>
               <p>光头勇访问了家族</p>

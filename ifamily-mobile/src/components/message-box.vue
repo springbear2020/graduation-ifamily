@@ -1,6 +1,11 @@
 <template>
   <van-cell-group>
     <van-swipe-cell v-for="msg in dataList" :key="msg.id">
+      <!-- 左滑添加联系人到通讯录 -->
+      <template #left>
+        <van-button square type="info" icon="like-o" @click="$toast.success('添加联系人')"/>
+      </template>
+
       <!-- 徽标、头像、标题、内容、时间 -->
       <van-cell center @click="$toast.fail('查看消息')">
         <template #title>
@@ -44,9 +49,5 @@ export default {
 <style scoped>
 .van-cell__title {
   display: flex;
-}
-
-.van-swipe-cell button {
-  height: 100%;
 }
 </style>

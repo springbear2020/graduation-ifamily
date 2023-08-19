@@ -7,10 +7,8 @@
     </van-nav-bar>
 
     <!-- 家族世代字辈信息 -->
-    <van-cell-group>
-      <van-cell is-link v-for="(item, index) in seniorityList" :key="item.id" @click="editSeniority(index)"
-                :title="'世代 ' + item.generation" :value="item.seniority"/>
-    </van-cell-group>
+    <van-cell is-link v-for="(item, index) in seniorityList" :key="item.id" @click="editSeniority(index)"
+              :title="'世代 ' + item.generation" :value="item.seniority"/>
 
     <!-- 字辈管理动作面板 -->
     <van-action-sheet v-model="showActionSheet" :title="sheetTitle">
@@ -50,7 +48,7 @@ export default {
     editSeniority(index) {
       this.selectedIndex = index
       this.type = '1'
-      this.title = '世代 ' + this.seniorityList[index].generation;
+      this.sheetTitle = '世代 ' + this.seniorityList[index].generation;
       this.seniority = this.seniorityList[index].seniority;
       this.showActionSheet = true
     },
@@ -67,3 +65,9 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+/deep/ .van-field {
+  padding-bottom: 20px;
+}
+</style>
