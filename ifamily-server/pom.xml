@@ -9,6 +9,9 @@
         <module>ifamily-user</module>
         <module>ifamily-security</module>
         <module>ifamily-manager</module>
+        <module>ifamily-client</module>
+        <module>ifamily-model</module>
+        <module>ifamily-acl</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -73,6 +76,12 @@
                 <groupId>cn.hutool</groupId>
                 <artifactId>hutool-all</artifactId>
                 <version>5.8.15</version>
+            </dependency>
+            <!-- qiniu -->
+            <dependency>
+                <groupId>com.qiniu</groupId>
+                <artifactId>qiniu-java-sdk</artifactId>
+                <version>7.7.0</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

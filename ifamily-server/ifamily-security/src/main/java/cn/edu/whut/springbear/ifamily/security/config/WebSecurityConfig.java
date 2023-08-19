@@ -2,10 +2,10 @@ package cn.edu.whut.springbear.ifamily.security.config;
 
 
 import cn.edu.whut.springbear.ifamily.security.access.DynamicPermissionProvider;
-import cn.edu.whut.springbear.ifamily.security.access.RestfulForbiddenHandler;
-import cn.edu.whut.springbear.ifamily.security.access.RestfulUnauthorizedEntryPoint;
-import cn.edu.whut.springbear.ifamily.security.access.intercept.DynamicSecurityFilter;
-import cn.edu.whut.springbear.ifamily.security.access.intercept.JwtAuthenticationFilter;
+import cn.edu.whut.springbear.ifamily.security.handler.RestfulForbiddenHandler;
+import cn.edu.whut.springbear.ifamily.security.handler.RestfulUnauthorizedEntryPoint;
+import cn.edu.whut.springbear.ifamily.security.intercept.DynamicSecurityFilter;
+import cn.edu.whut.springbear.ifamily.security.intercept.JwtAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;

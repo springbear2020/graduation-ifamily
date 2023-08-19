@@ -1,6 +1,6 @@
 package cn.edu.whut.springbear.ifamily.user.mapper;
 
-import cn.edu.whut.springbear.ifamily.user.pojo.po.UserDO;
+import cn.edu.whut.springbear.ifamily.model.po.UserDO;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.springframework.stereotype.Repository;
 

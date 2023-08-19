@@ -1,8 +1,8 @@
 package cn.edu.whut.springbear.ifamily.user.pojo.dto;
 
 import cn.edu.whut.springbear.ifamily.common.enumerate.EnableStatusEnum;
-import cn.edu.whut.springbear.ifamily.user.pojo.po.PermissionDO;
-import cn.edu.whut.springbear.ifamily.user.pojo.po.UserDO;
+import cn.edu.whut.springbear.ifamily.model.po.PermissionDO;
+import cn.edu.whut.springbear.ifamily.model.po.UserDO;
 import lombok.AllArgsConstructor;
 import lombok.ToString;
 import org.springframework.security.core.GrantedAuthority;

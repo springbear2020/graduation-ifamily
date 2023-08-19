@@ -2,7 +2,7 @@ package cn.edu.whut.springbear.ifamily.user.controller;
 
 import cn.edu.whut.springbear.ifamily.common.api.CommonResult;
 import cn.edu.whut.springbear.ifamily.common.constant.SystemMessageConstants;
-import cn.edu.whut.springbear.ifamily.user.constant.UserMessageConstants;
+import cn.edu.whut.springbear.ifamily.common.constant.UserMessageConstants;
 import cn.edu.whut.springbear.ifamily.user.pojo.query.PageQuery;
 import cn.edu.whut.springbear.ifamily.user.pojo.query.UserQuery;
 import cn.edu.whut.springbear.ifamily.user.pojo.vo.LoginLogVO;
@@ -100,7 +100,7 @@ public class UserSuperviseController {
             @ApiParam("需要保存的新内容") @RequestParam("content") String content,
             @ApiParam("额外携带的信息：[type==1]携带用户密码 [type==2 || type=3]携带验证码") @RequestParam("extra") String extra) {
 
-        boolean updateResult = false;
+        boolean updateResult;
         switch (type) {
             case 1:
                 // 用户名
@@ -131,6 +131,16 @@ public class UserSuperviseController {
         }
 
         return updateResult ? CommonResult.success() : CommonResult.failed(SystemMessageConstants.SYSTEM_EXCEPTION);
+    }
+
+    /**
+     * 用户账号注销
+     */
+    @ApiOperation("用户账号注销")
+    @DeleteMapping
+    public CommonResult<String> userLogout(@ApiParam("账号登录密码") @RequestParam("password") String password) {
+        boolean result = this.userService.userLogout(password);
+        return result ? CommonResult.success() : CommonResult.failed(SystemMessageConstants.SYSTEM_EXCEPTION);
     }
 
 }

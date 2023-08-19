@@ -1,8 +1,8 @@
 package cn.edu.whut.springbear.ifamily.user.config;
 
+import cn.edu.whut.springbear.ifamily.client.acl.AclFeignClient;
+import cn.edu.whut.springbear.ifamily.model.po.PermissionDO;
 import cn.edu.whut.springbear.ifamily.security.access.DynamicPermissionProvider;
-import cn.edu.whut.springbear.ifamily.user.pojo.po.PermissionDO;
-import cn.edu.whut.springbear.ifamily.user.service.PermissionService;
 import cn.edu.whut.springbear.ifamily.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -27,7 +27,7 @@ public class UserSecurityConfig {
     @Autowired
     private UserService userService;
     @Autowired
-    private PermissionService permissionService;
+    private AclFeignClient aclFeignClient;
 
     /**
      * 提供给安全框架鉴权使用
@@ -43,7 +43,7 @@ public class UserSecurityConfig {
     @Bean
     public DynamicPermissionProvider dynamicPermissionProvider() {
         return () -> {
-            List<PermissionDO> permissionsList = this.permissionService.listAll();
+            List<PermissionDO> permissionsList = this.aclFeignClient.listAllPermissions();
             permissionsList = permissionsList == null ? new ArrayList<>() : permissionsList;
             Map<String, ConfigAttribute> map = new ConcurrentHashMap<>(permissionsList.size());
             permissionsList.forEach(p -> map.put(p.getPath(), new org.springframework.security.access.SecurityConfig(p.getId() + ":" + p.getName())));

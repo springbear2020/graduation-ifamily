@@ -1,23 +1,22 @@
 package cn.edu.whut.springbear.ifamily.user.service.impl;
 
+import cn.edu.whut.springbear.ifamily.client.acl.AclFeignClient;
 import cn.edu.whut.springbear.ifamily.common.constant.RedisConstants;
+import cn.edu.whut.springbear.ifamily.common.constant.UserMessageConstants;
 import cn.edu.whut.springbear.ifamily.common.enumerate.DeleteStatusEnum;
 import cn.edu.whut.springbear.ifamily.common.enumerate.EnableStatusEnum;
 import cn.edu.whut.springbear.ifamily.common.exception.IllegalConditionException;
 import cn.edu.whut.springbear.ifamily.common.exception.IllegalStatusException;
+import cn.edu.whut.springbear.ifamily.model.po.PermissionDO;
+import cn.edu.whut.springbear.ifamily.model.po.UserDO;
 import cn.edu.whut.springbear.ifamily.security.util.JwtUtils;
-import cn.edu.whut.springbear.ifamily.user.constant.UserMessageConstants;
-import cn.edu.whut.springbear.ifamily.user.enumetate.AccountLoginEnum;
 import cn.edu.whut.springbear.ifamily.user.mapper.UserMapper;
 import cn.edu.whut.springbear.ifamily.user.pojo.dto.SecurityUserDetailsDTO;
-import cn.edu.whut.springbear.ifamily.user.pojo.po.PermissionDO;
-import cn.edu.whut.springbear.ifamily.user.pojo.po.UserDO;
 import cn.edu.whut.springbear.ifamily.user.pojo.po.UsernameUpdateLogDO;
 import cn.edu.whut.springbear.ifamily.user.pojo.query.UserLoginQuery;
 import cn.edu.whut.springbear.ifamily.user.pojo.query.UserQuery;
 import cn.edu.whut.springbear.ifamily.user.pojo.query.UserResetQuery;
 import cn.edu.whut.springbear.ifamily.user.pojo.vo.UserVO;
-import cn.edu.whut.springbear.ifamily.user.service.PermissionService;
 import cn.edu.whut.springbear.ifamily.user.service.UserLoginLogService;
 import cn.edu.whut.springbear.ifamily.user.service.UserService;
 import cn.edu.whut.springbear.ifamily.user.service.UsernameUpdateLogService;
@@ -53,7 +52,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
     @Autowired
     private PasswordEncoder passwordEncoder;
     @Autowired
-    private PermissionService permissionService;
+    private AclFeignClient aclFeignClient;
     @Autowired
     private UserLoginLogService userLoginLogService;
     @Autowired
@@ -75,11 +74,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
         // 检查用户账号状态
         if (EnableStatusEnum.DISABLE.getCode().equals(user.getStatus())) {
             // [401] RestfulUnauthorizedEntryPoint
-            throw new IllegalStatusException(UserMessageConstants.ILLEGAL_USER_STATUS);
+            throw new UsernameNotFoundException(UserMessageConstants.ILLEGAL_USER_STATUS);
         }
 
         // 查询当前用户下拥有的权限列表，提供给安全框架鉴权使用
-        List<PermissionDO> permissions = this.permissionService.listPermissionsOfUser(user.getId());
+        List<PermissionDO> permissions = this.aclFeignClient.listPermissionsOfUser(user.getId());
         permissions = permissions == null ? new ArrayList<>() : permissions;
         return new SecurityUserDetailsDTO(user, permissions);
     }
@@ -96,8 +95,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
         }
 
         // 客户端请求的登录类型：[0]密码登录 [1]验证码登录
+        final int passwordLogin = 0;
         Integer loginType = userLoginQuery.getLoginType();
-        if (AccountLoginEnum.PASSWORD.getCode().equals(loginType)) {
+        if (loginType == passwordLogin) {
             // 验证密码正确性
             if (!this.passwordEncoder.matches(userLoginQuery.getPassword(), user.getPassword())) {
                 throw new IllegalConditionException(UserMessageConstants.ERROR_PASSWORD);
@@ -113,7 +113,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
         }
 
         // 查询当前用户的系统权限，将当前用户信息注入到安全框架中
-        List<PermissionDO> permissions = this.permissionService.listPermissionsOfUser(user.getId());
+        List<PermissionDO> permissions = this.aclFeignClient.listPermissionsOfUser(user.getId());
         permissions = permissions == null ? new ArrayList<>() : permissions;
         SecurityUserDetailsDTO userDetails = new SecurityUserDetailsDTO(user, permissions);
         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
@@ -287,6 +287,25 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
         userDO.setPhone(phone);
         userDO.setId(user.getId());
         return this.baseMapper.updateById(userDO) == 1;
+    }
+
+    @Override
+    public boolean userLogout(String password) {
+        UserDO user = this.getCurrentUser();
+        // 验证输入的密码是否正确
+        if (!this.passwordEncoder.matches(password, user.getPassword())) {
+            throw new IllegalConditionException(UserMessageConstants.ERROR_PASSWORD);
+        }
+
+        // 更新用户账号启用状态、删除状态
+        return this.baseMapper.deleteById(user.getId()) == 1;
+    }
+
+    @Override
+    public UserDO getUserByUsername(String username) {
+        QueryWrapper<UserDO> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("username", username);
+        return this.baseMapper.selectOne(queryWrapper);
     }
 
     /**

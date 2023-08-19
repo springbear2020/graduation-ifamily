@@ -37,4 +37,5 @@ public class UsernameUpdateLogServiceImpl extends ServiceImpl<UsernameUpdateLogM
         UsernameUpdateLogDO log = new UsernameUpdateLogDO(null, oldUsername, newUsername, date, date, DeleteStatusEnum.UNDELETED.getCode(), userId);
         return this.baseMapper.insert(log) == 1;
     }
+
 }

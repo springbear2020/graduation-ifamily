@@ -1,6 +1,6 @@
 package cn.edu.whut.springbear.ifamily.user.service;
 
-import cn.edu.whut.springbear.ifamily.user.pojo.po.UserDO;
+import cn.edu.whut.springbear.ifamily.model.po.UserDO;
 import cn.edu.whut.springbear.ifamily.user.pojo.query.UserLoginQuery;
 import cn.edu.whut.springbear.ifamily.user.pojo.query.UserQuery;
 import cn.edu.whut.springbear.ifamily.user.pojo.query.UserResetQuery;
@@ -82,5 +82,15 @@ public interface UserService extends IService<UserDO> {
      * @return [true]更新成功
      */
     boolean updatePhone(String phone, String code);
+
+    /**
+     * 用户账号注销
+     */
+    boolean userLogout(String password);
+
+    /**
+     * 根据用户名查询用户
+     */
+    UserDO getUserByUsername(String username);
 
 }

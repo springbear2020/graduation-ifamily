@@ -40,7 +40,7 @@ public class DynamicAccessDecisionManager implements AccessDecisionManager {
             }
         }
 
-        // [403]org.springframework.security.access.AccessDeniedException -> cn.edu.whut.springbear.ifamily.security.access.RestfulForbiddenHandler
+        // [403]org.springframework.security.access.AccessDeniedException -> cn.edu.whut.springbear.ifamily.security.handler.RestfulForbiddenHandler
         throw new AccessDeniedException("禁止访问，缺少动态访问权限");
     }
 
