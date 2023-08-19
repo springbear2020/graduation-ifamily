@@ -74,7 +74,7 @@ public final class WebUtils {
      */
     public static String baiduParseIpLocation(String ip) {
         if (invalidIp(ip)) {
-            return "未知地点";
+            return DEFAULT_LOCATION;
         }
 
         String url = BAIDU_MAP_URL + ip;

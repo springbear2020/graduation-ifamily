@@ -2,7 +2,6 @@ package cn.edu.whut.springbear.ifamily.user.config;
 
 import cn.edu.whut.springbear.ifamily.client.acl.AclFeignClient;
 import cn.edu.whut.springbear.ifamily.common.constant.UserMessageConstants;
-import cn.edu.whut.springbear.ifamily.common.enumerate.EnableStatusEnum;
 import cn.edu.whut.springbear.ifamily.model.dto.SecurityUserDetailsDTO;
 import cn.edu.whut.springbear.ifamily.model.po.PermissionDO;
 import cn.edu.whut.springbear.ifamily.model.po.UserDO;
@@ -47,8 +46,8 @@ public class UserSecurityConfig {
             }
 
             // 检查用户账号状态
-            if (EnableStatusEnum.DISABLE.getCode().equals(user.getStatus())) {
-                // [401] RestfulUnauthorizedEntryPoint
+            if (SecurityUserDetailsDTO.EnableStatusEnum.DISABLE.getCode().equals(user.getStatus())) {
+                // [401] UsernameNotFoundException -> AuthenticationException -> RestfulUnauthorizedEntryPoint
                 throw new UsernameNotFoundException(UserMessageConstants.ILLEGAL_USER_STATUS);
             }
 
@@ -60,7 +59,7 @@ public class UserSecurityConfig {
     }
 
     /**
-     * 动态配置需要鉴权的系统权限数据源
+     * 动态配置系统权限数据源
      */
     @Bean
     public DynamicPermissionProvider dynamicPermissionProvider() {

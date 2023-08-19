@@ -1,8 +1,9 @@
 package cn.edu.whut.springbear.ifamily.genealogy.service.impl;
 
-import cn.edu.whut.springbear.ifamily.common.enumerate.DeleteStatusEnum;
+import cn.edu.whut.springbear.ifamily.common.enumerate.AssertEnum;
 import cn.edu.whut.springbear.ifamily.common.exception.IllegalConditionException;
 import cn.edu.whut.springbear.ifamily.genealogy.enumerate.GenderEnum;
+import cn.edu.whut.springbear.ifamily.genealogy.enumerate.CRUDEnum;
 import cn.edu.whut.springbear.ifamily.genealogy.mapper.PeopleMapper;
 import cn.edu.whut.springbear.ifamily.genealogy.pojo.bo.PeopleDetailsBO;
 import cn.edu.whut.springbear.ifamily.genealogy.pojo.po.PeopleDO;
@@ -11,6 +12,7 @@ import cn.edu.whut.springbear.ifamily.genealogy.pojo.vo.PeopleCardVO;
 import cn.edu.whut.springbear.ifamily.genealogy.pojo.vo.PeopleVO;
 import cn.edu.whut.springbear.ifamily.genealogy.service.GenealogyProfileService;
 import cn.edu.whut.springbear.ifamily.genealogy.service.PeopleService;
+import cn.edu.whut.springbear.ifamily.genealogy.service.RevisionLogService;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.BeanUtils;
@@ -32,6 +34,8 @@ public class PeopleServiceImpl extends ServiceImpl<PeopleMapper, PeopleDO> imple
 
     @Autowired
     private GenealogyProfileService genealogyProfileService;
+    @Autowired
+    private RevisionLogService revisionLogService;
 
     @Override
     public PeopleVO getByUserGenealogyId(Long userId, Long genealogyId) {
@@ -46,7 +50,7 @@ public class PeopleServiceImpl extends ServiceImpl<PeopleMapper, PeopleDO> imple
     }
 
     @Override
-    public PeopleDetailsBO getGenealogyPeopleProfileDetails(Long peopleId) {
+    public PeopleDetailsBO getWithDetails(Long peopleId) {
         PeopleDO meDO = this.baseMapper.selectById(peopleId);
         if (meDO == null) {
             return null;
@@ -105,11 +109,14 @@ public class PeopleServiceImpl extends ServiceImpl<PeopleMapper, PeopleDO> imple
             me.setCompatriots(compatriots);
         }
 
+        // 保存家族人员查看日志
+        this.revisionLogService.create(CRUDEnum.SELECT.getCode(), meDO.getId(), meDO.getGenealogyId());
+
         return me;
     }
 
     @Override
-    public PeopleVO getPeopleById(Long peopleId) {
+    public PeopleVO get(Long peopleId) {
         PeopleDO peopleDO = this.baseMapper.selectById(peopleId);
         if (peopleDO == null) {
             return null;
@@ -119,11 +126,27 @@ public class PeopleServiceImpl extends ServiceImpl<PeopleMapper, PeopleDO> imple
         return peopleVO;
     }
 
+    @Transactional(rollbackFor = RuntimeException.class)
     @Override
-    public boolean updatePeopleById(PeopleQuery peopleQuery) {
-        PeopleDO peopleDO = new PeopleDO();
-        BeanUtils.copyProperties(peopleQuery, peopleDO);
-        return this.baseMapper.updateById(peopleDO) == 1;
+    public boolean edit(PeopleQuery peopleQuery) {
+        final Long peopleId = peopleQuery.getId();
+        // 查询家族人员信息
+        PeopleDO peopleDO = this.baseMapper.selectById(peopleId);
+        if (peopleDO == null) {
+            return false;
+        }
+
+        PeopleDO peopleUpdateDO = new PeopleDO();
+        BeanUtils.copyProperties(peopleQuery, peopleUpdateDO);
+
+        // 检查人员性别是否发生改变，若发生改变则更新家族概况中的男、女人数
+        this.genealogyProfileService.changeByGender(peopleUpdateDO.getGender(), peopleDO.getGender(), peopleDO.getGenealogyId());
+        // 检查人员逝世日期是否发生改变，若发生改变则更新家族概况中的生、逝人数
+        this.genealogyProfileService.changeByDeathDate(peopleUpdateDO.getDeathDate(), peopleDO.getDeathDate(), peopleDO.getGenealogyId());
+        // 保存家族人员编辑日志
+        this.revisionLogService.create(CRUDEnum.UPDATE.getCode(), peopleDO.getId(), peopleDO.getGenealogyId());
+
+        return this.baseMapper.updateById(peopleUpdateDO) == 1;
     }
 
     @Transactional(rollbackFor = RuntimeException.class)
@@ -144,7 +167,7 @@ public class PeopleServiceImpl extends ServiceImpl<PeopleMapper, PeopleDO> imple
         final int generationLimit = 0;
         int fatherGeneration = meDO.getGeneration() - 1;
         if (fatherGeneration == generationLimit) {
-            this.baseMapper.membersGenerationIncreaseOne(meDO.getGenealogyId());
+            this.baseMapper.generationIncreaseOne(meDO.getGenealogyId());
             fatherGeneration = 1;
         }
         fatherDO.setGender(GenderEnum.MALE.getCode());
@@ -164,7 +187,9 @@ public class PeopleServiceImpl extends ServiceImpl<PeopleMapper, PeopleDO> imple
         affectedRows += this.baseMapper.updateById(meUpdate);
 
         // 家族总人数和男性人数 +1，根据逝世日期是否为空相应人数 +1
-        affectedRows += this.genealogyProfileService.genealogyPeopleProfileIncreaseOne(meDO.getGenealogyId(), GenderEnum.MALE.getCode(), fatherDO.getDeathDate() != null);
+        affectedRows += this.genealogyProfileService.increaseOne(meDO.getGenealogyId(), GenderEnum.MALE.getCode(), fatherDO.getDeathDate());
+        // 保存家族人员新增日志
+        this.revisionLogService.create(CRUDEnum.INSERT.getCode(), fatherDO.getId(), meDO.getGenealogyId());
 
         return affectedRows == 3;
     }
@@ -203,7 +228,9 @@ public class PeopleServiceImpl extends ServiceImpl<PeopleMapper, PeopleDO> imple
         affectedRows += this.baseMapper.updateById(meUpdate);
 
         // 家族总人数和女性人数 +1，根据逝世日期是否为空相应人数 +1
-        affectedRows += this.genealogyProfileService.genealogyPeopleProfileIncreaseOne(meDO.getGenealogyId(), GenderEnum.FEMALE.getCode(), motherDO.getDeathDate() != null);
+        affectedRows += this.genealogyProfileService.increaseOne(meDO.getGenealogyId(), GenderEnum.FEMALE.getCode(), motherDO.getDeathDate());
+        // 保存家族人员新增日志
+        this.revisionLogService.create(CRUDEnum.INSERT.getCode(), motherDO.getId(), meDO.getGenealogyId());
 
         return affectedRows == 3;
     }
@@ -231,7 +258,9 @@ public class PeopleServiceImpl extends ServiceImpl<PeopleMapper, PeopleDO> imple
         }
 
         // 家族总人数和女性人数 +1，根据逝世日期是否为空相应人数 +1
-        affectedRows += this.genealogyProfileService.genealogyPeopleProfileIncreaseOne(meDO.getGenealogyId(), GenderEnum.FEMALE.getCode(), wifeDO.getDeathDate() != null);
+        affectedRows += this.genealogyProfileService.increaseOne(meDO.getGenealogyId(), GenderEnum.FEMALE.getCode(), wifeDO.getDeathDate());
+        // 保存家族人员新增日志
+        this.revisionLogService.create(CRUDEnum.INSERT.getCode(), wifeDO.getId(), meDO.getGenealogyId());
 
         return affectedRows == 2;
     }
@@ -275,7 +304,9 @@ public class PeopleServiceImpl extends ServiceImpl<PeopleMapper, PeopleDO> imple
         }
 
         // 家族总人数 +1，根据孩子性别将男性或女性人数 +1，根据孩子逝世日期是否为空将健在或已逝人数 +1
-        affectedRows += this.genealogyProfileService.genealogyPeopleProfileIncreaseOne(meDO.getGenealogyId(), childDO.getGender(), childDO.getDeathDate() != null);
+        affectedRows += this.genealogyProfileService.increaseOne(meDO.getGenealogyId(), childDO.getGender(), childDO.getDeathDate());
+        // 保存家族人员新增日志
+        this.revisionLogService.create(CRUDEnum.INSERT.getCode(), childDO.getId(), meDO.getGenealogyId());
 
         return affectedRows == 2;
     }
@@ -308,7 +339,39 @@ public class PeopleServiceImpl extends ServiceImpl<PeopleMapper, PeopleDO> imple
         }
 
         // 家族总人数 +1，根据同胞性别将男性或女性人数 +1，根据同胞逝世日期是否为空将健在或已逝人数 +1
-        affectedRows += this.genealogyProfileService.genealogyPeopleProfileIncreaseOne(meDO.getGenealogyId(), compatriotDO.getGender(), compatriotDO.getDeathDate() != null);
+        affectedRows += this.genealogyProfileService.increaseOne(meDO.getGenealogyId(), compatriotDO.getGender(), compatriotDO.getDeathDate());
+        // 保存家族人员新增日志
+        this.revisionLogService.create(CRUDEnum.INSERT.getCode(), compatriotDO.getId(), meDO.getGenealogyId());
+
+        return affectedRows == 2;
+    }
+
+    @Override
+    public boolean create(PeopleQuery userPeople, Long userId, Long genealogyId) {
+        PeopleDO userPeopleDO = new PeopleDO();
+        BeanUtils.copyProperties(userPeople, userPeopleDO);
+        // 初始化家族人员必要信息
+        this.initRelativeDO(userPeopleDO, userPeopleDO.getGeneration(), genealogyId, null, null, null);
+        userPeopleDO.setUserId(userId);
+        this.genealogyProfileService.increaseOne(genealogyId, userPeopleDO.getGender(), userPeopleDO.getDeathDate());
+        // 保存家族人员新增日志
+        this.revisionLogService.create(CRUDEnum.INSERT.getCode(), userPeopleDO.getId(), genealogyId);
+
+        return this.baseMapper.insert(userPeopleDO) == 1;
+    }
+
+    @Override
+    public boolean remove(Long peopleId) {
+        PeopleDO peopleDO = this.baseMapper.selectById(peopleId);
+        if (peopleDO == null) {
+            throw new IllegalConditionException("家族人员信息不存在");
+        }
+
+        // 保存家族人员删除日志
+        this.revisionLogService.create(CRUDEnum.DELETE.getCode(), peopleDO.getId(), peopleDO.getGenealogyId());
+        int affectedRows = this.baseMapper.deleteById(peopleId);
+        // 更新家族成员概况信息，总人数 -1，对应男或女人数 -1，对应生或逝人数 -1
+        affectedRows += this.genealogyProfileService.decreaseOne(peopleDO.getGenealogyId(), peopleDO.getGender(), peopleDO.getDeathDate());
 
         return affectedRows == 2;
     }
@@ -327,7 +390,7 @@ public class PeopleServiceImpl extends ServiceImpl<PeopleMapper, PeopleDO> imple
         Date date = new Date();
         relativeDO.setCreated(date);
         relativeDO.setModified(date);
-        relativeDO.setDeleted(DeleteStatusEnum.UNDELETED.getCode());
+        relativeDO.setDeleted(AssertEnum.NO.getCode());
     }
 
     /**

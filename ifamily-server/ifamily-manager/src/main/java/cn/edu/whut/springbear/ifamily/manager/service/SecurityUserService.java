@@ -11,6 +11,6 @@ public interface SecurityUserService {
     /**
      * 获取当前已认证用户
      */
-    UserDO getCurrentUser();
+    UserDO current();
 
 }

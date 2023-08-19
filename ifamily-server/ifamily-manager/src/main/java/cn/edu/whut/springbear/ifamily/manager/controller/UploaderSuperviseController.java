@@ -7,6 +7,7 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.IdUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,10 +29,12 @@ public class UploaderSuperviseController {
     @Autowired
     private QiniuService qiniuService;
 
-    @ApiOperation("获取七牛云头像图片上传令牌")
+    @ApiOperation("获取七牛云图片上传令牌")
     @GetMapping("/qiniu/img/token")
-    public CommonResult<Object> qiniuImageToken(@RequestParam("suffix") String suffix, @RequestParam("type") Integer type) {
-        // [1]用户头像 [2]家族封面
+    public CommonResult<Object> qiniuImageToken(
+            @ApiParam("文件扩展名") @RequestParam("suffix") String suffix,
+            @ApiParam("图片类型：[1]用户头像 [2]家族封面 [3]人物肖像") @RequestParam("type") Integer type) {
+        // [1]用户头像 [2]家族封面 [3]人物肖像
         String imgType;
         switch (type) {
             case 1:
@@ -49,8 +52,9 @@ public class UploaderSuperviseController {
 
         // 自定义文件上传名，例：img/avatar/23/03/27/a5c8a5e8-df2b-4706-bea4-08d0939410e3.png
         String key = "img/" + imgType + "/" + DateUtil.format(new Date(), "yyyy/MM/dd") + "/" + IdUtil.randomUUID() + suffix;
+        // 创建 token，创建成功返回 token, cdn, key
         Map<String, String> map = qiniuService.imgToken(key);
-        return map == null ? CommonResult.failed(SystemMessageConstants.SYSTEM_EXCEPTION) : CommonResult.success(map);
+        return map == null || map.isEmpty() ? CommonResult.failed(SystemMessageConstants.SYSTEM_EXCEPTION) : CommonResult.success(map);
     }
 
 }

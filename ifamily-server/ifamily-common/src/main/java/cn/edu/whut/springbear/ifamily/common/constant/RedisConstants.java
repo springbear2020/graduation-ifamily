@@ -13,7 +13,7 @@ public class RedisConstants {
     /**
      * 验证码前缀
      */
-    public static final String VERIFY_CODE_PREFIX = "code:";
+    public static final String CODE_PREFIX = "code:";
     /**
      * 验证码有效期，单位：分钟
      */

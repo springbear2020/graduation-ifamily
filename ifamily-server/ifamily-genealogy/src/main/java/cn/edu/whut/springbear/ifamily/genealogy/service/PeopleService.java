@@ -20,17 +20,17 @@ public interface PeopleService extends IService<PeopleDO> {
     /**
      * 查询家族人员详细信息，包括个人详细信息以及家庭关系
      */
-    PeopleDetailsBO getGenealogyPeopleProfileDetails(Long peopleId);
+    PeopleDetailsBO getWithDetails(Long peopleId);
 
     /**
      * 根据人员 ID 查询家族人员信息
      */
-    PeopleVO getPeopleById(Long peopleId);
+    PeopleVO get(Long peopleId);
 
     /**
      * 根据 ID 更新家族人员信息
      */
-    boolean updatePeopleById(PeopleQuery peopleQuery);
+    boolean edit(PeopleQuery peopleQuery);
 
     /**
      * 添加父亲
@@ -71,5 +71,21 @@ public interface PeopleService extends IService<PeopleDO> {
      * @param compatriotInfo 同胞的家族信息
      */
     boolean savePeopleCompatriot(Long mePeopleId, PeopleQuery compatriotInfo);
+
+    /**
+     * 保存用户在家族中的人员信息
+     *
+     * @param userPeople  用户在默认家族中的资料
+     * @param userId      用户 ID
+     * @param genealogyId 用户家族 ID
+     */
+    boolean create(PeopleQuery userPeople, Long userId, Long genealogyId);
+
+    /**
+     * 移除家族中的人员信息
+     *
+     * @param peopleId 人员 ID
+     */
+    boolean remove(Long peopleId);
 
 }

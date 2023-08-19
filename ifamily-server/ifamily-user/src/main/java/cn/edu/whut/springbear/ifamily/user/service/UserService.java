@@ -1,9 +1,9 @@
 package cn.edu.whut.springbear.ifamily.user.service;
 
 import cn.edu.whut.springbear.ifamily.model.po.UserDO;
-import cn.edu.whut.springbear.ifamily.user.pojo.query.UserLoginQuery;
+import cn.edu.whut.springbear.ifamily.user.pojo.query.LoginQuery;
 import cn.edu.whut.springbear.ifamily.user.pojo.query.UserQuery;
-import cn.edu.whut.springbear.ifamily.user.pojo.query.UserResetQuery;
+import cn.edu.whut.springbear.ifamily.user.pojo.query.ResetQuery;
 import cn.edu.whut.springbear.ifamily.user.pojo.vo.UserVO;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -18,21 +18,19 @@ public interface UserService extends IService<UserDO> {
      *
      * @return 登录成功返回签发的 token，否则返回 null
      */
-    String login(UserLoginQuery userLoginQuery);
+    String login(LoginQuery loginQuery);
 
     /**
      * 用户注册
      *
      * @return 注册成功返回签发的 token，否则返回 null
      */
-    String register(UserResetQuery userResetQuery);
+    String register(ResetQuery resetQuery);
 
     /**
      * 重置用户登录密码
-     *
-     * @return [true]重置成功
      */
-    boolean reset(UserResetQuery userResetQuery);
+    boolean reset(ResetQuery resetQuery);
 
     /**
      * 返回当前请求中已认证的用户信息
@@ -40,41 +38,39 @@ public interface UserService extends IService<UserDO> {
     UserVO current();
 
     /**
-     * 更新用户简单资料，如用户头像地址、用户昵称、用户签名
-     *
-     * @return [true]更新成功
+     * 更新用户简单资料：头像地址、用户昵称、用户签名
      */
     boolean updateSimpleProfile(UserQuery userQuery);
 
     /**
      * 更新用户名
      *
-     * @param userId   用户 ID
-     * @param username 新用户名
-     * @param password 用户账号登录密码
+     * @param userId      用户 ID
+     * @param newUsername 新用户名
+     * @param password    用户账号登录密码
      * @return [true]更新成功
      */
-    boolean updateUsername(Long userId, String username, String password);
+    boolean updateUsername(Long userId, String newUsername, String password);
 
     /**
      * 更新邮箱
      *
-     * @param userId 用户 ID
-     * @param email  新邮箱地址
-     * @param code   验证码
+     * @param userId   用户 ID
+     * @param newEmail 新邮箱地址
+     * @param code     验证码
      * @return [true]更新成功
      */
-    boolean updateEmail(Long userId, String email, String code);
+    boolean updateEmail(Long userId, String newEmail, String code);
 
     /**
      * 更新手机号
      *
-     * @param userId 用户 ID
-     * @param phone  新手机号
-     * @param code   验证码
+     * @param userId   用户 ID
+     * @param newPhone 新手机号
+     * @param code     验证码
      * @return [true]更新成功
      */
-    boolean updatePhone(Long userId, String phone, String code);
+    boolean updatePhone(Long userId, String newPhone, String code);
 
     /**
      * 用户账号注销

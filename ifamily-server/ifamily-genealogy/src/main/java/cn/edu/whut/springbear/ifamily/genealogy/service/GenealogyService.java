@@ -2,7 +2,7 @@ package cn.edu.whut.springbear.ifamily.genealogy.service;
 
 import cn.edu.whut.springbear.ifamily.genealogy.pojo.po.GenealogyDO;
 import cn.edu.whut.springbear.ifamily.genealogy.pojo.query.GenealogyQuery;
-import cn.edu.whut.springbear.ifamily.genealogy.pojo.vo.GenealogyVO;
+import cn.edu.whut.springbear.ifamily.genealogy.pojo.bo.GenealogyDetailsBO;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 import java.util.List;
@@ -21,11 +21,11 @@ public interface GenealogyService extends IService<GenealogyDO> {
     /**
      * 查询用户关联的所有家族，包含家族成员概况信息、家族创建者和管理员等信息
      */
-    List<GenealogyVO> listGenealogiesWithProfileOfUser(Long userId);
+    List<GenealogyDetailsBO> listWithDetailsOfUser(Long userId);
 
     /**
      * 更新家族信息
      */
-    boolean editGenealogy(GenealogyQuery genealogyQuery);
+    boolean edit(GenealogyQuery genealogyQuery);
 
 }

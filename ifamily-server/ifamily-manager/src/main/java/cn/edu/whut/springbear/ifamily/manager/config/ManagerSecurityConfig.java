@@ -3,7 +3,6 @@ package cn.edu.whut.springbear.ifamily.manager.config;
 import cn.edu.whut.springbear.ifamily.client.acl.AclFeignClient;
 import cn.edu.whut.springbear.ifamily.client.user.UserFeignClient;
 import cn.edu.whut.springbear.ifamily.common.constant.UserMessageConstants;
-import cn.edu.whut.springbear.ifamily.common.enumerate.EnableStatusEnum;
 import cn.edu.whut.springbear.ifamily.model.dto.SecurityUserDetailsDTO;
 import cn.edu.whut.springbear.ifamily.model.po.PermissionDO;
 import cn.edu.whut.springbear.ifamily.model.po.UserDO;
@@ -38,7 +37,7 @@ public class ManagerSecurityConfig {
             }
 
             // 检查用户账号状态
-            if (EnableStatusEnum.DISABLE.getCode().equals(user.getStatus())) {
+            if (SecurityUserDetailsDTO.EnableStatusEnum.DISABLE.getCode().equals(user.getStatus())) {
                 // [401] RestfulUnauthorizedEntryPoint
                 throw new UsernameNotFoundException(UserMessageConstants.ILLEGAL_USER_STATUS);
             }

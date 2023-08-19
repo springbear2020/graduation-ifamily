@@ -39,9 +39,7 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
         }
 
         // 根据权限 ID 集合查询所有权限，真正实现查询用户拥有的所有权限
-        QueryWrapper<PermissionDO> queryWrapper = new QueryWrapper<>();
-        queryWrapper.in("id", permissionIds);
-        return this.baseMapper.selectList(queryWrapper);
+        return this.baseMapper.selectBatchIds(permissionIds);
     }
 
     @Override

@@ -10,10 +10,12 @@ import java.util.Map;
  */
 @FunctionalInterface
 public interface DynamicPermissionProvider {
+
     /**
-     * 加载资源 Ant 通配符和资源对应 Map
+     * 加载系统动态权限数据源
      *
-     * @return Ant 通配符和资源对应 Map
+     * @return key = permission.getPath(); val = permission.getId() + ":" + permission.getName();
      */
     Map<String, ConfigAttribute> loadDataSource();
+
 }

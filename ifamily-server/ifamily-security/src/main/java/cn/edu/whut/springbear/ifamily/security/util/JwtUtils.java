@@ -22,9 +22,13 @@ public class JwtUtils {
      */
     private static final Long EXPIRE = 259200000L;
     /**
+     * 请求头键
+     */
+    public static final String HEADER_KEY = "Authentication";
+    /**
      * 令牌键
      */
-    public static final String TOKEN_KEY = "Authentication";
+    public static final String TOKEN_KEY = "username";
 
     /**
      * 创建 token 字符串
@@ -41,7 +45,7 @@ public class JwtUtils {
     }
 
     /**
-     * 从 token 中根据 key 获取 value
+     * 从 token 中根据 key 获取 value，获取失败返回 null
      */
     public static String get(String token, String key) {
         if (!StringUtils.hasLength(token)) {

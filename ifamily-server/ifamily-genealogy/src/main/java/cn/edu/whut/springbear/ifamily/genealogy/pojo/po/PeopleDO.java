@@ -1,6 +1,8 @@
 package cn.edu.whut.springbear.ifamily.genealogy.pojo.po;
 
 import cn.edu.whut.springbear.ifamily.model.po.AbstractBaseDO;
+import com.baomidou.mybatisplus.annotation.FieldStrategy;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -83,6 +85,7 @@ public class PeopleDO extends AbstractBaseDO {
     /**
      * 逝世日期
      */
+    @TableField(updateStrategy = FieldStrategy.IGNORED)
     private Date deathDate;
 
     /**

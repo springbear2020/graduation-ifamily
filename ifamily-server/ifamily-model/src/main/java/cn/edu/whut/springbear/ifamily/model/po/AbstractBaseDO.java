@@ -21,7 +21,7 @@ public abstract class AbstractBaseDO implements Serializable {
     /**
      * ID
      */
-    @TableId(value = "id", type = IdType.AUTO)
+    @TableId(value = "id", type = IdType.ASSIGN_ID)
     protected Long id;
 
     /**

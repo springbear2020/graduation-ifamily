@@ -1,13 +1,12 @@
 package cn.edu.whut.springbear.ifamily.genealogy.service.impl;
 
-import cn.edu.whut.springbear.ifamily.common.enumerate.DeleteStatusEnum;
-import cn.edu.whut.springbear.ifamily.genealogy.enumerate.DefaultStatusEnum;
+import cn.edu.whut.springbear.ifamily.common.enumerate.AssertEnum;
 import cn.edu.whut.springbear.ifamily.genealogy.mapper.GenealogyMapper;
+import cn.edu.whut.springbear.ifamily.genealogy.pojo.bo.GenealogyDetailsBO;
 import cn.edu.whut.springbear.ifamily.genealogy.pojo.po.GenealogyDO;
 import cn.edu.whut.springbear.ifamily.genealogy.pojo.po.GenealogyProfileDO;
-import cn.edu.whut.springbear.ifamily.genealogy.pojo.po.GenealogyUserDO;
+import cn.edu.whut.springbear.ifamily.genealogy.pojo.po.UserGenealogyDO;
 import cn.edu.whut.springbear.ifamily.genealogy.pojo.query.GenealogyQuery;
-import cn.edu.whut.springbear.ifamily.genealogy.pojo.vo.GenealogyVO;
 import cn.edu.whut.springbear.ifamily.genealogy.pojo.vo.PeopleCardVO;
 import cn.edu.whut.springbear.ifamily.genealogy.pojo.vo.PeopleVO;
 import cn.edu.whut.springbear.ifamily.genealogy.service.*;
@@ -31,11 +30,13 @@ public class GenealogyServiceImpl extends ServiceImpl<GenealogyMapper, Genealogy
     @Autowired
     private GenealogyProfileService genealogyProfileService;
     @Autowired
-    private GenealogyUserService genealogyUserService;
+    private UserGenealogyService userGenealogyService;
     @Autowired
     private PeopleService peopleService;
     @Autowired
-    private GenealogyAdminService genealogyAdminService;
+    private MemberService memberService;
+    @Autowired
+    private VisitorLogService visitorLogService;
 
     @Transactional(rollbackFor = RuntimeException.class)
     @Override
@@ -43,65 +44,69 @@ public class GenealogyServiceImpl extends ServiceImpl<GenealogyMapper, Genealogy
         // 用户新增家族，保存家族信息
         GenealogyDO genealogyDO = new GenealogyDO();
         BeanUtils.copyProperties(genealogyQuery, genealogyDO);
-        // 家族 ID 置空，由服务器生成
         genealogyDO.setId(null);
-        // 创建者用户 ID
         genealogyDO.setCreatorUserId(userId);
         Date date = new Date();
         genealogyDO.setCreated(date);
         genealogyDO.setModified(date);
-        genealogyDO.setDeleted(DeleteStatusEnum.UNDELETED.getCode());
+        genealogyDO.setDeleted(AssertEnum.NO.getCode());
 
         // 保存家族
         int affectedRows = 0;
         affectedRows += this.baseMapper.insert(genealogyDO);
-        // 保存家族成员概况默认信息：总人数、男性人数、女性人数、健在人数、已逝人数均为 0
+        // 保存家族成员概况默认信息
         this.genealogyProfileService.create(genealogyDO.getId());
         // 修改用户已经关联家族的默认家族状态为否
-        this.genealogyUserService.updateGenealogiesStatusOfUser(userId, DefaultStatusEnum.NO.getCode());
+        this.userGenealogyService.updateDefault(userId, AssertEnum.NO.getCode());
         // 关联用户当前新建的家族，并将其设为默认家族
-        this.genealogyUserService.createUserDefaultGenealogy(userId, genealogyDO.getId());
+        this.userGenealogyService.createDefault(userId, genealogyDO.getId());
 
         return affectedRows == 1;
     }
 
     @Override
-    public List<GenealogyVO> listGenealogiesWithProfileOfUser(Long userId) {
+    public List<GenealogyDetailsBO> listWithDetailsOfUser(Long userId) {
         // 从家族-用户关联表中查询当前用户关联的所有家族
-        List<GenealogyUserDO> genealogyUserDOList = this.genealogyUserService.listGenealogiesOfUser(userId);
-        if (genealogyUserDOList == null || genealogyUserDOList.isEmpty()) {
+        List<UserGenealogyDO> userGenealogyDOList = this.userGenealogyService.listGenealogiesOfUser(userId);
+        if (userGenealogyDOList == null || userGenealogyDOList.isEmpty()) {
             return null;
         }
 
-        List<GenealogyVO> result = new ArrayList<>();
+        List<GenealogyDetailsBO> result = new ArrayList<>();
         // 遍历用户关联的所有家族，依次查询每个家族的成员概况概况信息、家族信息、家族管理员信息
-        genealogyUserDOList.forEach(item -> {
+        userGenealogyDOList.forEach(item -> {
             Long gid = item.getGenealogyId();
-            GenealogyVO genealogyVO = new GenealogyVO();
+            GenealogyDetailsBO genealogyDetailsBO = new GenealogyDetailsBO();
             // 查询当前家族的成员概况信息
             GenealogyProfileDO overviewDO = this.genealogyProfileService.getByGenealogyId(gid);
-            BeanUtils.copyProperties(overviewDO, genealogyVO);
+            BeanUtils.copyProperties(overviewDO, genealogyDetailsBO);
             // 查询当前家族信息
             GenealogyDO genealogyDO = this.getById(gid);
-            BeanUtils.copyProperties(genealogyDO, genealogyVO);
+            BeanUtils.copyProperties(genealogyDO, genealogyDetailsBO);
             // 查询家族创建者信息
             PeopleVO genealogyCreator = this.peopleService.getByUserGenealogyId(genealogyDO.getCreatorUserId(), item.getGenealogyId());
             PeopleCardVO genealogyCreatorVO = new PeopleCardVO();
             BeanUtils.copyProperties(genealogyCreator, genealogyCreatorVO);
-            genealogyVO.setCreator(genealogyCreatorVO);
+            genealogyDetailsBO.setCreator(genealogyCreatorVO);
             // 查询家族管理员列表信息
-            List<PeopleCardVO> genealogyAdmins = this.genealogyAdminService.listAdminsOfGenealogy(item.getGenealogyId());
-            genealogyVO.setAdmins(genealogyAdmins);
+            List<Long> genealogyAdminIds = this.userGenealogyService.listAdminIdsOfGenealogy(item.getGenealogyId());
+            List<PeopleCardVO> genealogyAdmins = this.memberService.listMemberByBatchUserIds(genealogyAdminIds, item.getGenealogyId());
+            genealogyDetailsBO.setAdmins(genealogyAdmins);
             // 设置当前用户家族的默认状态
-            genealogyVO.setDefaultGenealogy(item.getDefaultGenealogy());
-            result.add(genealogyVO);
+            genealogyDetailsBO.setDefaultGenealogy(item.getDefaultGenealogy());
+            result.add(genealogyDetailsBO);
+
+            // 保存用户默认家族的访问记录
+            if (AssertEnum.YES.getCode().equals(item.getDefaultGenealogy())) {
+                visitorLogService.create(userId, item.getGenealogyId());
+            }
         });
 
         return result;
     }
 
     @Override
-    public boolean editGenealogy(GenealogyQuery genealogyQuery) {
+    public boolean edit(GenealogyQuery genealogyQuery) {
         GenealogyDO genealogyDO = new GenealogyDO();
         BeanUtils.copyProperties(genealogyQuery, genealogyDO);
         return this.baseMapper.updateById(genealogyDO) == 1;

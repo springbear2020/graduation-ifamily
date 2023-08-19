@@ -7,7 +7,7 @@ import cn.edu.whut.springbear.ifamily.user.pojo.query.PageQuery;
 import cn.edu.whut.springbear.ifamily.user.pojo.query.UserQuery;
 import cn.edu.whut.springbear.ifamily.user.pojo.vo.LoginLogVO;
 import cn.edu.whut.springbear.ifamily.user.pojo.vo.UserVO;
-import cn.edu.whut.springbear.ifamily.user.service.UserLoginLogService;
+import cn.edu.whut.springbear.ifamily.user.service.LoginLogService;
 import cn.edu.whut.springbear.ifamily.user.service.UserService;
 import cn.hutool.core.util.ReUtil;
 import io.swagger.annotations.Api;
@@ -32,20 +32,20 @@ public class UserSuperviseController {
     @Autowired
     private UserService userService;
     @Autowired
-    private UserLoginLogService userLoginLogService;
+    private LoginLogService loginLogService;
 
     @ApiOperation("获取当前用户")
     @GetMapping
-    public CommonResult<Object> currentUser() {
+    public CommonResult<Object> current() {
         UserVO userVO = this.userService.current();
         return userVO != null ? CommonResult.success(userVO) : CommonResult.failed(UserMessageConstants.UNAUTHORIZED);
     }
 
     @ApiOperation("查询登录记录")
     @GetMapping("/devices")
-    public CommonResult<Object> userLoginLog(@Validated PageQuery pageQuery) {
+    public CommonResult<Object> loginLog(@Validated PageQuery pageQuery) {
         UserVO current = this.userService.current();
-        List<LoginLogVO> records = this.userLoginLogService.page(pageQuery, current.getId());
+        List<LoginLogVO> records = this.loginLogService.page(pageQuery, current.getId());
         return records == null || records.isEmpty() ? CommonResult.failed("登录记录无数据") : CommonResult.success(records);
     }
 
@@ -54,12 +54,18 @@ public class UserSuperviseController {
      */
     @ApiOperation("用户账号注销")
     @DeleteMapping
-    public CommonResult<String> userLogout(@ApiParam("账号登录密码") @RequestParam("password") String password) {
+    public CommonResult<String> logout(@ApiParam("账号登录密码") @RequestParam("password") String password) {
         UserVO current = this.userService.current();
-        boolean result = this.userService.remove(current.getId(), password);
-        return result ? CommonResult.success() : CommonResult.failed(SystemMessageConstants.SYSTEM_EXCEPTION);
+        boolean deleteResult = this.userService.remove(current.getId(), password);
+        return deleteResult ? CommonResult.success() : CommonResult.failed(SystemMessageConstants.SYSTEM_EXCEPTION);
     }
 
+    /**
+     * 更新用户简单资料
+     *
+     * @param content 需要保存的新内容
+     * @param type    操作类型：[1]用户昵称 [2]个性签名 [3]头像地址
+     */
     @ApiOperation("更新用户资料")
     @PutMapping("/profile/{type}")
     public CommonResult<String> updateSimpleProfile(
@@ -75,14 +81,14 @@ public class UserSuperviseController {
             case 1:
                 // 用户昵称
                 if (!StringUtils.hasLength(content) || content.length() > limit) {
-                    return CommonResult.failed("昵称格式：长度不大于 30 的字符串");
+                    return CommonResult.failed("请填写用户昵称, 长度不大于 30");
                 }
                 userQuery.setNickname(content);
                 break;
             case 2:
                 // 个性签名
                 if (!StringUtils.hasLength(content) || content.length() > limit) {
-                    return CommonResult.failed("签名格式：长度不大于 30 的字符串");
+                    return CommonResult.failed("请填写个性签名, 长度不大于 30");
                 }
                 userQuery.setSignature(content);
                 break;
@@ -98,7 +104,8 @@ public class UserSuperviseController {
                 return CommonResult.failed("类型：[1]用户昵称 [2]个性签名 [3]头像地址");
         }
 
-        return this.userService.updateSimpleProfile(userQuery) ? CommonResult.success() : CommonResult.failed(SystemMessageConstants.SYSTEM_EXCEPTION);
+        boolean updateResult = this.userService.updateSimpleProfile(userQuery);
+        return updateResult ? CommonResult.success() : CommonResult.failed(SystemMessageConstants.SYSTEM_EXCEPTION);
     }
 
     /**

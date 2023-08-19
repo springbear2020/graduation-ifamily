@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
 public class SecurityUserServiceImpl implements SecurityUserService {
 
     @Override
-    public UserDO getCurrentUser() {
+    public UserDO current() {
         SecurityUserDetailsDTO userDetailsDTO = (SecurityUserDetailsDTO) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (userDetailsDTO == null) {
             throw new IllegalStatusException(UserMessageConstants.UNAUTHORIZED);

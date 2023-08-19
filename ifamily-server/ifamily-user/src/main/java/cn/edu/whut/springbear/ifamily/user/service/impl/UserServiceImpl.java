@@ -3,8 +3,7 @@ package cn.edu.whut.springbear.ifamily.user.service.impl;
 import cn.edu.whut.springbear.ifamily.client.acl.AclFeignClient;
 import cn.edu.whut.springbear.ifamily.common.constant.RedisConstants;
 import cn.edu.whut.springbear.ifamily.common.constant.UserMessageConstants;
-import cn.edu.whut.springbear.ifamily.common.enumerate.DeleteStatusEnum;
-import cn.edu.whut.springbear.ifamily.common.enumerate.EnableStatusEnum;
+import cn.edu.whut.springbear.ifamily.common.enumerate.AssertEnum;
 import cn.edu.whut.springbear.ifamily.common.exception.IllegalConditionException;
 import cn.edu.whut.springbear.ifamily.common.exception.IllegalStatusException;
 import cn.edu.whut.springbear.ifamily.model.dto.SecurityUserDetailsDTO;
@@ -12,14 +11,14 @@ import cn.edu.whut.springbear.ifamily.model.po.PermissionDO;
 import cn.edu.whut.springbear.ifamily.model.po.UserDO;
 import cn.edu.whut.springbear.ifamily.security.util.JwtUtils;
 import cn.edu.whut.springbear.ifamily.user.mapper.UserMapper;
-import cn.edu.whut.springbear.ifamily.user.pojo.po.UsernameUpdateLogDO;
-import cn.edu.whut.springbear.ifamily.user.pojo.query.UserLoginQuery;
+import cn.edu.whut.springbear.ifamily.user.pojo.po.UsernameLogDO;
+import cn.edu.whut.springbear.ifamily.user.pojo.query.LoginQuery;
+import cn.edu.whut.springbear.ifamily.user.pojo.query.ResetQuery;
 import cn.edu.whut.springbear.ifamily.user.pojo.query.UserQuery;
-import cn.edu.whut.springbear.ifamily.user.pojo.query.UserResetQuery;
 import cn.edu.whut.springbear.ifamily.user.pojo.vo.UserVO;
-import cn.edu.whut.springbear.ifamily.user.service.UserLoginLogService;
+import cn.edu.whut.springbear.ifamily.user.service.LoginLogService;
 import cn.edu.whut.springbear.ifamily.user.service.UserService;
-import cn.edu.whut.springbear.ifamily.user.service.UsernameUpdateLogService;
+import cn.edu.whut.springbear.ifamily.user.service.UsernameLogService;
 import cn.hutool.core.date.DateUnit;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.DesensitizedUtil;
@@ -51,16 +50,16 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
     @Autowired
     private AclFeignClient aclFeignClient;
     @Autowired
-    private UserLoginLogService userLoginLogService;
-    @Autowired
-    private UsernameUpdateLogService usernameUpdateLogService;
-    @Autowired
     private RedisTemplate<String, String> redisTemplate;
+    @Autowired
+    private LoginLogService loginLogService;
+    @Autowired
+    private UsernameLogService usernameLogService;
 
     @Override
-    public String login(UserLoginQuery userLoginQuery) {
+    public String login(LoginQuery loginQuery) {
         // 根据用户名、手机、邮箱查询用户，验证用户是否存在
-        String account = userLoginQuery.getAccount();
+        String account = loginQuery.getAccount();
         QueryWrapper<UserDO> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("phone", account).or().eq("email", account).or().eq("username", account);
         UserDO user = this.baseMapper.selectOne(queryWrapper);
@@ -69,45 +68,46 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
         }
 
         // 客户端请求的登录类型：[0]密码登录 [1]验证码登录
+        Integer loginType = loginQuery.getLoginType();
         final int codeLogin = 1;
-        Integer loginType = userLoginQuery.getLoginType();
         if (loginType == codeLogin) {
             // 检验当前验证码的正确性
-            this.validateVerifyCode(account, userLoginQuery.getCode());
+            this.validateVerifyCode(account, loginQuery.getCode());
         } else {
             // 验证密码正确性
-            if (!this.passwordEncoder.matches(userLoginQuery.getPassword(), user.getPassword())) {
+            if (!this.passwordEncoder.matches(loginQuery.getPassword(), user.getPassword())) {
                 throw new IllegalConditionException(UserMessageConstants.ERROR_PASSWORD);
             }
         }
 
         // 检查用户账号状态
-        if (EnableStatusEnum.DISABLE.getCode().equals(user.getStatus())) {
+        if (SecurityUserDetailsDTO.EnableStatusEnum.DISABLE.getCode().equals(user.getStatus())) {
             throw new IllegalStatusException(UserMessageConstants.ILLEGAL_USER_STATUS);
         }
 
-        // 查询当前用户的系统权限，将当前用户信息注入到安全框架中
+        // 查询当前用户拥有的系统权限
         List<PermissionDO> permissions = this.aclFeignClient.listPermissionsOfUser(user.getId());
         permissions = permissions == null ? new ArrayList<>() : permissions;
+        // 将当前用户信息封装为 SecurityUserDetailsDTO 并注入到安全框架中
         SecurityUserDetailsDTO userDetails = new SecurityUserDetailsDTO(user, permissions);
         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         // 保存用户登录记录
-        this.userLoginLogService.create(user.getId());
+        this.loginLogService.create(user.getId());
         // 更新上次登录时间
         UserDO userDO = new UserDO();
         userDO.setId(user.getId());
         userDO.setLastLogin(new Date());
         this.baseMapper.updateById(userDO);
 
-        return JwtUtils.create("username", user.getUsername());
+        return JwtUtils.create(JwtUtils.TOKEN_KEY, user.getUsername());
     }
 
     @Override
-    public String register(UserResetQuery userResetQuery) {
+    public String register(ResetQuery resetQuery) {
         UserDO userDO = new UserDO();
-        String account = userResetQuery.getAccount();
+        String account = resetQuery.getAccount();
 
         // 正则表达式匹配客户端的注册方式是手机注册还是邮箱注册
         String phoneRegexp = "^1[3456789]\\d{9}$";
@@ -125,29 +125,30 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
         }
 
         // 验证用户输入的验证码是否正确
-        this.validateVerifyCode(account, userResetQuery.getCode());
+        this.validateVerifyCode(account, resetQuery.getCode());
 
-        // 设置用户注册所需的必要信息，用户名唯一、密码加密存储
-        Date date = new Date();
+        // 设置用户注册所需的必要信息，ID 置空、用户名唯一、密码加密存储
+        userDO.setId(null);
         userDO.setUsername(IdUtil.simpleUUID());
-        userDO.setPassword(this.passwordEncoder.encode(userResetQuery.getPassword()));
+        userDO.setPassword(this.passwordEncoder.encode(resetQuery.getPassword()));
+        Date date = new Date();
         userDO.setCreated(date);
         userDO.setModified(date);
+        userDO.setDeleted(AssertEnum.NO.getCode());
         userDO.setLastLogin(date);
-        userDO.setStatus(EnableStatusEnum.ENABLE.getCode());
-        userDO.setDeleted(DeleteStatusEnum.UNDELETED.getCode());
+        userDO.setStatus(SecurityUserDetailsDTO.EnableStatusEnum.ENABLE.getCode());
         this.baseMapper.insert(userDO);
 
         // 保存用户登录记录
-        this.userLoginLogService.create(userDO.getId());
+        this.loginLogService.create(userDO.getId());
 
-        return JwtUtils.create("username", userDO.getUsername());
+        return JwtUtils.create(JwtUtils.TOKEN_KEY, userDO.getUsername());
     }
 
     @Override
-    public boolean reset(UserResetQuery userResetQuery) {
+    public boolean reset(ResetQuery resetQuery) {
         // 根据手机号或邮箱查询用户信息是否存在
-        String account = userResetQuery.getAccount();
+        String account = resetQuery.getAccount();
         QueryWrapper<UserDO> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("phone", account).or().eq("email", account);
         UserDO user = this.baseMapper.selectOne(queryWrapper);
@@ -156,15 +157,15 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
         }
 
         // 判断新旧密码是否一致
-        if (this.passwordEncoder.matches(userResetQuery.getPassword(), user.getPassword())) {
+        if (this.passwordEncoder.matches(resetQuery.getPassword(), user.getPassword())) {
             throw new IllegalConditionException("新旧密码相同，请重新输入");
         }
 
         // 检验验证码是否正确
-        this.validateVerifyCode(account, userResetQuery.getCode());
+        this.validateVerifyCode(account, resetQuery.getCode());
 
         // 更新用户登录密码
-        String encodedNewPassword = this.passwordEncoder.encode(userResetQuery.getPassword());
+        String encodedNewPassword = this.passwordEncoder.encode(resetQuery.getPassword());
         UserDO userDO = new UserDO();
         userDO.setId(user.getId());
         userDO.setPassword(encodedNewPassword);
@@ -189,7 +190,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
     @Override
     public boolean updateSimpleProfile(UserQuery userQuery) {
         UserDO userDO = new UserDO();
-        // 更新头像地址 || 用户昵称 || 个性签名
         BeanUtils.copyProperties(userQuery, userDO);
         return this.baseMapper.updateById(userDO) == 1;
     }
@@ -215,7 +215,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
         }
 
         // 查询当前用户用户名的上次更新时间，一年内只允许更新一次
-        UsernameUpdateLogDO latest = this.usernameUpdateLogService.getLatestOfUser(user.getId());
+        UsernameLogDO latest = this.usernameLogService.getLatest(user.getId());
         if (latest != null) {
             Date lastUpdate = latest.getCreated();
             long days = DateUtil.between(lastUpdate, new Date(), DateUnit.DAY);
@@ -226,12 +226,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
         }
 
         // 保存用户最新的用户名修改记录
-        this.usernameUpdateLogService.create(user.getUsername(), username, user.getId());
+        this.usernameLogService.create(user.getUsername(), username, user.getId());
         // 更新用户名
         UserDO userDO = new UserDO();
         userDO.setUsername(username);
         userDO.setId(user.getId());
-
         return this.baseMapper.updateById(userDO) == 1;
     }
 
@@ -317,7 +316,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
      * @param code    需要检验的验证码
      */
     private void validateVerifyCode(String account, String code) {
-        String key = RedisConstants.VERIFY_CODE_PREFIX + account;
+        String key = RedisConstants.CODE_PREFIX + account;
         String codeFromRedis = redisTemplate.opsForValue().get(key);
         if (codeFromRedis == null) {
             throw new IllegalConditionException("验证码不存在，请先获取验证码");

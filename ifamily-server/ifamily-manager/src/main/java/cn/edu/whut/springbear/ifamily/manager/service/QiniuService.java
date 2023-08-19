@@ -9,7 +9,7 @@ import java.util.Map;
 public interface QiniuService {
 
     /**
-     * 从七牛云平台获取文件图片上传 token
+     * 从七牛云平台获取图片文件上传 token
      *
      * @param key 文件名
      * @return Map: 键中包含 token, key, cdn

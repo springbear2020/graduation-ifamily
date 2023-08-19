@@ -1,15 +1,14 @@
 package cn.edu.whut.springbear.ifamily.manager.service.impl;
 
-import cn.edu.whut.springbear.ifamily.common.enumerate.DeleteStatusEnum;
-import cn.edu.whut.springbear.ifamily.common.enumerate.SuccessStatusEnum;
-import cn.edu.whut.springbear.ifamily.manager.pojo.po.QiniuTokenLogDO;
+import cn.edu.whut.springbear.ifamily.common.enumerate.AssertEnum;
+import cn.edu.whut.springbear.ifamily.common.exception.SystemServiceException;
+import cn.edu.whut.springbear.ifamily.manager.pojo.po.QiniuLogDO;
+import cn.edu.whut.springbear.ifamily.manager.service.QiniuLogService;
 import cn.edu.whut.springbear.ifamily.manager.service.QiniuService;
-import cn.edu.whut.springbear.ifamily.manager.service.QiniuTokenLogService;
 import cn.edu.whut.springbear.ifamily.manager.service.SecurityUserService;
 import cn.edu.whut.springbear.ifamily.model.po.UserDO;
 import com.qiniu.util.Auth;
 import com.qiniu.util.StringMap;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -23,7 +22,6 @@ import java.util.Map;
  * @since 23/03/27 16:19
  */
 @Service
-@Slf4j
 public class QiniuServiceImpl implements QiniuService {
 
     @Value("${qiniu.bucket}")
@@ -36,7 +34,7 @@ public class QiniuServiceImpl implements QiniuService {
     private String cdn;
 
     @Autowired
-    private QiniuTokenLogService qiniuTokenLogService;
+    private QiniuLogService qiniuLogService;
     @Autowired
     private SecurityUserService securityUserService;
 
@@ -51,23 +49,30 @@ public class QiniuServiceImpl implements QiniuService {
         policy.put("scope", bucket + key);
 
         // 七牛云 token 获取记录
-        UserDO currentUser = securityUserService.getCurrentUser();
-        QiniuTokenLogDO qiniuTokenLogDO = this.qiniuTokenLogDO(key, currentUser.getId());
+        UserDO current = securityUserService.current();
+        QiniuLogDO qiniuLogDO = new QiniuLogDO();
+        qiniuLogDO.setBucket(bucket);
+        qiniuLogDO.setFileKey(key);
+        qiniuLogDO.setCdn(cdn);
+        qiniuLogDO.setToken("");
+        qiniuLogDO.setSuccess(AssertEnum.NO.getCode());
+        qiniuLogDO.setCreated(new Date());
+        qiniuLogDO.setModified(new Date());
+        qiniuLogDO.setDeleted(AssertEnum.NO.getCode());
+        qiniuLogDO.setUserId(current.getId());
 
         String token;
         try {
             Auth auth = Auth.create(accessKey, secretKey);
             // token 有效期 60 分钟
-            token = auth.uploadToken(bucket, key, 3600, policy);
-            qiniuTokenLogDO.setToken(token);
-            qiniuTokenLogDO.setStatus(SuccessStatusEnum.SUCCESS.getCode());
+            final int expires = 3600;
+            token = auth.uploadToken(bucket, key, expires, policy);
+            qiniuLogDO.setToken(token);
+            qiniuLogDO.setSuccess(AssertEnum.YES.getCode());
         } catch (Exception e) {
-            qiniuTokenLogDO.setToken("");
-            log.error(e.getMessage());
-            return null;
+            throw new SystemServiceException(e.getMessage());
         } finally {
-            // 保存 token 获取记录
-            qiniuTokenLogService.save(qiniuTokenLogDO);
+            qiniuLogService.save(qiniuLogDO);
         }
 
         // 返回客户端必要数据：key - token - cdn
@@ -76,21 +81,6 @@ public class QiniuServiceImpl implements QiniuService {
         map.put("token", token);
         map.put("cdn", cdn);
         return map;
-    }
-
-    private QiniuTokenLogDO qiniuTokenLogDO(String key, Long userId) {
-        Date date = new Date();
-        QiniuTokenLogDO qiniuTokenLogDO = new QiniuTokenLogDO();
-        qiniuTokenLogDO.setBucket(bucket);
-        qiniuTokenLogDO.setFileKey(key);
-        qiniuTokenLogDO.setCdn(cdn);
-        qiniuTokenLogDO.setToken(null);
-        qiniuTokenLogDO.setStatus(SuccessStatusEnum.FAILED.getCode());
-        qiniuTokenLogDO.setCreated(date);
-        qiniuTokenLogDO.setModified(date);
-        qiniuTokenLogDO.setDeleted(DeleteStatusEnum.UNDELETED.getCode());
-        qiniuTokenLogDO.setUserId(userId);
-        return qiniuTokenLogDO;
     }
 
 }

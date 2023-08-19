@@ -76,7 +76,7 @@ public final class CommonResult<T> {
         return new CommonResult<>(ResultCodeEnum.SERVICE_UNAVAILABLE.getCode(), ResultCodeEnum.SERVICE_UNAVAILABLE.getMessage(), data);
     }
 
-    /// ===============================================================================================================
+    /// ================================================================================================================
 
     /**
      * 失败
@@ -84,7 +84,6 @@ public final class CommonResult<T> {
     public static <T> CommonResult<T> failed(T data) {
         return new CommonResult<>(ResultCodeEnum.NOT_ACCEPTABLE.getCode(), ResultCodeEnum.NOT_ACCEPTABLE.getMessage(), data);
     }
-
     /**
      * 错误条件
      */

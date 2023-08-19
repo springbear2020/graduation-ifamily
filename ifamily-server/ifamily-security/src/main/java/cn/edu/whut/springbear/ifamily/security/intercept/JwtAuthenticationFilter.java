@@ -32,14 +32,17 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws ServletException, IOException {
         // 从请求头中获取 token，若 token 内容为空则直接放行
-        String token = request.getHeader(JwtUtils.TOKEN_KEY);
+        String token = request.getHeader(JwtUtils.HEADER_KEY);
         if (!StringUtils.hasLength(token)) {
             chain.doFilter(request, response);
             return;
         }
 
-        // 从 token 中解析用户名，而后验证当前用户名信息是否已在系统登录，若未登录且用户信息合法则将其注入到安全上下文框架中，从而实现用户免鉴权登录
-        String username = JwtUtils.get(token, "username");
+        /*
+         * 从 token 中解析用户名，而后验证当前用户名信息是否已在系统登录，
+         * 若未登录且用户信息合法则将其注入到安全上下文框架中，从而实现用户免鉴权登录
+         */
+        String username = JwtUtils.get(token, JwtUtils.TOKEN_KEY);
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
             if (username.equals(userDetails.getUsername())) {

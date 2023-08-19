@@ -4,6 +4,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.Date;
+
 
 /**
  * @author Spring-_-Bear
@@ -14,6 +16,7 @@ class GenealogyProfileServiceTest {
 
     @Test
     void genealogyPeopleIncreaseOne(@Autowired GenealogyProfileService genealogyProfileService) {
-        System.out.println(genealogyProfileService.genealogyPeopleProfileIncreaseOne(9L, 1, true));
+        System.out.println(genealogyProfileService.increaseOne(9L, 1, new Date()));
     }
+
 }

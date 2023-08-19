@@ -74,7 +74,7 @@ public class SecurityUserDetailsDTO implements UserDetails {
     }
 
     @Getter
-    enum EnableStatusEnum {
+    public enum EnableStatusEnum {
 
         /**
          * 启用
