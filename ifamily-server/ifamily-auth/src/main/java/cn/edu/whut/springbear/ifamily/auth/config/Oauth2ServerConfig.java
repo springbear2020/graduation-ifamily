@@ -104,7 +104,7 @@ public class Oauth2ServerConfig extends AuthorizationServerConfigurerAdapter {
     public TokenEnhancer tokenEnhancer() {
         return (accessToken, authentication) -> {
             SecurityUser securityUser = (SecurityUser) authentication.getPrincipal();
-            Map<String, Object> info = new HashMap<>(2);
+            Map<String, Object> info = new HashMap<>(1);
             // 将 UID 设置到 token 中
             info.put("id", securityUser.getId());
             ((DefaultOAuth2AccessToken) accessToken).setAdditionalInformation(info);

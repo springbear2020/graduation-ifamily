@@ -16,8 +16,7 @@
     </van-swipe>
 
     <van-tabs>
-      <!-- 动态 -->
-      <van-tab title="动态">
+      <van-tab title="成员动态">
         <van-pull-refresh success-text="刷新成功" v-model="isRefreshing" @refresh="onRefresh">
           <van-list isFinished-text="没有更多了" error-text="请求失败，点击重新加载"
                     v-model="isLoading" :isFinished="isFinished" @load="onLoad" :error.sync="error">
@@ -30,7 +29,6 @@
 </template>
 
 <script>
-import moments from '@/assets/json/moments.json'
 import socialMoments from '@/components/business/social-moments'
 
 export default {
@@ -40,15 +38,271 @@ export default {
   },
   data() {
     return {
-      momentList: [],
+      momentList: [
+        {
+          "id": 1,
+          "portrait": "https://img01.yzcdn.cn/vant/cat.jpeg",
+          "name": "光头勇",
+          "content": "2023-02-23 17:23",
+          "description": "所以认真才显得格格不入，好像你只想跟我风花雪月过眼云烟，我却想跟你朝朝暮暮岁岁年年。",
+          "permission": "0",
+          "imgList": [
+            {
+              "id": 1,
+              "url": "https://img01.yzcdn.cn/vant/cat.jpeg"
+            },
+            {
+              "id": 2,
+              "url": "https://img01.yzcdn.cn/vant/cat.jpeg"
+            },
+            {
+              "id": 3,
+              "url": "https://img01.yzcdn.cn/vant/cat.jpeg"
+            },
+            {
+              "id": 4,
+              "url": "https://img01.yzcdn.cn/vant/cat.jpeg"
+            },
+            {
+              "id": 5,
+              "url": "https://img01.yzcdn.cn/vant/cat.jpeg"
+            },
+            {
+              "id": 6,
+              "url": "https://img01.yzcdn.cn/vant/cat.jpeg"
+            }
+          ],
+          "likeList": [
+            {
+              "id": 1,
+              "name": "光头勇"
+            },
+            {
+              "id": 2,
+              "name": "光头勇"
+            },
+            {
+              "id": 3,
+              "name": "光头勇"
+            },
+            {
+              "id": 4,
+              "name": "光头勇"
+            },
+            {
+              "id": 5,
+              "name": "光头勇"
+            },
+            {
+              "id": 6,
+              "name": "光头勇"
+            }
+          ],
+          "commentList": [
+            {
+              "id": 1,
+              "source": "强哥",
+              "target": "伟哥",
+              "content": "所以认真才显得格格不入，好像你只想跟我风花雪月过眼云烟，我却想跟你朝朝暮暮岁岁年年。"
+            },
+            {
+              "id": 2,
+              "source": "强哥",
+              "target": "伟哥",
+              "content": "所以认真才显得格格不入"
+            },
+            {
+              "id": 3,
+              "source": "强哥",
+              "target": "伟哥",
+              "content": "所以认真才显得格格不入"
+            },
+            {
+              "id": 4,
+              "source": "强哥",
+              "target": "伟哥",
+              "content": "所以认真才显得格格不入"
+            }
+          ]
+        },
+        {
+          "id": 2,
+          "portrait": "https://img01.yzcdn.cn/vant/cat.jpeg",
+          "name": "光头勇",
+          "content": "2023-02-23 17:23",
+          "description": "所以认真才显得格格不入，好像你只想跟我风花雪月过眼云烟，我却想跟你朝朝暮暮岁岁年年。",
+          "permission": "1",
+          "imgList": [
+            {
+              "id": 1,
+              "url": "https://img01.yzcdn.cn/vant/cat.jpeg"
+            },
+            {
+              "id": 2,
+              "url": "https://img01.yzcdn.cn/vant/cat.jpeg"
+            },
+            {
+              "id": 3,
+              "url": "https://img01.yzcdn.cn/vant/cat.jpeg"
+            },
+            {
+              "id": 4,
+              "url": "https://img01.yzcdn.cn/vant/cat.jpeg"
+            },
+            {
+              "id": 5,
+              "url": "https://img01.yzcdn.cn/vant/cat.jpeg"
+            },
+            {
+              "id": 6,
+              "url": "https://img01.yzcdn.cn/vant/cat.jpeg"
+            }
+          ],
+          "likeList": [
+            {
+              "id": 1,
+              "name": "光头勇"
+            },
+            {
+              "id": 2,
+              "name": "光头勇"
+            },
+            {
+              "id": 3,
+              "name": "光头勇"
+            },
+            {
+              "id": 4,
+              "name": "光头勇"
+            },
+            {
+              "id": 5,
+              "name": "光头勇"
+            },
+            {
+              "id": 6,
+              "name": "光头勇"
+            }
+          ],
+          "commentList": [
+            {
+              "id": 1,
+              "source": "强哥",
+              "target": "伟哥",
+              "content": "阿伟，不要啦"
+            },
+            {
+              "id": 2,
+              "source": "强哥",
+              "target": "伟哥",
+              "content": "阿伟，不要啦"
+            },
+            {
+              "id": 3,
+              "source": "强哥",
+              "target": "伟哥",
+              "content": "阿伟，不要啦"
+            },
+            {
+              "id": 4,
+              "source": "强哥",
+              "target": "伟哥",
+              "content": "阿伟，不要啦"
+            }
+          ]
+        },
+        {
+          "id": 3,
+          "portrait": "https://img01.yzcdn.cn/vant/cat.jpeg",
+          "name": "光头勇",
+          "content": "2023-02-23 17:23",
+          "description": "所以认真才显得格格不入，好像你只想跟我风花雪月过眼云烟，我却想跟你朝朝暮暮岁岁年年。",
+          "permission": "2",
+          "imgList": [
+            {
+              "id": 1,
+              "url": "https://img01.yzcdn.cn/vant/cat.jpeg"
+            },
+            {
+              "id": 2,
+              "url": "https://img01.yzcdn.cn/vant/cat.jpeg"
+            },
+            {
+              "id": 3,
+              "url": "https://img01.yzcdn.cn/vant/cat.jpeg"
+            },
+            {
+              "id": 4,
+              "url": "https://img01.yzcdn.cn/vant/cat.jpeg"
+            },
+            {
+              "id": 5,
+              "url": "https://img01.yzcdn.cn/vant/cat.jpeg"
+            },
+            {
+              "id": 6,
+              "url": "https://img01.yzcdn.cn/vant/cat.jpeg"
+            }
+          ],
+          "likeList": [
+            {
+              "id": 1,
+              "name": "光头勇"
+            },
+            {
+              "id": 2,
+              "name": "光头勇"
+            },
+            {
+              "id": 3,
+              "name": "光头勇"
+            },
+            {
+              "id": 4,
+              "name": "光头勇"
+            },
+            {
+              "id": 5,
+              "name": "光头勇"
+            },
+            {
+              "id": 6,
+              "name": "光头勇"
+            }
+          ],
+          "commentList": [
+            {
+              "id": 1,
+              "source": "强哥",
+              "target": "伟哥",
+              "content": "阿伟，不要啦"
+            },
+            {
+              "id": 2,
+              "source": "强哥",
+              "target": "伟哥",
+              "content": "阿伟，不要啦"
+            },
+            {
+              "id": 3,
+              "source": "强哥",
+              "target": "伟哥",
+              "content": "阿伟，不要啦"
+            },
+            {
+              "id": 4,
+              "source": "强哥",
+              "target": "伟哥",
+              "content": "阿伟，不要啦"
+            }
+          ]
+        }
+      ],
       isRefreshing: false,
       isLoading: false,
       isFinished: false,
       error: false
     };
-  },
-  mounted() {
-    this.momentList = moments
   },
   methods: {
     onRefresh() {

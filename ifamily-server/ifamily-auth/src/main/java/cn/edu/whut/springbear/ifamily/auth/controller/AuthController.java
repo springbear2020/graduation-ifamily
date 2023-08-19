@@ -1,6 +1,5 @@
 package cn.edu.whut.springbear.ifamily.auth.controller;
 
-import cn.edu.whut.springbear.ifamily.auth.pojo.vo.Oauth2TokenVO;
 import cn.edu.whut.springbear.ifamily.common.api.CommonResult;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
@@ -57,14 +56,14 @@ public class AuthController {
         // 请求签发 token
         OAuth2AccessToken token = this.tokenEndpoint.postAccessToken(request.getUserPrincipal(), parameters).getBody();
         if (token == null) {
-            return CommonResult.failed("令牌签发失败");
+            return CommonResult.failed("请求签发或刷新令牌失败");
         }
 
-        Oauth2TokenVO tokenVO = new Oauth2TokenVO();
-        tokenVO.setAccessToken(token.getValue());
-        tokenVO.setRefreshToken(token.getRefreshToken().getValue());
-        tokenVO.setExpires(token.getExpiresIn());
-        return CommonResult.success(tokenVO);
+        Map<String, Object> resultMap = new HashMap<>(3);
+        resultMap.put("accessToken", token.getValue());
+        resultMap.put("refreshToken", token.getRefreshToken().getValue());
+        resultMap.put("expires", token.getExpiresIn());
+        return CommonResult.success(resultMap);
     }
 
     @ApiOperation("获取 rsa 公钥")

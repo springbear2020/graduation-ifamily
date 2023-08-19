@@ -7,10 +7,6 @@ import {Notify} from "vant";
 Vue.use(VueRouter)
 
 export const constantRoutes = [
-    {
-        path: '/',
-        redirect: '/home'
-    },
     /// user ===========================================================================================================
     {
         path: '/user/login',
@@ -29,10 +25,6 @@ export const constantRoutes = [
     {
         path: '/mine/info',
         component: () => import('@/views/mine/info'),
-    },
-    {
-        path: '/mine/info/form/:type',
-        component: () => import('@/views/mine/info/form'),
     },
     {
         path: '/mine/settings',
@@ -61,19 +53,15 @@ export const constantRoutes = [
         meta: {footerShow: true}
     },
     {
-        path: '/family/list',
-        component: () => import('@/views/family/list'),
-    },
-    {
         path: '/family/info',
         component: () => import('@/views/family/info'),
     },
     {
-        path: '/family/info/form/:type',
-        component: () => import('@/views/family/info/form'),
+        path: '/family/list',
+        component: () => import('@/views/family/list'),
     },
     {
-        path: '/family/tree/:type',
+        path: '/family/tree',
         component: () => import('@/views/family/tree'),
     },
     {
@@ -85,14 +73,6 @@ export const constantRoutes = [
         component: () => import('@/views/family/member/info'),
     },
     {
-        path: '/family/member/edit/:type',
-        component: () => import('@/views/family/member/edit'),
-    },
-    {
-        path: '/family/member/add/:type',
-        component: () => import('@/views/family/member/add'),
-    },
-    {
         path: '/family/revision',
         component: () => import('@/views/family/revision'),
     },
@@ -100,66 +80,52 @@ export const constantRoutes = [
         path: '/family/notice',
         component: () => import('@/views/family/notice'),
     },
-
-    // *****************************************************************************************************************
-
-    {
-        path: '/family/manage/member/init',
-        component: () => import('@/views/family/manage/member/init'),
-    },
     {
         path: '/family/album',
         component: () => import('@/views/family/album'),
     },
     {
-        path: '/family/manage',
-        component: () => import('@/views/family/manage'),
+        path: '/family/memorabilia',
+        component: () => import('@/views/family/memorabilia'),
+    },
+    /// 家族管理 ========================================================================================================
+    {
+        path: '/family/admin',
+        component: () => import('@/views/family/admin'),
     },
     {
-        path: '/family/manage/member',
-        component: () => import('@/views/family/manage/member'),
+        path: '/family/admin/info/form/:type',
+        component: () => import('@/views/family/admin/info/form'),
     },
     {
-        path: '/family/manage/seniority',
-        component: () => import('@/views/family/manage/seniority'),
+        path: '/family/admin/member',
+        component: () => import('@/views/family/admin/member'),
     },
     {
-        path: '/family/manage/access',
-        component: () => import('@/views/family/manage/access'),
+        path: '/family/admin/member/add',
+        component: () => import('@/views/family/admin/member/add'),
     },
     {
-        path: '/family/manage/permission',
-        component: () => import('@/views/family/manage/permission'),
-    },
-
-    // *****************************************************************************************************************
-
-    {
-        path: '/mine/family',
-        component: () => import('@/views/mine/family'),
+        path: '/family/admin/member/edit',
+        component: () => import('@/views/family/admin/member/edit'),
     },
     {
-        path: '/mine/family/album',
-        component: () => import('@/views/mine/family/album'),
+        path: '/family/admin/notice/form',
+        component: () => import('@/views/family/admin/notice/form'),
     },
     {
-        path: '/mine/moments',
-        component: () => import('@/views/mine/moments'),
+        path: '/family/admin/album/form',
+        component: () => import('@/views/family/admin/album/form'),
     },
     {
-        path: '/mine/moments/post',
-        component: () => import('@/views/mine/moments/post'),
+        path: '/family/admin/memorabilia/form',
+        component: () => import('@/views/family/admin/memorabilia/form'),
     },
-    {
-        path: '/mine/memorial',
-        component: () => import('@/views/mine/memorial'),
-    },
-    {
-        path: '/mine/contact',
-        component: () => import('@/views/mine/contact'),
-    },
-
     /// home ===========================================================================================================
+    {
+        path: '/',
+        redirect: '/home'
+    },
     {
         path: '/home',
         component: () => import('@/views/home'),
@@ -222,14 +188,13 @@ router.beforeEach((to, from, next) => {
                     next()
                 }).catch(() => {
                     // 请求刷新令牌失败，退出登录
-                    store.dispatch('genealogy/logout').then(() => {
-                        store.dispatch('user/logout').then(() => {
-                            Notify({
-                                type: 'danger',
-                                message: '身份令牌已失效，即将前往登录页',
-                                duration: 3000,
-                                onClose: () => next('/user/login')
-                            })
+                    store.commit('genealogy/CLEAR_STATE')
+                    store.dispatch('user/logout').then(() => {
+                        Notify({
+                            type: 'danger',
+                            message: '身份令牌已失效，即将前往登录页',
+                            duration: 3000,
+                            onClose: () => next('/user/login')
                         })
                     })
                 })

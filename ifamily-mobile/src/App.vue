@@ -13,3 +13,7 @@ export default {
   components: {footerTab},
 }
 </script>
+
+<style>#nprogress .bar {
+  background: #007bff !important;
+}</style>

@@ -31,4 +31,13 @@ public interface VisitorLogService extends IService<VisitorLogDO> {
      */
     List<VisitorBO> page(PageQuery pageQuery, Long genealogyId);
 
+    /**
+     * 查询用户今日是否访问了指定家族
+     *
+     * @param userId      用户 ID
+     * @param genealogyId 家族 ID
+     * @return [true]是
+     */
+    boolean userVisitedGenealogyToday(Long userId, Long genealogyId);
+
 }

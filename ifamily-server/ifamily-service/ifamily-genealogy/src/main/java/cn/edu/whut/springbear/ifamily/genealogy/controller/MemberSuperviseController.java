@@ -3,13 +3,13 @@ package cn.edu.whut.springbear.ifamily.genealogy.controller;
 import cn.edu.whut.springbear.ifamily.common.api.CommonResult;
 import cn.edu.whut.springbear.ifamily.common.pojo.dto.UserDTO;
 import cn.edu.whut.springbear.ifamily.common.util.WebUtils;
-import cn.edu.whut.springbear.ifamily.genealogy.constant.GenealogyMessageConstants;
+import cn.edu.whut.springbear.ifamily.genealogy.constant.MessageConstants;
 import cn.edu.whut.springbear.ifamily.genealogy.pojo.bo.MemberTreeNodeBO;
 import cn.edu.whut.springbear.ifamily.genealogy.pojo.po.UserGenealogyDO;
 import cn.edu.whut.springbear.ifamily.genealogy.pojo.query.MemberQuery;
 import cn.edu.whut.springbear.ifamily.genealogy.pojo.vo.PeopleCardVO;
-import cn.edu.whut.springbear.ifamily.genealogy.service.UserGenealogyService;
 import cn.edu.whut.springbear.ifamily.genealogy.service.MemberService;
+import cn.edu.whut.springbear.ifamily.genealogy.service.UserGenealogyService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.constraints.NotEmpty;
 import java.util.List;
 import java.util.Map;
 
@@ -52,22 +53,17 @@ public class MemberSuperviseController {
     public CommonResult<Object> generationMembers(@Validated MemberQuery memberQuery) {
         UserDTO userDTO = WebUtils.parseGeneralUser(httpServletRequest);
         UserGenealogyDO defaultGenealogy = this.userGenealogyService.getDefault(userDTO.getId());
-        memberQuery.setGenealogyId(defaultGenealogy.getGenealogyId());
-        Map<String, Object> result = this.memberService.listGenerationMembers(memberQuery);
-        return result == null || result.isEmpty() ? CommonResult.failed("家族成员世代列表无数据") : CommonResult.success(result);
+        Map<String, Object> result = this.memberService.listGenerationMembers(memberQuery, defaultGenealogy.getGenealogyId());
+        return result == null || result.isEmpty() ? CommonResult.failed("家族世代成员列表无数据") : CommonResult.success(result);
     }
 
     @ApiOperation("根据姓名查询默认家族成员列表")
     @GetMapping("/search")
-    public CommonResult<Object> listMembersByName(@ApiParam("家族人员姓名") @RequestParam("name") String name) {
-        if (name == null || name.isEmpty()) {
-            return CommonResult.failed("家族人员姓名不能为空");
-        }
-
+    public CommonResult<Object> listMembersByName(@ApiParam("家族人员姓名") @NotEmpty(message = "家族人员姓名不能为空") @RequestParam("name") String name) {
         UserDTO userDTO = WebUtils.parseGeneralUser(httpServletRequest);
         UserGenealogyDO defaultGenealogy = this.userGenealogyService.getDefault(userDTO.getId());
         List<PeopleCardVO> peopleList = this.memberService.listMembersByName(name, defaultGenealogy.getGenealogyId());
-        return peopleList == null || peopleList.isEmpty() ? CommonResult.failed(GenealogyMessageConstants.PEOPLE_NOT_EXISTS) : CommonResult.success(peopleList);
+        return peopleList == null || peopleList.isEmpty() ? CommonResult.failed(MessageConstants.PEOPLE_INFO_NO_DATA) : CommonResult.success(peopleList);
     }
 
 }

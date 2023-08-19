@@ -1,5 +1,5 @@
 export const TOKEN_KEY = 'Authorization'
-export const REFRESH_TOKEN = 'refreshToken'
+export const REFRESH_TOKEN_KEY = 'refreshToken'
 
 export function setToken(token) {
     localStorage.setItem(TOKEN_KEY, token)
@@ -14,14 +14,14 @@ export function removeToken() {
 }
 
 export function setRefreshToken(refreshToken) {
-    localStorage.setItem(REFRESH_TOKEN, refreshToken)
+    localStorage.setItem(REFRESH_TOKEN_KEY, refreshToken)
 }
 
 export function removeRefreshToken() {
-    localStorage.removeItem(REFRESH_TOKEN)
+    localStorage.removeItem(REFRESH_TOKEN_KEY)
 }
 
 export function getRefreshToken() {
-    return localStorage.getItem(REFRESH_TOKEN)
+    return localStorage.getItem(REFRESH_TOKEN_KEY)
 }
 

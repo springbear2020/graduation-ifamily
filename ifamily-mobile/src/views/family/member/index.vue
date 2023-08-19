@@ -2,8 +2,9 @@
   <div>
     <van-nav-bar title="家族成员" left-arrow @click-left="$router.replace('/family')" @click-right="showPopover = true">
       <template #right>
-        <van-popover v-if="generations && generations.length > 0" placement="bottom-end" trigger="click"
-                     v-model="showPopover" :actions="actions" @select="onSelect">
+        <!-- 家族成员过滤气泡框 -->
+        <van-popover placement="bottom-end" trigger="click" v-model="showPopover" :actions="actions"
+                     @select="onSelect" v-if="generations && generations.length > 0">
           <template #reference>
             <van-icon name="filter-o" size="20"/>
           </template>
@@ -11,12 +12,12 @@
       </template>
     </van-nav-bar>
 
-    <!-- 搜索框与搜索条件面包屑 -->
-    <form v-if="generations && generations.length > 0">
-      <van-search shape="round" placeholder="请输入家族人员姓名" clearable
+    <!-- 搜索框与过滤条件面包屑 -->
+    <van-form v-if="generations && generations.length > 0">
+      <van-search shape="round" placeholder="请输入家族人员姓名"
                   @cancel="formData.name = undefined" v-model.trim="formData.name"
       />
-      <div class="tags-container">
+      <div class="condition-tags-container">
         <van-tag closeable size="large" round color="#007bff" v-if="formData.gender === 0"
                  @close="formData.gender = undefined">男
         </van-tag>
@@ -30,13 +31,12 @@
                  @close="formData.alive = undefined">逝
         </van-tag>
       </div>
-    </form>
+    </van-form>
 
+    <!-- 世代成员列表 -->
     <van-index-bar :index-list="generations">
       <div v-for="generation in generations" :key="generation">
-        <!-- 世代 -->
         <van-index-anchor :index="generation">{{ chineseGeneration(generation) }}</van-index-anchor>
-        <!-- 世代成员列表 -->
         <van-cell is-link center v-for="people in memberMap[generation]" :key="people.id"
                   @click="$router.push(`/family/member/info/1?pid=${people.id}`)"
         >
@@ -62,10 +62,12 @@
 <script>
 import SexTag from '@/components/tag/sex-tag'
 import {numToChinese} from "@/utils/converter";
+import {defaultPortrait} from "@/mixin/common-utils";
 
 export default {
   name: "index",
   components: {SexTag},
+  mixins: [defaultPortrait],
   data() {
     return {
       // 右上角气泡弹出框
@@ -81,15 +83,9 @@ export default {
         name: undefined,
         gender: undefined,
         alive: undefined
-      }
-    }
-  },
-  computed: {
-    generations() {
-      return this.$store.state.genealogy.memberMap.generations
-    },
-    memberMap() {
-      return this.$store.state.genealogy.memberMap.members
+      },
+      generations: [],
+      memberMap: {}
     }
   },
   watch: {
@@ -97,23 +93,22 @@ export default {
       immediate: true,
       deep: true,
       handler() {
+        // 根据过滤条件查询家族世代列表
         this.getGenerationsMember()
       }
     }
   },
   methods: {
     getGenerationsMember() {
-      this.$store.dispatch('genealogy/generationMembers', this.formData).then(() => {
+      this.$api.member.listGenerationMember(this.formData).then(res => {
+        this.generations = res.generations
+        this.memberMap = res.members
       }).catch(err => {
         this.$toast({message: err.data || err.desc, position: 'bottom'})
       })
     },
-    defaultPortrait(gender) {
-      // 根据性别决定展示的默认肖像
-      return gender === 0 ? 'img/male.jpg' : 'img/female.jpg'
-    },
     chineseGeneration(generation) {
-      return "第" + numToChinese(generation) + "世";
+      return '第' + numToChinese(generation) + '世';
     },
     onSelect(action, index) {
       switch (index) {
@@ -141,7 +136,7 @@ export default {
           break;
         default:
       }
-    },
+    }
   }
 }
 </script>
@@ -155,22 +150,13 @@ export default {
   margin-left: 8px;
 }
 
-.tags-container {
+.condition-tags-container {
   text-align: center;
   background-color: #ffffff;
   padding: 0 16px 8px 16px;
 }
 
-.tags-container .van-tag {
+.condition-tags-container .van-tag {
   margin-right: 8px;
-}
-
-.empty {
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  margin: auto;
 }
 </style>

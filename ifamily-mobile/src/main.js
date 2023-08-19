@@ -9,6 +9,7 @@ import 'vant/lib/index.css'
 import 'default-passive-events'
 
 import api from '@/api'
+import '@/styles/index.css'
 import '@/assets/iconfont/iconfont.css'
 import logoPattern from '@/components/layout/logo-pattern.vue'
 

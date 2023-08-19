@@ -4,6 +4,7 @@ import cn.edu.whut.springbear.ifamily.auth.pojo.dto.SecurityUser;
 import cn.edu.whut.springbear.ifamily.auth.service.feign.AdminFeignService;
 import cn.edu.whut.springbear.ifamily.auth.service.feign.UserFeignService;
 import cn.edu.whut.springbear.ifamily.common.constant.AuthConstants;
+import cn.edu.whut.springbear.ifamily.common.constant.GlobalMessageConstants;
 import cn.edu.whut.springbear.ifamily.common.pojo.dto.UserDTO;
 import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.DisabledException;
@@ -45,13 +46,13 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         }
 
         if (userDTO == null) {
-            throw new UsernameNotFoundException("用户名不存在");
+            throw new UsernameNotFoundException(GlobalMessageConstants.USERNAME_NOT_EXISTS);
         }
 
         userDTO.setClientId(clientId);
         SecurityUser securityUser = new SecurityUser(userDTO);
         if (!securityUser.isEnabled()) {
-            throw new DisabledException("账号已被禁用");
+            throw new DisabledException(GlobalMessageConstants.ACCOUNT_WAS_DISABLED);
         }
 
         return securityUser;

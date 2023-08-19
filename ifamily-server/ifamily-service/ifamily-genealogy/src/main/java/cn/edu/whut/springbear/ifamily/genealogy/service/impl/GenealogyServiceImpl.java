@@ -106,7 +106,9 @@ public class GenealogyServiceImpl extends ServiceImpl<GenealogyMapper, Genealogy
 
             // 保存用户默认家族的访问记录
             if (AssertEnum.YES.getCode().equals(item.getDefaultGenealogy())) {
-                this.visitorLogService.create(userId, genealogyId);
+                if (!this.visitorLogService.userVisitedGenealogyToday(userId, genealogyId)) {
+                    this.visitorLogService.create(userId, genealogyId);
+                }
             }
         }
 
@@ -114,9 +116,10 @@ public class GenealogyServiceImpl extends ServiceImpl<GenealogyMapper, Genealogy
     }
 
     @Override
-    public boolean edit(GenealogyQuery genealogyQuery) {
+    public boolean edit(GenealogyQuery genealogyQuery, Long genealogyId) {
         GenealogyDO genealogyDO = new GenealogyDO();
         BeanUtils.copyProperties(genealogyQuery, genealogyDO);
+        genealogyDO.setId(genealogyId);
         return this.updateById(genealogyDO);
     }
 

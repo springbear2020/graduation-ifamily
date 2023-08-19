@@ -10,10 +10,10 @@
     <van-cell title="使用帮助" icon="question-o" is-link class="top"/>
     <!-- 联系我们、版本信息 -->
     <van-cell title="关于我们" icon="info-o" is-link/>
-    <div class="block-button-container">
-      <van-button color="linear-gradient(to right, #ff6034, #ee0a24)" block @click="logout">退出登录</van-button>
-    </div>
 
+    <div class="block-button-container">
+      <van-button color="linear-gradient(to right, #ff6034, #ee0a24)" block @click="signOut">退出登录</van-button>
+    </div>
   </div>
 </template>
 
@@ -21,14 +21,14 @@
 export default {
   name: "index",
   methods: {
-    logout() {
+    signOut() {
       this.$dialog.confirm({
         title: '退出登录',
-        message: '您确定要退出吗？您可以随时再次登录。',
+        message: '您确定要退出吗？您可以随时再次登录。'
       }).then(() => {
-        // 退出登录，移除仓库信息
+        // 退出登录，移除仓库信息，跳转到登录页
         this.$store.dispatch('user/logout')
-        this.$store.dispatch('genealogy/logout')
+        this.$store.commit('genealogy/CLEAR_STATE')
         this.$router.replace('/user/login')
       }).catch(() => {
       });
@@ -38,15 +38,7 @@ export default {
 </script>
 
 <style scoped>
-.block-button-container {
-  margin: 8px 16px;
-}
-
 /deep/ .van-cell {
   padding: 20px 16px;
-}
-
-.top {
-  margin-top: 8px;
 }
 </style>

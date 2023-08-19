@@ -5,7 +5,6 @@ import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
 
 /**
  * @author Spring-_-Bear
@@ -20,7 +19,7 @@ public class ResetQuery {
 
     @ApiModelProperty(value = "密码", required = true)
     @NotBlank(message = "密码值不能为空")
-    @Size(max = 30, message = "请填写密码, 长度不大于 30")
+    @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{6,16}$", message = "密码限 6-16 个字符，至少一个字母和数字")
     private String password;
 
     @ApiModelProperty(value = "验证码", required = true)

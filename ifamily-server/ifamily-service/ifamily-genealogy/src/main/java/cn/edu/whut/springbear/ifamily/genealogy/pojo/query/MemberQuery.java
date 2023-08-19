@@ -15,9 +15,6 @@ public class MemberQuery implements Serializable {
 
     private static final long serialVersionUID = -8535086684903836231L;
 
-    @ApiModelProperty(value = "家族 ID", required = true)
-    private Long genealogyId;
-
     @ApiModelProperty("家族人员姓名")
     private String name;
 

@@ -9,6 +9,8 @@ import cn.edu.whut.springbear.ifamily.genealogy.pojo.po.VisitorLogDO;
 import cn.edu.whut.springbear.ifamily.genealogy.pojo.vo.PeopleCardVO;
 import cn.edu.whut.springbear.ifamily.genealogy.service.VisitorLogService;
 import cn.edu.whut.springbear.ifamily.genealogy.service.MemberService;
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -86,6 +88,14 @@ public class VisitorLogServiceImpl extends ServiceImpl<VisitorLogMapper, Visitor
         }
 
         return resultList;
+    }
+
+    @Override
+    public boolean userVisitedGenealogyToday(Long userId, Long genealogyId) {
+        QueryWrapper<VisitorLogDO> queryWrapper = new QueryWrapper<>();
+        String todayStr = DateUtil.format(new Date(), "yyyy-MM-dd");
+        queryWrapper.eq("genealogy_id", genealogyId).eq("visitor_user_id", userId).eq("visited_date", todayStr);
+        return CollUtil.isNotEmpty(this.list(queryWrapper));
     }
 
 }

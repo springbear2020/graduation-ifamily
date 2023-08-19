@@ -1,21 +1,17 @@
 <template>
   <div>
-    <van-nav-bar title="人员信息" left-arrow @click-left="$router.replace(backRoute)" @click-right="$router.push(dstRoute)">
-      <template #right>
-        <van-icon name="edit" size="20" v-if="people.me"/>
-      </template>
-    </van-nav-bar>
+    <van-nav-bar title="人员信息" left-arrow @click-left="$router.replace(backRoute)"/>
 
     <div v-if="people.me">
       <!-- 肖像、姓名、性别 -->
-      <van-grid :border="false" :column-num="1" class="portrait-grid">
+      <van-grid :column-num="1">
         <van-grid-item>
           <template #icon>
-            <van-image round height="100" width="100" :src="me.portrait || defaultPortrait"
-                       @click="previewImage(me.portrait || defaultPortrait)"/>
+            <van-image round height="100" width="100" :src="me.portrait || defaultPortrait(me.gender)"
+                       @click="previewImage(me.portrait || defaultPortrait(me.gender))"/>
           </template>
           <template #text>
-            <p>
+            <p class="plain-p">
               {{ me.name }}
               <sex-tag :sex="me.gender"/>
             </p>
@@ -44,21 +40,21 @@
       </van-grid>
 
       <!-- 手机、常住地 -->
-      <van-cell title="手机" :label="me.phone"/>
+      <van-cell title="手机" :label="me.phone" class="top"/>
       <van-cell title="常住地" :label="me.residence"/>
       <!-- 生于、出生地 -->
-      <van-cell title="生于" :label="birthdate"/>
+      <van-cell title="生于" :label="birthdate" class="top"/>
       <van-cell title="出生地" :label="me.birthplace"/>
       <!-- 逝于、埋葬地 -->
-      <van-cell title="逝于" :label="deathDate" v-if="!alive"/>
+      <van-cell title="逝于" :label="deathDate" v-if="!alive" class="top"/>
       <van-cell title="埋葬地" :label="me.burialPlace" v-if="!alive"/>
 
       <!-- 家庭关系 -->
-      <family-relationship :add-button="false" @view-family-member="viewFamilyMember"
+      <family-relationship :add-button="false" @view-family-member="viewFamilyMember" class="top"
                            :relation="{father: people.father, mother: people.mother, mates: people.mates,
                              children: people.children, compatriots: people.compatriots}"
       />
-      <van-cell title="关系备注" v-if="me.familyRelationRemark" :label="me.familyRelationRemark"/>
+      <van-cell title="关系备注" :label="me.familyRelationRemark" v-if="me.familyRelationRemark"/>
     </div>
 
     <van-empty class="empty" v-if="emptyShow" description="空空如也~"/>
@@ -68,18 +64,20 @@
 <script>
 import SexTag from '@/components/tag/sex-tag'
 import DescTag from '@/components/tag/desc-tag'
-import FamilyRelationship from '@/components/business/family-relationship'
+import FamilyRelationship from '@/components/basis/family-relationship'
 import {solarToLunar} from "@/utils/converter"
 import {peopleInfo} from "@/mixin/people-info";
+import {defaultPortrait} from "@/mixin/common-utils";
+import {previewImage} from "@/mixin/common-utils";
 
 export default {
   name: "index",
   components: {SexTag, FamilyRelationship, DescTag},
-  mixins: [peopleInfo],
+  mixins: [peopleInfo, defaultPortrait, previewImage],
   mounted() {
-    // [0] 家族树谱 [1]成员列表
+    // [0] 家族树谱 [1]成员列表 [2]成员管理
     let type = this.$route.params.type
-    if (!(type === '0' || type === '1')) {
+    if (!(type === '0' || type === '1' || type === '2')) {
       type = '0'
     }
     this.type = type
@@ -91,20 +89,13 @@ export default {
     backRoute() {
       let back = '/'
       if (this.type === '0') {
-        back = `/family/tree/0?pid=${this.$route.query.pid}`
+        back = `/family/tree?pid=${this.$route.query.pid}`
       } else if (this.type === '1') {
         back = '/family/member'
+      } else if (this.type === '2') {
+        back = '/family/admin/member'
       }
       return back;
-    },
-    dstRoute() {
-      let dst = '/'
-      if (this.type === '0') {
-        dst = `/family/member/edit/1?pid=${this.$route.query.pid}`
-      } else if (this.type === '1') {
-        dst = `/family/member/edit/2?pid=${this.$route.query.pid}`
-      }
-      return dst;
     },
     birthdate() {
       return this.me.birthdate ? solarToLunar(this.me.birthdate, this.me.lunarBirthdate) : ''
@@ -115,26 +106,3 @@ export default {
   },
 }
 </script>
-
-<style scoped>
-.empty {
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  margin: auto;
-}
-
-/deep/ .van-tag {
-  margin-right: 2px;
-}
-
-/deep/ .portrait-grid .van-grid-item__content {
-  padding-bottom: 0;
-}
-
-.van-grid-item__content p {
-  margin: 0;
-}
-</style>

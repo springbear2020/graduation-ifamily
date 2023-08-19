@@ -2,7 +2,7 @@ package cn.edu.whut.springbear.ifamily.genealogy.service.impl;
 
 import cn.edu.whut.springbear.ifamily.common.enumerate.AssertEnum;
 import cn.edu.whut.springbear.ifamily.common.exception.IncorrectConditionException;
-import cn.edu.whut.springbear.ifamily.genealogy.constant.GenealogyMessageConstants;
+import cn.edu.whut.springbear.ifamily.genealogy.constant.MessageConstants;
 import cn.edu.whut.springbear.ifamily.genealogy.mapper.UserGenealogyMapper;
 import cn.edu.whut.springbear.ifamily.genealogy.pojo.po.UserGenealogyDO;
 import cn.edu.whut.springbear.ifamily.genealogy.service.UserGenealogyService;
@@ -63,7 +63,7 @@ public class UserGenealogyServiceImpl extends ServiceImpl<UserGenealogyMapper, U
         boolean hasThisGenealogy = this.listGenealogiesOfUser(userId).stream()
                 .anyMatch(item -> item.getGenealogyId().equals(genealogyId));
         if (!hasThisGenealogy) {
-            throw new IncorrectConditionException(GenealogyMessageConstants.GENEALOGY_NOT_EXISTS);
+            throw new IncorrectConditionException(MessageConstants.GENEALOGY_NOT_EXISTS);
         }
 
         // 更新用户所有家族的默认家族状态为否
@@ -82,7 +82,7 @@ public class UserGenealogyServiceImpl extends ServiceImpl<UserGenealogyMapper, U
         queryWrapper.eq("user_id", userId).eq("is_default_genealogy", AssertEnum.YES.getCode());
         UserGenealogyDO defaultGenealogy = this.getOne(queryWrapper);
         if (defaultGenealogy == null) {
-            throw new IncorrectConditionException(GenealogyMessageConstants.GENEALOGY_NOT_EXISTS);
+            throw new IncorrectConditionException(MessageConstants.GENEALOGY_NOT_EXISTS);
         }
         return this.getOne(queryWrapper);
     }

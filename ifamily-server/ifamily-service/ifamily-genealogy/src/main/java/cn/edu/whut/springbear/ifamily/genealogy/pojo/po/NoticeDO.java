@@ -1,12 +1,9 @@
 package cn.edu.whut.springbear.ifamily.genealogy.pojo.po;
 
 import cn.edu.whut.springbear.ifamily.common.pojo.po.AbstractBaseDO;
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-
-import java.util.Date;
 
 /**
  * @author Spring-_-Bear
@@ -25,17 +22,6 @@ public class NoticeDO extends AbstractBaseDO {
     private String content;
 
     /**
-     * 是否已审核：[0]否 [1]是
-     */
-    @TableField("is_approval")
-    private Integer approval;
-
-    /**
-     * 审核时间
-     */
-    private Date reviewDatetime;
-
-    /**
      * 家族 ID
      */
     private Long genealogyId;
@@ -44,10 +30,5 @@ public class NoticeDO extends AbstractBaseDO {
      * 发布者用户 ID
      */
     private Long announcerUserId;
-
-    /**
-     * 审核者用户 ID
-     */
-    private Long inspectorUserId;
 
 }

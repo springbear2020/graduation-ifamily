@@ -2,7 +2,7 @@ package cn.edu.whut.springbear.ifamily.genealogy.service.impl;
 
 import cn.edu.whut.springbear.ifamily.common.enumerate.AssertEnum;
 import cn.edu.whut.springbear.ifamily.common.exception.IncorrectConditionException;
-import cn.edu.whut.springbear.ifamily.genealogy.constant.GenealogyMessageConstants;
+import cn.edu.whut.springbear.ifamily.genealogy.constant.MessageConstants;
 import cn.edu.whut.springbear.ifamily.genealogy.enumerate.CRUDEnum;
 import cn.edu.whut.springbear.ifamily.genealogy.enumerate.GenderEnum;
 import cn.edu.whut.springbear.ifamily.genealogy.mapper.PeopleMapper;
@@ -123,7 +123,7 @@ public class PeopleServiceImpl extends ServiceImpl<PeopleMapper, PeopleDO> imple
         }
 
         // 保存家族人员查看日志
-        this.revisionLogService.create(CRUDEnum.SELECT.getCode(), meDO.getName(), meDO.getId(), meDO.getGenealogyId(), userId);
+        // this.revisionLogService.create(CRUDEnum.SELECT.getCode(), meDO.getName(), meDO.getId(), meDO.getGenealogyId(), userId);
 
         return me;
     }
@@ -140,7 +140,7 @@ public class PeopleServiceImpl extends ServiceImpl<PeopleMapper, PeopleDO> imple
     public boolean editGenealogyPeople(Long genealogyId, PeopleQuery peopleQuery, Long userId) {
         PeopleVO peopleVO = this.getGenealogyPeople(genealogyId, peopleQuery.getId());
         if (peopleVO == null) {
-            throw new IncorrectConditionException(GenealogyMessageConstants.PEOPLE_NOT_EXISTS);
+            throw new IncorrectConditionException(MessageConstants.PEOPLE_NOT_EXISTS);
         }
 
         // 检查人员性别是否发生改变，若发生改变则更新家族概况中的男、女人数
@@ -161,7 +161,7 @@ public class PeopleServiceImpl extends ServiceImpl<PeopleMapper, PeopleDO> imple
     public boolean removeGenealogyPeople(Long genealogyId, Long peopleId, Long userId) {
         PeopleVO peopleVO = this.getGenealogyPeople(genealogyId, peopleId);
         if (peopleVO == null) {
-            throw new IncorrectConditionException(GenealogyMessageConstants.PEOPLE_NOT_EXISTS);
+            throw new IncorrectConditionException(MessageConstants.PEOPLE_NOT_EXISTS);
         }
 
         // 保存家族人员删除日志
@@ -170,6 +170,7 @@ public class PeopleServiceImpl extends ServiceImpl<PeopleMapper, PeopleDO> imple
         boolean decreaseOne = this.genealogyProfileService.peopleDecreaseOne(genealogyId, peopleVO.getGender(), peopleVO.getDeathDate());
         // 删除家族人员
         boolean remove = this.removeById(peopleId);
+        // FIXME 移除当前人员的家庭关系，将关联 ID 置空
 
         return create && decreaseOne && remove;
     }
@@ -383,7 +384,7 @@ public class PeopleServiceImpl extends ServiceImpl<PeopleMapper, PeopleDO> imple
         queryWrapper.eq("genealogy_id", genealogyId).eq("id", peopleId);
         PeopleDO peopleDO = this.getOne(queryWrapper);
         if (peopleDO == null) {
-            throw new IncorrectConditionException(GenealogyMessageConstants.PEOPLE_NOT_EXISTS);
+            throw new IncorrectConditionException(MessageConstants.PEOPLE_NOT_EXISTS);
         }
         return peopleDO;
     }

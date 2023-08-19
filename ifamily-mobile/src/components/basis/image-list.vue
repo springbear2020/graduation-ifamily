@@ -1,10 +1,11 @@
 <template>
-  <div class="img-wrap">
-    <!-- 图片列表展示，支持图片点击预览 -->
-    <van-image width="100" height="100" class="right bottom"
-               v-for="(img, index) in dataList" :key="img.id" :src="img.url" @click="previewImage(index)"
-    />
-  </div>
+  <van-cell>
+    <van-grid square :column-num="3" :gutter="2" :border="false">
+      <van-grid-item v-for="(img, index) in dataList" :key="index">
+        <van-image :src="img.url" @click="previewImage(index)" class="img"/>
+      </van-grid-item>
+    </van-grid>
+  </van-cell>
 </template>
 
 <script>
@@ -31,8 +32,13 @@ export default {
 </script>
 
 <style scoped>
-.img-wrap {
-  font-size: 0;
-  line-height: normal;
+/deep/ .van-grid-item__content {
+  padding: 0;
+}
+
+.img {
+  flex: 1;
+  overflow: hidden;
+  width: 100%;
 }
 </style>

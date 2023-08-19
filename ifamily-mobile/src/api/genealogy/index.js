@@ -12,14 +12,14 @@ export function createGenealogy(data) {
     })
 }
 
-export function listGenealogiesOfUser() {
+export function reqListGenealogies() {
     return request({
         url: `${superviseBaseUrl}`,
         method: 'get',
     })
 }
 
-export function setDefaultGenealogyOfUser(genealogyId) {
+export function setDefaultGenealogyForUser(genealogyId) {
     return request({
         url: `${superviseBaseUrl}/${genealogyId}`,
         method: 'put',

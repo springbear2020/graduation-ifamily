@@ -1,4 +1,3 @@
-import {ImagePreview} from "vant";
 import dayjs from "dayjs";
 
 export const peopleInfo = {
@@ -12,10 +11,7 @@ export const peopleInfo = {
     },
     computed: {
         me() {
-            return this.people.me ? this.people.me : {}
-        },
-        defaultPortrait() {
-            return this.me.gender === 0 ? 'img/male.jpg' : 'img/female.jpg'
+            return this.people.me || {}
         },
         age() {
             if (!this.me.birthdate) {
@@ -29,11 +25,6 @@ export const peopleInfo = {
         },
     },
     methods: {
-        previewImage(url) {
-            let images = []
-            images.push(url)
-            ImagePreview({images})
-        },
         initPeople() {
             // 路由路径中读取 pid
             const pid = this.$route.query.pid
@@ -45,7 +36,7 @@ export const peopleInfo = {
         },
         getPeople(pid) {
             // 根据 peopleId 查询人员信息
-            this.$api.people.getGenealogyPeopleDetails({peopleId: pid}).then(people => {
+            this.$api.people.getPeopleDetails({peopleId: pid}).then(people => {
                 this.people = people
                 this.emptyShow = false
             }).catch(err => {

@@ -5,7 +5,9 @@ import * as member from '@/api/genealogy/member'
 import * as people from '@/api/genealogy/people'
 import * as record from '@/api/genealogy/record'
 import * as notice from '@/api/genealogy/notice'
+import * as album from '@/api/genealogy/album'
+import * as memorabilia from '@/api/genealogy/memorabilia'
 
 export default {
-    user, manager, genealogy, member, people, record, notice
+    user, manager, genealogy, member, people, record, notice, album, memorabilia
 }

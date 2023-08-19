@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class Oauth2ExceptionHandler {
 
-    @ExceptionHandler(value = OAuth2Exception.class)
+    @ExceptionHandler(OAuth2Exception.class)
     public CommonResult<Object> handleOauth2(OAuth2Exception e) {
-        return CommonResult.failed(e.getMessage());
+        return CommonResult.preconditionFailed(e.getMessage());
     }
 
 }

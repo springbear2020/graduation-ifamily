@@ -1,9 +1,7 @@
 package cn.edu.whut.springbear.ifamily.genealogy.service.impl;
 
 import cn.edu.whut.springbear.ifamily.common.enumerate.AssertEnum;
-import cn.edu.whut.springbear.ifamily.common.exception.IncorrectConditionException;
 import cn.edu.whut.springbear.ifamily.common.pojo.query.PageQuery;
-import cn.edu.whut.springbear.ifamily.genealogy.constant.GenealogyMessageConstants;
 import cn.edu.whut.springbear.ifamily.genealogy.mapper.NoticeMapper;
 import cn.edu.whut.springbear.ifamily.genealogy.pojo.bo.NoticeBO;
 import cn.edu.whut.springbear.ifamily.genealogy.pojo.po.NoticeDO;
@@ -36,7 +34,6 @@ public class NoticeServiceImpl extends ServiceImpl<NoticeMapper, NoticeDO> imple
     public boolean create(Long genealogyId, Long announcerUserId, String content) {
         NoticeDO noticeDO = new NoticeDO();
         noticeDO.setContent(content);
-        noticeDO.setApproval(AssertEnum.NO.getCode());
         noticeDO.setGenealogyId(genealogyId);
         noticeDO.setAnnouncerUserId(announcerUserId);
         Date date = new Date();
@@ -48,9 +45,9 @@ public class NoticeServiceImpl extends ServiceImpl<NoticeMapper, NoticeDO> imple
 
     @Override
     public List<NoticeBO> page(PageQuery pageQuery, Long genealogyId) {
-        // 查询家族已审核公告，按发布时间逆序排列
+        // 查询家族公告，按发布时间逆序排列
         QueryWrapper<NoticeDO> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("genealogy_id", genealogyId).eq("is_approval", AssertEnum.YES.getCode()).orderByDesc("created");
+        queryWrapper.eq("genealogy_id", genealogyId).orderByDesc("created");
         Page<NoticeDO> pageData = this.page(new Page<>(pageQuery.getCurrent(), pageQuery.getSize()), queryWrapper);
         if (pageData == null || pageData.getRecords().isEmpty()) {
             return null;
@@ -72,44 +69,6 @@ public class NoticeServiceImpl extends ServiceImpl<NoticeMapper, NoticeDO> imple
         }
 
         return resultList;
-    }
-
-    @Override
-    public boolean edit(Long id, String content, Long genealogyId) {
-        NoticeDO noticeDO = this.getByGenealogyId(id, genealogyId);
-        if (noticeDO == null) {
-            throw new IncorrectConditionException(GenealogyMessageConstants.NOTICE_NOT_EXISTS);
-        }
-
-        // 编辑家族公告
-        NoticeDO updateDO = new NoticeDO();
-        updateDO.setId(id);
-        updateDO.setContent(content);
-        updateDO.setApproval(AssertEnum.NO.getCode());
-        return this.updateById(updateDO);
-    }
-
-    @Override
-    public boolean remove(Long id, Long genealogyId) {
-        NoticeDO noticeDO = this.getByGenealogyId(id, genealogyId);
-        if (noticeDO == null) {
-            throw new IncorrectConditionException(GenealogyMessageConstants.NOTICE_NOT_EXISTS);
-        }
-
-        return this.removeById(id);
-    }
-
-    /**
-     * 通过公告 ID 和家族 ID 获取家族公告
-     *
-     * @param noticeId    公告 ID
-     * @param genealogyId 家族 ID
-     * @return 家族公告
-     */
-    private NoticeDO getByGenealogyId(Long noticeId, Long genealogyId) {
-        QueryWrapper<NoticeDO> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("id", noticeId).eq("genealogy_id", genealogyId);
-        return this.getOne(queryWrapper);
     }
 
 }

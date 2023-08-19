@@ -2,7 +2,26 @@
   <div>
     <div v-for="moment in dataList" :key="moment.id" class="van-hairline--bottom">
       <!-- 头像、标题、内容、更多 -->
-      <portrait-desc :person="moment" @click-image="$toast('点击头像')"/>
+      <van-cell center class="flex-cell-container" :border="false">
+        <!-- 头像、标题、内容 -->
+        <template #title>
+          <van-image round width="52" height="52" :src="moment.portrait"/>
+          <div class="portrait-title-container">
+            <p>{{ moment.name }}</p>
+            <p class="content">{{ moment.content }}</p>
+          </div>
+        </template>
+
+        <!-- 更多 -->
+        <template #right-icon>
+          <van-popover placement="bottom-end" trigger="click"
+                       v-model="showPopover" :actions="actions" @select="action => $emit('moreOperation', action)">
+            <template #reference>
+              <van-icon name="ellipsis" size="20" @click.stop="showPopover = true"/>
+            </template>
+          </van-popover>
+        </template>
+      </van-cell>
 
       <!-- 文本内容、图片列表、行为图标 -->
       <van-cell class="text-content-top">
@@ -64,14 +83,10 @@
 
 <script>
 import ImageList from '@/components/basis/image-list'
-import PortraitDesc from '@/components/basis/portrait-desc'
 
 export default {
   name: "social-moments",
-  components: {
-    ImageList,
-    PortraitDesc
-  },
+  components: {ImageList},
   data() {
     return {
       comment: '',
@@ -91,6 +106,11 @@ export default {
           {name: '二维码', icon: 'qrcode'},
           {name: '小程序码', icon: 'weapp-qrcode'},
         ],
+      ],
+      showPopover: false,
+      actions: [
+        {text: '编辑', icon: 'edit'},
+        {text: '删除', icon: 'delete-o'}
       ],
     }
   },
@@ -164,5 +184,22 @@ export default {
 
 /deep/ .van-share-sheet__options {
   justify-content: center
+}
+
+.flex-cell-container .van-cell__title {
+  display: flex;
+}
+
+.portrait-title-container {
+  margin-left: 8px;
+}
+
+.portrait-title-container p {
+  margin: 0 0;
+}
+
+.portrait-title-container .content {
+  color: #969799;
+  font-size: 12px;
 }
 </style>

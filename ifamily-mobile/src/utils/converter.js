@@ -87,16 +87,14 @@ export function mergeNonNullValues(obj) {
  * @param dateStr 日期字符串
  * @returns {string} 计算后的字符串
  */
-export function weekDate(dateStr) {
-    const date = new Date(dateStr)
-    const now = new Date();
-    const diff = (now - date) / (1000 * 60 * 60 * 24);
+export function diffDate(dateStr) {
+    const now = dayjs().format('YYYY-MM-DD')
+    const diff = dayjs(now).diff(dateStr, 'day')
 
-    if (diff < 1) {
+    if (diff === 0) {
         return '今天';
-    } else if (diff < 7) {
-        const days = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
-        return days[date.getDay()];
+    } else if (diff >= 1 && diff <= 7) {
+        return `${diff}天前`;
     } else {
         return dateStr
     }
@@ -108,46 +106,23 @@ export function weekDate(dateStr) {
  * @returns {string} 计算后的字符串
  */
 export function momentDate(dateStr) {
-    const date = new Date(dateStr)
-    const now = new Date();
-    const diff = (now - date) / (1000 * 60 * 60 * 24);
+    const now = dayjs().format('YYYY-MM-DD')
+    const date = dayjs(dateStr).format('YYYY-MM-DD')
+    const diff = dayjs(now).diff(date, 'day')
 
     // 今年内
-    if (date.getFullYear() === now.getFullYear()) {
-        if (diff < 1) {
-            return '今天 ' + dayjs(date).format('HH:mm')
-        } else if (diff < 2) {
-            return '昨天 ' + dayjs(date).format('HH:mm')
-        } else if (diff < 3) {
-            return '前天 ' + dayjs(date).format('HH:mm')
+    if (new Date().getFullYear() === new Date(now).getFullYear()) {
+        if (diff === 0) {
+            return '今天 ' + dayjs(dateStr).format('HH:mm')
+        } else if (diff === 1) {
+            return '昨天 ' + dayjs(dateStr).format('HH:mm')
+        } else if (diff === 2) {
+            return '前天 ' + dayjs(dateStr).format('HH:mm')
         } else {
-            return dayjs(date).format('MM月DD日 HH:mm')
+            return dayjs(dateStr).format('MM月DD日 HH:mm')
         }
     } else {
-        return dayjs(date).format('YYYY年MM月DD日 HH:mm')
+        return dayjs(dateStr).format('YYYY年MM月DD日 HH:mm')
     }
 
 }
-
-/*
- * 移除 params、data 中的 ''、null、undefined
- */
-// function clearEmptyParam(config) {
-//     ['data', 'params'].forEach(item => {
-//         if (config[item]) {
-//             const keys = Object.keys(config[item])
-//             if (keys.length) {
-//                 keys.forEach(key => {
-//                     // 获取数据原始类型字符串，如 'String', 'Object', 'Null', 'Boolean', 'Number', 'Array'
-//                     const rawType = Object.prototype.toString.call(config[item]).slice(8, -1)
-//                     if (['', undefined, null].includes(config[item][key]) && ['Object'].includes(rawType)) {
-//                         // 移除属性之前，进行深拷贝断开引用，避免影响页面
-//                         // const _cloneDeep = require('lodash/cloneDeep')
-//                         config[item] = _cloneDeep(config[item])
-//                         delete config[item][key]
-//                     }
-//                 })
-//             }
-//         }
-//     })
-// }

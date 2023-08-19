@@ -1,7 +1,6 @@
 package cn.edu.whut.springbear.ifamily.genealogy.service.impl;
 
 import cn.edu.whut.springbear.ifamily.common.exception.IncorrectConditionException;
-import cn.edu.whut.springbear.ifamily.genealogy.constant.GenealogyMessageConstants;
 import cn.edu.whut.springbear.ifamily.genealogy.enumerate.GenderEnum;
 import cn.edu.whut.springbear.ifamily.genealogy.mapper.PeopleMapper;
 import cn.edu.whut.springbear.ifamily.genealogy.pojo.bo.MemberTreeNodeBO;
@@ -42,7 +41,7 @@ public class MemberServiceImpl extends ServiceImpl<PeopleMapper, PeopleDO> imple
         queryWrapper.eq("genealogy_id", genealogyId).select("MIN(`generation`) as generation");
         PeopleDO peopleDO = this.getOne(queryWrapper);
         if (peopleDO == null || peopleDO.getGeneration() == null) {
-            throw new IncorrectConditionException(GenealogyMessageConstants.PEOPLE_NOT_EXISTS);
+            throw new IncorrectConditionException("家族祖先人员信息不存在");
         }
 
         // 一个家族只有一位共同祖先，根据最小世代查询人员信息，此即为家族的祖先
@@ -67,7 +66,7 @@ public class MemberServiceImpl extends ServiceImpl<PeopleMapper, PeopleDO> imple
     }
 
     @Override
-    public Map<String, Object> listGenerationMembers(MemberQuery memberQuery) {
+    public Map<String, Object> listGenerationMembers(MemberQuery memberQuery, Long genealogyId) {
         /*
          * 拼接查询条件：姓名 name、性别 gender [0]男 [1]女、生逝状态 [true]生 [false]逝
          * SQL: select * from genealogy_people
@@ -77,7 +76,7 @@ public class MemberServiceImpl extends ServiceImpl<PeopleMapper, PeopleDO> imple
          *      and ISNULL(death_date)
          */
         QueryWrapper<PeopleDO> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("genealogy_id", memberQuery.getGenealogyId());
+        queryWrapper.eq("genealogy_id", genealogyId);
         if (StringUtils.hasLength(memberQuery.getName())) {
             queryWrapper.like("name", memberQuery.getName());
         }

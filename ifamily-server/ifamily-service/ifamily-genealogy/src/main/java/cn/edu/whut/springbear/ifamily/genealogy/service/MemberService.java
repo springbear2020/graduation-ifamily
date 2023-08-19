@@ -36,9 +36,10 @@ public interface MemberService extends IService<PeopleDO> {
      * 查询家族成员世代分组列表，可根据家族人员姓名、性别以及生逝状态进行过滤查询
      *
      * @param memberQuery 查询条件：必须包含家族 ID，人员姓名、性别和生逝状态可选
+     * @param genealogyId 家族 ID
      * @return 返回的 Map 中包含了家族世代列表和每个列表下的家族人员
      */
-    Map<String, Object> listGenerationMembers(MemberQuery memberQuery);
+    Map<String, Object> listGenerationMembers(MemberQuery memberQuery, Long genealogyId);
 
     /**
      * 根据姓名模糊查询家族人员列表

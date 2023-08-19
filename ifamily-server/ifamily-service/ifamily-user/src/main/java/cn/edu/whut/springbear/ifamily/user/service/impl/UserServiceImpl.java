@@ -3,14 +3,14 @@ package cn.edu.whut.springbear.ifamily.user.service.impl;
 import cn.edu.whut.springbear.ifamily.common.api.CommonResult;
 import cn.edu.whut.springbear.ifamily.common.api.ResultCodeEnum;
 import cn.edu.whut.springbear.ifamily.common.constant.AuthConstants;
+import cn.edu.whut.springbear.ifamily.common.constant.GlobalMessageConstants;
 import cn.edu.whut.springbear.ifamily.common.constant.RedisConstants;
 import cn.edu.whut.springbear.ifamily.common.constant.RegExpConstants;
 import cn.edu.whut.springbear.ifamily.common.enumerate.AssertEnum;
 import cn.edu.whut.springbear.ifamily.common.exception.IncorrectConditionException;
 import cn.edu.whut.springbear.ifamily.common.pojo.dto.UserDTO;
 import cn.edu.whut.springbear.ifamily.common.util.WebUtils;
-import cn.edu.whut.springbear.ifamily.user.constant.UserMessageConstants;
-import cn.edu.whut.springbear.ifamily.user.enumerate.LoginTypeEnum;
+import cn.edu.whut.springbear.ifamily.user.constant.MessageConstants;
 import cn.edu.whut.springbear.ifamily.user.mapper.UserMapper;
 import cn.edu.whut.springbear.ifamily.user.pojo.po.UserDO;
 import cn.edu.whut.springbear.ifamily.user.pojo.po.UsernameLogDO;
@@ -85,19 +85,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
         queryWrapper.eq("phone", account).or().eq("email", account).or().eq("username", account);
         UserDO user = this.baseMapper.selectOne(queryWrapper);
         if (user == null) {
-            throw new IncorrectConditionException(UserMessageConstants.USER_NOT_EXISTS);
+            throw new IncorrectConditionException(MessageConstants.USER_NOT_EXISTS);
         }
 
-        // 客户端请求的登录类型：[1]密码登录 [2]验证码登录
-        Integer loginType = loginQuery.getLoginType();
-        if (LoginTypeEnum.VERIFY_CODE.getCode().equals(loginType)) {
-            // 校验用户输入验证码的正确性 FIXME 验证码登录
-            this.validateCode(account, loginQuery.getCode());
-        } else {
-            // 校验用户输入的密码是否正确
-            if (!BCrypt.checkpw(loginQuery.getPassword(), user.getPassword())) {
-                throw new IncorrectConditionException(UserMessageConstants.ERROR_PASSWORD);
-            }
+        // 校验用户输入的密码是否正确
+        if (!BCrypt.checkpw(loginQuery.getPassword(), user.getPassword())) {
+            throw new IncorrectConditionException(MessageConstants.ERROR_PASSWORD);
         }
 
         // 请求认证服务器签发令牌
@@ -135,7 +128,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
             userDO.setEmail(account);
             this.verifyPhoneOrEmailExistence("email", account);
         } else {
-            throw new IncorrectConditionException("账号格式不正确，请重新输入");
+            throw new IncorrectConditionException("账号类型不存在，请重新输入");
         }
 
         // 验证用户输入的验证码是否正确
@@ -169,7 +162,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
         queryWrapper.eq("phone", account).or().eq("email", account);
         UserDO user = this.baseMapper.selectOne(queryWrapper);
         if (user == null) {
-            throw new IncorrectConditionException(UserMessageConstants.USER_NOT_EXISTS);
+            throw new IncorrectConditionException(MessageConstants.USER_NOT_EXISTS);
         }
 
         // 判断新旧密码是否一致
@@ -195,7 +188,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
         // 查询用户详细信息
         UserDO userDO = this.getById(userDTO.getId());
         if (userDO == null) {
-            throw new IncorrectConditionException(UserMessageConstants.USER_NOT_EXISTS);
+            throw new IncorrectConditionException(MessageConstants.USER_NOT_EXISTS);
         }
 
         // 手机号脱敏，隐藏中间四位为 *
@@ -209,12 +202,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
     public boolean logout(Long userId, String password) {
         UserDO user = this.getById(userId);
         if (user == null) {
-            throw new IncorrectConditionException(UserMessageConstants.USER_NOT_EXISTS);
+            throw new IncorrectConditionException(MessageConstants.USER_NOT_EXISTS);
         }
 
         // 验证输入的密码是否正确
         if (!BCrypt.checkpw(password, user.getPassword())) {
-            throw new IncorrectConditionException(UserMessageConstants.ERROR_PASSWORD);
+            throw new IncorrectConditionException(MessageConstants.ERROR_PASSWORD);
         }
 
         return this.removeById(userId);
@@ -242,12 +235,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
                 break;
             case 3:
                 if (!ReUtil.isMatch(RegExpConstants.URL_PATTERN, content)) {
-                    throw new IncorrectConditionException("用户头像图片地址不合法");
+                    throw new IncorrectConditionException("头像图片地址格式不正确");
                 }
                 userDO.setAvatar(content);
                 break;
             default:
-                throw new IncorrectConditionException("类型：[1]用户昵称 [2]个性签名 [3]头像地址");
+                throw new IncorrectConditionException("资料类型：[1]用户昵称 [2]个性签名 [3]头像地址");
         }
 
         return this.updateById(userDO);
@@ -256,12 +249,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
     @Override
     public boolean updateUsername(Long userId, String username, String password) {
         if (!ReUtil.isMatch(RegExpConstants.USERNAME_PATTERN, username)) {
-            throw new IncorrectConditionException("用户名以字母开头，可包含数字、字母、下划线和连字符，长度限 5 至 20 位");
+            throw new IncorrectConditionException("用户名须以字母开头，可包含数字、字母、下划线和连字符，长度限 5-20 位");
         }
 
         UserDO user = this.getById(userId);
         if (user == null) {
-            throw new IncorrectConditionException(UserMessageConstants.USER_NOT_EXISTS);
+            throw new IncorrectConditionException(MessageConstants.USER_NOT_EXISTS);
         }
 
         // 新用户名与旧用户名一致，不允许修改
@@ -271,7 +264,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
 
         // 验证密码是否正确
         if (!BCrypt.checkpw(password, user.getPassword())) {
-            throw new IncorrectConditionException(UserMessageConstants.ERROR_PASSWORD);
+            throw new IncorrectConditionException(MessageConstants.ERROR_PASSWORD);
         }
 
         // 验证用户输入的用户名是否已被占用
@@ -303,12 +296,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
     @Override
     public boolean updateEmail(Long userId, String email, String code) {
         if (!ReUtil.isMatch(RegExpConstants.EMAIL_PATTERN, email)) {
-            throw new IncorrectConditionException("请输入正确格式的邮箱地址");
+            throw new IncorrectConditionException(GlobalMessageConstants.INCORRECT_EMAIL_PATTERN);
         }
 
         UserDO user = this.getById(userId);
         if (user == null) {
-            throw new IncorrectConditionException(UserMessageConstants.USER_NOT_EXISTS);
+            throw new IncorrectConditionException(MessageConstants.USER_NOT_EXISTS);
         }
 
         // 验证新旧邮箱是否一致，注意旧邮箱为 null
@@ -331,12 +324,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
     @Override
     public boolean updatePhone(Long userId, String phone, String code) {
         if (!ReUtil.isMatch(RegExpConstants.PHONE_PATTERN, phone)) {
-            throw new IncorrectConditionException("请输入正确格式的手机号");
+            throw new IncorrectConditionException(GlobalMessageConstants.INCORRECT_PHONE_PATTERN);
         }
 
         UserDO user = this.getById(userId);
         if (user == null) {
-            throw new IncorrectConditionException(UserMessageConstants.USER_NOT_EXISTS);
+            throw new IncorrectConditionException(MessageConstants.USER_NOT_EXISTS);
         }
 
         // 验证新旧手机号是否一致，注意旧手机号为 null

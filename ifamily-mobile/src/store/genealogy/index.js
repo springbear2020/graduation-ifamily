@@ -1,6 +1,6 @@
-import {listGenealogiesOfUser} from "@/api/genealogy";
-import {memberTreeOfGenealogy, listGenerationMember} from "@/api/genealogy/member";
-import {currentUserPeople} from "@/api/genealogy/people";
+import {reqListGenealogies} from "@/api/genealogy";
+import {reqMemberTreeOfGenealogy} from "@/api/genealogy/member";
+import {reqCurrentUserPeople} from "@/api/genealogy/people";
 
 export default {
     namespaced: true,
@@ -11,15 +11,10 @@ export default {
         tree: {},
         // 我的资料
         userPeople: {},
-        // 世代成员
-        memberMap: {
-            generations: [],
-            members: {}
-        }
     },
     getters: {
+        // 过滤出用户家族列表中的默认家族
         defaultGenealogy(state) {
-            // 过滤出用户家族列表中的默认家族
             return state.genealogyList.find(item => item.defaultGenealogy === 1) || {}
         }
     },
@@ -28,7 +23,6 @@ export default {
             state.genealogyList = []
             state.tree = {}
             state.userPeople = {}
-            state.memberMap = {}
         },
         SET_GENEALOGY_LIST(state, list) {
             state.genealogyList = list
@@ -38,18 +32,25 @@ export default {
         },
         SET_USER_PEOPLE(state, people) {
             state.userPeople = people
-        },
-        SET_GENERATION_MEMBER(state, memberMap) {
-            state.memberMap = memberMap
-        },
+        }
     },
     actions: {
-        logout({commit}) {
-            commit('CLEAR_STATE')
+        updateGenealogyStore({commit}) {
+            // FIXME Used by 添加亲人、编辑成员、移除成员
+            return new Promise((resolve, reject) => {
+                commit('CLEAR_STATE')
+                // 重新查询家族列表信息
+                reqListGenealogies().then(list => {
+                    commit('SET_GENEALOGY_LIST', list)
+                    resolve()
+                }).catch(err => {
+                    reject(err)
+                })
+            })
         },
         listGenealogyList({commit}) {
             return new Promise((resolve, reject) => {
-                listGenealogiesOfUser().then(list => {
+                reqListGenealogies().then(list => {
                     commit('SET_GENEALOGY_LIST', list)
                     resolve()
                 }).catch(err => {
@@ -59,7 +60,7 @@ export default {
         },
         getGenealogyTree({commit}) {
             return new Promise((resolve, reject) => {
-                memberTreeOfGenealogy().then(tree => {
+                reqMemberTreeOfGenealogy().then(tree => {
                     // 为祖先节点添加 root-node 样式名称使得初始化页面时其居中展示
                     tree.class = ['root-node']
                     commit('SET_GENEALOGY_TREE', tree)
@@ -71,18 +72,9 @@ export default {
         },
         getPeopleOfUser({commit}) {
             return new Promise((resolve, reject) => {
-                currentUserPeople().then(people => {
+                reqCurrentUserPeople().then(people => {
                     commit('SET_USER_PEOPLE', people)
                     resolve()
-                }).catch(err => {
-                    reject(err)
-                })
-            })
-        },
-        generationMembers({commit}, params) {
-            return new Promise((resolve, reject) => {
-                listGenerationMember(params).then(memberMap => {
-                    commit("SET_GENERATION_MEMBER", memberMap)
                 }).catch(err => {
                     reject(err)
                 })

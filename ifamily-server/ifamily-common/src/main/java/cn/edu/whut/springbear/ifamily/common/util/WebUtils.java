@@ -1,7 +1,6 @@
 package cn.edu.whut.springbear.ifamily.common.util;
 
 import cn.edu.whut.springbear.ifamily.common.constant.AuthConstants;
-import cn.edu.whut.springbear.ifamily.common.constant.MessageConstants;
 import cn.edu.whut.springbear.ifamily.common.exception.IncorrectConditionException;
 import cn.edu.whut.springbear.ifamily.common.pojo.dto.UserDTO;
 import cn.hutool.http.HttpRequest;
@@ -19,15 +18,6 @@ import java.net.UnknownHostException;
  * @since 23/03/12 09:22
  */
 public final class WebUtils {
-
-    /**
-     * 百度地图签发的 IP 归属地解析请求地址
-     */
-    private static final String BAIDU_MAP_URL = "https://api.map.baidu.com/location/ip?ak=IPhSgYKe4YCEn2KfYyQwdp3S8RtqrvV4&coor=bd09ll&ip=";
-    /**
-     * 淘宝公共 IP 归属地查询请求地址
-     */
-    private static final String TAOBAO_URL = "https://ip.taobao.com/outGetIpInfo?accessKey=alibaba-inc&ip=";
 
     private static final String DEFAULT_LOCATION = "未知地点";
 
@@ -81,7 +71,7 @@ public final class WebUtils {
             return DEFAULT_LOCATION;
         }
 
-        String url = BAIDU_MAP_URL + ip;
+        String url = "https://api.map.baidu.com/location/ip?ak=IPhSgYKe4YCEn2KfYyQwdp3S8RtqrvV4&coor=bd09ll&ip=" + ip;
         // 尝试与百度服务器建立一个 GET 连接，获得其响应的 json 数据字符串
         String responseStr = HttpRequest.get(url).execute().body();
         // 将响应的 json 字符串解析为 json 对象
@@ -100,7 +90,7 @@ public final class WebUtils {
             return DEFAULT_LOCATION;
         }
 
-        String url = TAOBAO_URL + ip;
+        String url = "https://ip.taobao.com/outGetIpInfo?accessKey=alibaba-inc&ip=" + ip;
         // 尝试与淘宝服务器建立一个 GET 连接，获得其响应的 json 数据字符串
         String responseStr = HttpRequest.get(url).execute().body();
         // 将响应的 json 字符串解析为 json 对象
@@ -150,7 +140,7 @@ public final class WebUtils {
             userDTO.setClientId(jsonObject.getStr("client_id"));
         } catch (Exception e) {
             // 解析失败，请求头非法
-            throw new IncorrectConditionException(MessageConstants.UNAUTHORIZED);
+            throw new IncorrectConditionException("账号未登录或令牌已过期");
         }
         return userDTO;
     }

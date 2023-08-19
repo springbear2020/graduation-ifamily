@@ -32,23 +32,4 @@ public interface NoticeService extends IService<NoticeDO> {
      */
     List<NoticeBO> page(PageQuery pageQuery, Long genealogyId);
 
-    /**
-     * 更新家族公告
-     *
-     * @param id          家族公告 ID
-     * @param content     家族公告内容
-     * @param genealogyId 家族 ID
-     * @return [true]更新成功
-     */
-    boolean edit(Long id, String content, Long genealogyId);
-
-    /**
-     * 删除家族公告
-     *
-     * @param id          公告 ID
-     * @param genealogyId 家族 ID
-     * @return [true]删除成功
-     */
-    boolean remove(Long id, Long genealogyId);
-
 }

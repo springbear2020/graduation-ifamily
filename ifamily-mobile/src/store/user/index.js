@@ -1,11 +1,11 @@
-import {login, getUser, refreshToken} from '@/api/user'
+import {reqLogin, reqGetCurrentUser, reqRefreshToken} from '@/api/user'
 import {setToken, removeToken, setRefreshToken, removeRefreshToken, getRefreshToken} from "@/utils/auth";
 
 export default {
     namespaced: true,
     state: {
         token: '',
-        user: {},
+        user: {}
     },
     getters: {},
     mutations: {
@@ -18,7 +18,7 @@ export default {
         },
         SET_USER(state, user) {
             state.user = user
-        },
+        }
     },
     actions: {
         logout({commit}) {
@@ -26,9 +26,14 @@ export default {
             removeRefreshToken()
             commit('CLEAR_STATE')
         },
+        signIn({commit}, res) {
+            setToken(res.accessToken)
+            setRefreshToken(res.refreshToken)
+            commit('SET_TOKEN', res.accessToken)
+        },
         login({commit}, params) {
             return new Promise((resolve, reject) => {
-                login(params).then(res => {
+                reqLogin(params).then(res => {
                     setToken(res.accessToken)
                     setRefreshToken(res.refreshToken)
                     commit('SET_TOKEN', res.accessToken);
@@ -40,7 +45,7 @@ export default {
         },
         getUser({commit}) {
             return new Promise((resolve, reject) => {
-                getUser().then(user => {
+                reqGetCurrentUser().then(user => {
                     commit('SET_USER', user)
                     resolve()
                 }).catch(err => {
@@ -48,20 +53,16 @@ export default {
                 })
             })
         },
-        signIn({commit}, res) {
-            setToken(res.accessToken)
-            setRefreshToken(res.refreshToken)
-            commit('SET_TOKEN', res.accessToken)
-        },
         refreshUserToken({commit}) {
             return new Promise((resolve, reject) => {
                 const token = getRefreshToken()
                 if (token) {
                     // 请求认证服务器刷新用户令牌
-                    refreshToken(token).then(res => {
+                    reqRefreshToken(token).then(res => {
                         setToken(res.accessToken)
                         setRefreshToken(res.refreshToken)
                         commit('SET_TOKEN', res.accessToken)
+                        resolve()
                     }).catch(err => {
                         reject(err)
                     })

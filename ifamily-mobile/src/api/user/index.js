@@ -1,9 +1,10 @@
 import request from "@/utils/request";
 
 // 开放接口 =============================================================================================================
+
 const apiBaseUrl = '/ifamily-user/user/api'
 
-export function login(data) {
+export function reqLogin(data) {
     return request({
         url: `${apiBaseUrl}/login`,
         method: 'post',
@@ -31,7 +32,7 @@ export function register(data) {
 
 const superviseBaseUrl = '/ifamily-user/user/supervise'
 
-export function getUser() {
+export function reqGetCurrentUser() {
     return request({
         url: `${superviseBaseUrl}`,
         method: 'get'
@@ -49,7 +50,7 @@ export function logout(params) {
     })
 }
 
-export function getUserLoginLog(params) {
+export function loginLogPageData(params) {
     return request({
         url: `${superviseBaseUrl}/devices`,
         method: 'get',
@@ -90,7 +91,7 @@ export function updateUserPrivacy(content, extra, type) {
  * 刷新用户令牌
  * @param refreshToken 刷新令牌
  */
-export function refreshToken(refreshToken) {
+export function reqRefreshToken(refreshToken) {
     return request({
         url: '/ifamily-auth/oauth/token',
         method: 'post',

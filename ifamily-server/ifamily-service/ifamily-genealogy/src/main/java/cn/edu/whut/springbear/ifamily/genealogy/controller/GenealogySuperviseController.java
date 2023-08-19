@@ -1,7 +1,6 @@
 package cn.edu.whut.springbear.ifamily.genealogy.controller;
 
 import cn.edu.whut.springbear.ifamily.common.api.CommonResult;
-import cn.edu.whut.springbear.ifamily.common.constant.MessageConstants;
 import cn.edu.whut.springbear.ifamily.common.pojo.dto.UserDTO;
 import cn.edu.whut.springbear.ifamily.common.util.WebUtils;
 import cn.edu.whut.springbear.ifamily.genealogy.pojo.bo.GenealogyDetailsBO;
@@ -35,9 +34,9 @@ public class GenealogySuperviseController {
     @ApiOperation("用户创建家族")
     @PostMapping
     public CommonResult<String> create(@Validated @RequestBody GenealogyQuery genealogyQuery) {
-        UserDTO userDTO =  WebUtils.parseGeneralUser(httpServletRequest);
+        UserDTO userDTO = WebUtils.parseGeneralUser(httpServletRequest);
         boolean saveResult = this.genealogyService.create(genealogyQuery, userDTO.getId());
-        return saveResult ? CommonResult.success() : CommonResult.failed(MessageConstants.SYSTEM_EXCEPTION);
+        return saveResult ? CommonResult.success() : CommonResult.failed("请求创建家族失败");
     }
 
     @ApiOperation("查询用户家族列表详细信息")
@@ -45,7 +44,7 @@ public class GenealogySuperviseController {
     public CommonResult<Object> list() {
         UserDTO userDTO = WebUtils.parseGeneralUser(httpServletRequest);
         List<GenealogyDetailsBO> genealogiesOfUser = this.genealogyService.listWithDetails(userDTO.getId());
-        return genealogiesOfUser == null || genealogiesOfUser.isEmpty() ? CommonResult.failed("家族列表信息无数据") : CommonResult.success(genealogiesOfUser);
+        return genealogiesOfUser == null || genealogiesOfUser.isEmpty() ? CommonResult.failed("家族列表无数据") : CommonResult.success(genealogiesOfUser);
     }
 
     @ApiOperation("设置用户默认家族")
@@ -53,7 +52,7 @@ public class GenealogySuperviseController {
     public CommonResult<String> setDefault(@ApiParam("家族 ID") @PathVariable("genealogyId") Long genealogyId) {
         UserDTO userDTO = WebUtils.parseGeneralUser(httpServletRequest);
         boolean updateResult = this.userGenealogyService.setDefault(userDTO.getId(), genealogyId);
-        return updateResult ? CommonResult.success() : CommonResult.failed(MessageConstants.SYSTEM_EXCEPTION);
+        return updateResult ? CommonResult.success() : CommonResult.failed("请求设置默认家族失败");
     }
 
 }

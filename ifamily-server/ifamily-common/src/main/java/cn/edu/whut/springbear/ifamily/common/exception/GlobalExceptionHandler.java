@@ -1,7 +1,7 @@
 package cn.edu.whut.springbear.ifamily.common.exception;
 
 import cn.edu.whut.springbear.ifamily.common.api.CommonResult;
-import cn.edu.whut.springbear.ifamily.common.constant.MessageConstants;
+import cn.edu.whut.springbear.ifamily.common.constant.GlobalMessageConstants;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -24,7 +24,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(SystemServiceException.class)
     public CommonResult<String> systemService(SystemServiceException e) {
         log.error(e.getMessage());
-        return CommonResult.serviceUnavailable(MessageConstants.SYSTEM_EXCEPTION);
+        return CommonResult.serviceUnavailable(GlobalMessageConstants.SERVICE_NOT_AVAILABLE);
     }
 
     /**
@@ -36,27 +36,27 @@ public class GlobalExceptionHandler {
     }
 
     /**
-     * 406
+     * 412
      */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public CommonResult<String> handleValidException(MethodArgumentNotValidException e) {
-        return CommonResult.failed(e.getBindingResult().getAllErrors().get(0).getDefaultMessage());
+        return CommonResult.preconditionFailed(e.getBindingResult().getAllErrors().get(0).getDefaultMessage());
     }
 
     /**
-     * 406
+     * 412
      */
     @ExceptionHandler(BindException.class)
     public CommonResult<String> handleBindException(BindException e) {
-        return CommonResult.failed(e.getBindingResult().getAllErrors().get(0).getDefaultMessage());
+        return CommonResult.preconditionFailed(e.getBindingResult().getAllErrors().get(0).getDefaultMessage());
     }
 
     /**
-     * 406
+     * 412
      */
     @ExceptionHandler(ValidationException.class)
     public CommonResult<String> handleValidationException(ValidationException e) {
-        return CommonResult.failed(e.getCause().getMessage());
+        return CommonResult.preconditionFailed(e.getCause().getMessage());
     }
 
     /**
@@ -65,7 +65,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public CommonResult<String> exception(Exception e) {
         log.error(e.getMessage());
-        return CommonResult.serverInternalError(MessageConstants.SYSTEM_EXCEPTION);
+        return CommonResult.serverInternalError(GlobalMessageConstants.SERVER_INTERNAL_EXCEPTION);
     }
 
 }

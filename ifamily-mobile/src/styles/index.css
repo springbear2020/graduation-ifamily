@@ -1,0 +1,48 @@
+/* 块级按钮容器 */
+.block-button-container {
+    margin: 8px 16px;
+}
+
+/* 灰色背景色 */
+.grey-background {
+    background-color: #f7f8fa;
+}
+
+/* 上间距 */
+.top {
+    margin-top: 8px;
+}
+
+/* 空状态 */
+.empty {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+}
+
+/* 无边距 <p> 标签 */
+.plain-p {
+    margin: 0;
+    padding: 0;
+}
+
+/* 流动布局容器 */
+.flex-container {
+    display: flex;
+}
+
+/* 封面图片居中 */
+.flex-container .cover {
+    margin: auto auto;
+    padding: 8px;
+}
+
+/* 全弹出层 */
+.full-popup {
+    height: 100%;
+    width: 100%;
+    background-color: #f7f8fa;
+}

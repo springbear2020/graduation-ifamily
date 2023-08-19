@@ -8,9 +8,9 @@
         <van-list finished-text="没有更多了" :finished="revision.finished" v-model="revision.loading" @load="loadRevision">
           <van-steps direction="vertical" active-color="#1989fa">
             <van-step v-for="(item, index) in revision.list" :key="index">
-              <h3>{{ formatDate(item.operationDate) }}</h3>
+              <h3>{{ item.operationDate }}</h3>
               <p v-for="(log, logIndex) in item.dateLogs" :key="logIndex">
-                <span class="operator">{{ log.operator.name }}</span>&nbsp;
+                <span>{{ log.operator.name }}</span>&nbsp;
                 <span :class="`operation-type-${log.operationType}`">{{ operationType(log.operationType) }}</span>&nbsp;
                 {{ `${log.operatedPeopleList.join("、")}` }}
               </p>
@@ -24,10 +24,10 @@
         <van-list finished-text="没有更多了" :finished="visitor.finished" v-model="visitor.loading" @load="loadVisitor">
           <van-steps direction="vertical">
             <van-step v-for="(item, index) in visitor.list" :key="index">
-              <h3>{{ formatDate(item.visitedDate) }}</h3>
+              <h3>{{ item.visitedDate }}</h3>
               <div v-for="people in item.visitors" class="visitor-container">
-                <van-image round height="50" width="50" :src="people.portrait || defaultPortrait(people.gender)"/>
-                <p>{{ people.name }}</p>
+                <van-image round height="52" width="52" :src="people.portrait || defaultPortrait(people.gender)"/>
+                <p style="margin: 0">{{ people.name }}</p>
               </div>
             </van-step>
           </van-steps>
@@ -39,11 +39,13 @@
 
 <script>
 import SexTag from '@/components/tag/sex-tag'
-import {weekDate} from "@/utils/converter";
+import {diffDate} from "@/utils/converter"
+import {defaultPortrait} from "@/mixin/common-utils"
 
 export default {
   name: "index",
   components: {SexTag},
+  mixins: [defaultPortrait],
   data() {
     return {
       active: 0,
@@ -69,30 +71,36 @@ export default {
   },
   methods: {
     loadRevision() {
-      this.$api.record.listRevisionLog(this.revision.formData).then(revisionList => {
+      this.$api.record.revisionLogPageData(this.revision.formData).then(revisionList => {
         revisionList.forEach(item => {
+          item.operationDate = diffDate(item.operationDate)
           this.revision.list.push(item)
         })
         this.revision.loading = false
         this.revision.formData.current += 1
+
+        if (!revisionList || revisionList.length < this.revision.formData.size) {
+          this.finished = true
+        }
       }).catch(() => {
         this.revision.finished = true
       })
     },
     loadVisitor() {
-      this.$api.record.listVisitorLog(this.visitor.formData).then(visitorList => {
+      this.$api.record.visitorLogPageData(this.visitor.formData).then(visitorList => {
         visitorList.forEach(item => {
+          item.visitedDate = diffDate(item.visitedDate)
           this.visitor.list.push(item)
         })
         this.visitor.loading = false
         this.visitor.formData.current += 1
+
+        if (!visitorList || visitorList.length < this.visitor.formData.size) {
+          this.finished = true
+        }
       }).catch(() => {
         this.visitor.finished = true
       })
-    },
-    defaultPortrait(gender) {
-      // 根据性别决定展示的默认肖像
-      return gender === 0 ? 'img/male.jpg' : 'img/female.jpg'
     },
     operationType(type) {
       switch (type) {
@@ -108,9 +116,6 @@ export default {
           return ''
       }
     },
-    formatDate(dateStr) {
-      return weekDate(dateStr)
-    }
   }
 }
 </script>
@@ -127,14 +132,6 @@ export default {
 .visitor-container {
   display: inline-block;
   text-align: center;
-}
-
-.visitor-container .van-image {
-  padding: 2px;
-}
-
-.operator {
-  font-weight: bold;
 }
 
 .operation-type-1 {

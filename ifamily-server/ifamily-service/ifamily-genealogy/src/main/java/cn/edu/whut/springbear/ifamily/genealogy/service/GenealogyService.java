@@ -28,6 +28,6 @@ public interface GenealogyService extends IService<GenealogyDO> {
     /**
      * 更新家族信息
      */
-    boolean edit(GenealogyQuery genealogyQuery);
+    boolean edit(GenealogyQuery genealogyQuery, Long genealogyId);
 
 }

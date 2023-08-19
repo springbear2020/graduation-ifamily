@@ -4,7 +4,7 @@ import {qiniuUploader} from "@/utils/qiniu";
 export const imageUploader = {
     data() {
         return {
-            // [1]用户头像 [2]家族封面 [3]人员肖像
+            // 图片类型：[1]用户头像 [2]家族封面 [3]人物肖像 [4]家族相册 [5]大事配图
             imgType: '0',
             imgUrl: undefined,
             fileType: undefined

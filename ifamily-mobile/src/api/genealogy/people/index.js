@@ -4,7 +4,15 @@ import request from "@/utils/request";
 
 const superviseBaseUrl = '/ifamily-genealogy/genealogy/people/supervise'
 
-export function currentUserPeople() {
+export function getPeopleDetails(params) {
+    return request({
+        url: `${superviseBaseUrl}/details`,
+        method: 'get',
+        params
+    })
+}
+
+export function reqCurrentUserPeople() {
     return request({
         url: `${superviseBaseUrl}/current`,
         method: 'get'
@@ -23,15 +31,7 @@ export function saveUserPeople(data) {
 
 const adminBaseUrl = '/ifamily-genealogy/genealogy/people/admin'
 
-export function getGenealogyPeopleDetails(params) {
-    return request({
-        url: `${adminBaseUrl}/details`,
-        method: 'get',
-        params
-    })
-}
-
-export function getPeopleById(params) {
+export function getPeople(params) {
     return request({
         url: `${adminBaseUrl}`,
         method: 'get',

@@ -1,11 +1,11 @@
 package cn.edu.whut.springbear.ifamily.manager.service.business.impl;
 
+import cn.edu.whut.springbear.ifamily.common.constant.GlobalMessageConstants;
 import cn.edu.whut.springbear.ifamily.common.constant.RedisConstants;
 import cn.edu.whut.springbear.ifamily.common.constant.RegExpConstants;
 import cn.edu.whut.springbear.ifamily.common.enumerate.AssertEnum;
 import cn.edu.whut.springbear.ifamily.common.exception.IncorrectConditionException;
 import cn.edu.whut.springbear.ifamily.common.exception.SystemServiceException;
-import cn.edu.whut.springbear.ifamily.manager.constants.CodeConstants;
 import cn.edu.whut.springbear.ifamily.manager.enumerate.CodeTypeEnum;
 import cn.edu.whut.springbear.ifamily.manager.pojo.po.CodeLogDO;
 import cn.edu.whut.springbear.ifamily.manager.service.CodeLogService;
@@ -35,6 +35,19 @@ import java.util.concurrent.TimeUnit;
 @Service
 public class CodeServiceImpl implements CodeService {
 
+    /**
+     * 验证码长度
+     */
+    private static final int CODE_LENGTH = 6;
+    /**
+     * 验证码有效时间（单位：分钟）
+     */
+    private static final int CODE_VALIDITY_TIME = 10;
+    /**
+     * 每日验证码最大发送次数
+     */
+    private static final Integer MAX_SEND_TIMES = 5;
+
     @Value("${spring.mail.username}")
     private String sender;
 
@@ -53,16 +66,16 @@ public class CodeServiceImpl implements CodeService {
     @Override
     public boolean sendEmailCode(String email) {
         if (!ReUtil.isMatch(RegExpConstants.EMAIL_PATTERN, email)) {
-            throw new IncorrectConditionException("请输入正确格式的邮箱地址");
+            throw new IncorrectConditionException(GlobalMessageConstants.INCORRECT_EMAIL_PATTERN);
         }
 
         // 限制今日验证码发送次数
         List<CodeLogDO> codeLogDOList = this.codeLogService.listByDateAndReceiver(email, new Date());
-        if (codeLogDOList != null && codeLogDOList.size() >= CodeConstants.MAX_SEND_TIMES) {
-            throw new IncorrectConditionException("今日验证码发送次数已达上限 " + CodeConstants.MAX_SEND_TIMES + " 次");
+        if (codeLogDOList != null && codeLogDOList.size() >= MAX_SEND_TIMES) {
+            throw new IncorrectConditionException("今日验证码发送次数已达上限 " + MAX_SEND_TIMES + " 次");
         }
 
-        String code = RandomUtil.randomNumbers(CodeConstants.CODE_LENGTH);
+        String code = RandomUtil.randomNumbers(CODE_LENGTH);
         // 将验证码内容注入到邮件 HTML 文件模板中，而后读取模板文件，将其内容解析为字符串
         Context context = new Context();
         context.setVariable("code", code);
@@ -100,17 +113,17 @@ public class CodeServiceImpl implements CodeService {
 
         // 将验证码存入 Redis 中，并设置有效期
         String key = RedisConstants.CODE_PREFIX + email;
-        redisTemplate.opsForValue().set(key, code, CodeConstants.CODE_VALIDITY_TIME, TimeUnit.MINUTES);
+        redisTemplate.opsForValue().set(key, code, CODE_VALIDITY_TIME, TimeUnit.MINUTES);
         return true;
     }
 
     @Override
     public boolean sendPhoneCode(String phone) {
         if (!ReUtil.isMatch(RegExpConstants.PHONE_PATTERN, phone)) {
-            throw new IncorrectConditionException("请输入正确格式的手机号");
+            throw new IncorrectConditionException(GlobalMessageConstants.INCORRECT_PHONE_PATTERN);
         }
         // TODO 手机验证码发送功能待实现
-        return false;
+        throw new IncorrectConditionException("手机验证码服务暂不可用");
     }
 
 }

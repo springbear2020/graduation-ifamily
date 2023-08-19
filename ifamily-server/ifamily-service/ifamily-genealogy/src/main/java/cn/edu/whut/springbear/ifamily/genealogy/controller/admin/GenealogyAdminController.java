@@ -1,7 +1,6 @@
 package cn.edu.whut.springbear.ifamily.genealogy.controller.admin;
 
 import cn.edu.whut.springbear.ifamily.common.api.CommonResult;
-import cn.edu.whut.springbear.ifamily.common.constant.MessageConstants;
 import cn.edu.whut.springbear.ifamily.common.pojo.dto.UserDTO;
 import cn.edu.whut.springbear.ifamily.common.util.WebUtils;
 import cn.edu.whut.springbear.ifamily.genealogy.pojo.po.UserGenealogyDO;
@@ -38,10 +37,8 @@ public class GenealogyAdminController {
     public CommonResult<String> editDefaultGenealogy(@Validated @RequestBody GenealogyQuery genealogyQuery) {
         UserDTO userDTO = WebUtils.parseGeneralUser(httpServletRequest);
         UserGenealogyDO defaultGenealogy = this.userGenealogyService.getDefault(userDTO.getId());
-        // 更新用户默认家族信息
-        genealogyQuery.setId(defaultGenealogy.getGenealogyId());
-        boolean updateResult = this.genealogyService.edit(genealogyQuery);
-        return updateResult ? CommonResult.success() : CommonResult.failed(MessageConstants.SYSTEM_EXCEPTION);
+        boolean updateResult = this.genealogyService.edit(genealogyQuery, defaultGenealogy.getGenealogyId());
+        return updateResult ? CommonResult.success() : CommonResult.failed("请求更新家族资料失败");
     }
 
 }

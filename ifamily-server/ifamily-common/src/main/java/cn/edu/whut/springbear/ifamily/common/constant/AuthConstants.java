@@ -27,10 +27,6 @@ public class AuthConstants {
      */
     public static final String AUTHORITY_PREFIX = "ROLE_";
     /**
-     * JWT 存储权限属性
-     */
-    public static final String AUTHORITY_CLAIM_NAME = "authorities";
-    /**
      * Redis 缓存权限规则 key
      */
     public static final String PERMISSION_ROLES_MAP_KEY = "auth:permissionRoleNamesMap";

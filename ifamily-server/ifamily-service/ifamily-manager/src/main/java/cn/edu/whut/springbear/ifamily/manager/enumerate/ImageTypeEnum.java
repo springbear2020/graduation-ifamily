@@ -20,7 +20,15 @@ public enum ImageTypeEnum {
     /**
      * 人物肖像
      */
-    PEOPLE_PORTRAIT(3, "人物肖像", "portrait");
+    PEOPLE_PORTRAIT(3, "人物肖像", "portrait"),
+    /**
+     * 家族相册
+     */
+    FAMILY_ALBUM(4, "家族相册", "album"),
+    /**
+     * 大事配图
+     */
+    MEMORABILIA(5, "大事配图", "memorabilia");
 
     private final Integer code;
     private final String desc;

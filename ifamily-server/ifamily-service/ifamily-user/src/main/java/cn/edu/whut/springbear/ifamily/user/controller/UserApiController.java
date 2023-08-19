@@ -1,7 +1,6 @@
 package cn.edu.whut.springbear.ifamily.user.controller;
 
 import cn.edu.whut.springbear.ifamily.common.api.CommonResult;
-import cn.edu.whut.springbear.ifamily.common.constant.MessageConstants;
 import cn.edu.whut.springbear.ifamily.user.pojo.query.LoginQuery;
 import cn.edu.whut.springbear.ifamily.user.pojo.query.ResetQuery;
 import cn.edu.whut.springbear.ifamily.user.service.UserService;
@@ -39,7 +38,7 @@ public class UserApiController {
     @PutMapping("/reset")
     public CommonResult<String> reset(@Validated @RequestBody ResetQuery resetQuery) {
         boolean updateResult = this.userService.reset(resetQuery);
-        return updateResult ? CommonResult.success() : CommonResult.failed(MessageConstants.SYSTEM_EXCEPTION);
+        return updateResult ? CommonResult.success() : CommonResult.failed("请求更新密码失败");
     }
 
 }

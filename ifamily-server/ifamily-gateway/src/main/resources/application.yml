@@ -72,4 +72,4 @@ secure:
       - "/webjars/**"
       - "/ifamily-auth/oauth/token"
       - "/ifamily-user/user/api/**"
-      - "/ifamily-manager/manager/api/**"
+      - "/ifamily-manager/manager/code/api/**"

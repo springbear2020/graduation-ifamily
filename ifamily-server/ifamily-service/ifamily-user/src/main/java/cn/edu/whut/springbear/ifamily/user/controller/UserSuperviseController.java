@@ -1,7 +1,6 @@
 package cn.edu.whut.springbear.ifamily.user.controller;
 
 import cn.edu.whut.springbear.ifamily.common.api.CommonResult;
-import cn.edu.whut.springbear.ifamily.common.constant.MessageConstants;
 import cn.edu.whut.springbear.ifamily.common.pojo.query.PageQuery;
 import cn.edu.whut.springbear.ifamily.user.pojo.vo.LoginLogVO;
 import cn.edu.whut.springbear.ifamily.user.pojo.vo.UserVO;
@@ -33,7 +32,7 @@ public class UserSuperviseController {
     @GetMapping
     public CommonResult<Object> current() {
         UserVO userVO = this.userService.current();
-        return userVO != null ? CommonResult.success(userVO) : CommonResult.failed(MessageConstants.UNAUTHORIZED);
+        return userVO == null ? CommonResult.failed("用户信息无数据") : CommonResult.success(userVO);
     }
 
     @ApiOperation("用户账号注销")
@@ -41,7 +40,7 @@ public class UserSuperviseController {
     public CommonResult<String> logout(@ApiParam("账号登录密码") @RequestParam("password") String password) {
         UserVO current = this.userService.current();
         boolean deleteResult = this.userService.logout(current.getId(), password);
-        return deleteResult ? CommonResult.success() : CommonResult.failed(MessageConstants.SYSTEM_EXCEPTION);
+        return deleteResult ? CommonResult.success() : CommonResult.failed("请求注销账号失败");
     }
 
     /**
@@ -58,7 +57,7 @@ public class UserSuperviseController {
 
         UserVO current = this.userService.current();
         boolean updateResult = this.userService.updateSimpleProfile(type, current.getId(), content);
-        return updateResult ? CommonResult.success() : CommonResult.failed(MessageConstants.SYSTEM_EXCEPTION);
+        return updateResult ? CommonResult.success() : CommonResult.failed("请求更新资料失败");
     }
 
     /**
@@ -89,10 +88,10 @@ public class UserSuperviseController {
                 updateResult = this.userService.updatePhone(current.getId(), content, extra);
                 break;
             default:
-                return CommonResult.failed("类型：[1]用户名 [2]邮箱 [3]手机");
+                return CommonResult.preconditionFailed("账户类型：[1]用户名 [2]邮箱 [3]手机");
         }
 
-        return updateResult ? CommonResult.success() : CommonResult.failed(MessageConstants.SYSTEM_EXCEPTION);
+        return updateResult ? CommonResult.success() : CommonResult.failed("请求更新隐私失败");
     }
 
     @ApiOperation("查询用户登录记录")

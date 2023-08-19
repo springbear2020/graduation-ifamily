@@ -5,12 +5,11 @@
     <van-list finished-text="没有更多了" :finished="finished" v-model="loading" @load="onLoad">
       <van-cell v-for="item in loginLogList" :key="item.id" :title="item.device" :label="item.loginDatetime">
         <template #default>
-          <p>{{ item.location }}</p>
-          <p>{{ item.ip }}</p>
+          <p class="plain-p">{{ item.location }}</p>
+          <p class="plain-p">{{ item.ip }}</p>
         </template>
       </van-cell>
     </van-list>
-
   </div>
 </template>
 
@@ -30,24 +29,20 @@ export default {
   },
   methods: {
     onLoad() {
-      this.$api.user.getUserLoginLog(this.formData).then(logList => {
-        if (Array.isArray(logList)) {
-          logList.forEach(item => {
-            this.loginLogList.push(item)
-          })
-        }
+      this.$api.user.loginLogPageData(this.formData).then(logList => {
+        logList.forEach(item => {
+          this.loginLogList.push(item)
+        })
         this.loading = false
         this.formData.current += 1
+
+        if (!logList || logList.length < this.formData.size) {
+          this.finished = true
+        }
       }).catch(() => {
         this.finished = true
       })
-    },
+    }
   }
 }
 </script>
-
-<style scoped>
-.van-cell__value p {
-  margin: 0;
-}
-</style>

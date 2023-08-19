@@ -1,7 +1,6 @@
 package cn.edu.whut.springbear.ifamily.genealogy.controller;
 
 import cn.edu.whut.springbear.ifamily.common.api.CommonResult;
-import cn.edu.whut.springbear.ifamily.common.constant.MessageConstants;
 import cn.edu.whut.springbear.ifamily.common.pojo.dto.UserDTO;
 import cn.edu.whut.springbear.ifamily.common.pojo.query.PageQuery;
 import cn.edu.whut.springbear.ifamily.common.util.WebUtils;
@@ -17,6 +16,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.constraints.Size;
 import java.util.List;
 
 /**
@@ -35,11 +35,11 @@ public class NoticeSuperviseController {
 
     @ApiOperation("发布用户默认家族公告")
     @PostMapping
-    public CommonResult<String> create(@ApiParam("公告内容") @RequestParam("content") String content) {
+    public CommonResult<String> create(@ApiParam("公告内容") @RequestParam("content") @Size(max = 1000, message = "请填写家族公告，长度不大于 1000") String content) {
         UserDTO userDTO = WebUtils.parseGeneralUser(httpServletRequest);
         UserGenealogyDO defaultGenealogy = this.userGenealogyService.getDefault(userDTO.getId());
         boolean saveResult = this.noticeService.create(defaultGenealogy.getGenealogyId(), userDTO.getId(), content);
-        return saveResult ? CommonResult.success() : CommonResult.failed(MessageConstants.SYSTEM_EXCEPTION);
+        return saveResult ? CommonResult.success() : CommonResult.failed("请求发布家族公告失败");
     }
 
     @ApiOperation("查看用户默认家族公告")

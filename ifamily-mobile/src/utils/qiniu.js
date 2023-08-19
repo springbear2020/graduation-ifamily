@@ -1,5 +1,4 @@
 import * as qiniu from 'qiniu-js'
-import {Notify} from 'vant';
 
 /**
  * 上传图片文件到七牛云服务器
@@ -32,16 +31,12 @@ export function qiniuUploader(file, key, token) {
             qiniu.upload(data.dist, key, token, putExtra, config).subscribe({
                 // 上传进度
                 next(next) {
-                    // let rate = next.total.percent + "";
-                    // rate = rate.substring(0, rate.indexOf(".") + 3) + '%'
+                    let rate = next.total.percent + "";
+                    rate = rate.substring(0, rate.indexOf(".") + 3) + '%'
                     // console.log(rate);
                 },
                 // 上传失败
                 error(err) {
-                    Notify({
-                        type: 'danger',
-                        message: '图片上传失败，请稍后重试'
-                    })
                     reject(err)
                 },
                 // 上传成功

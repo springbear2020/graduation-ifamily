@@ -1,12 +1,16 @@
 package cn.edu.whut.springbear.ifamily.manager.service.business.impl;
 
 import cn.edu.whut.springbear.ifamily.common.enumerate.AssertEnum;
+import cn.edu.whut.springbear.ifamily.common.exception.IncorrectConditionException;
 import cn.edu.whut.springbear.ifamily.common.exception.SystemServiceException;
 import cn.edu.whut.springbear.ifamily.common.pojo.dto.UserDTO;
 import cn.edu.whut.springbear.ifamily.common.util.WebUtils;
+import cn.edu.whut.springbear.ifamily.manager.enumerate.ImageTypeEnum;
 import cn.edu.whut.springbear.ifamily.manager.pojo.po.QiniuLogDO;
 import cn.edu.whut.springbear.ifamily.manager.service.QiniuLogService;
 import cn.edu.whut.springbear.ifamily.manager.service.business.QiniuService;
+import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.IdUtil;
 import com.qiniu.util.Auth;
 import com.qiniu.util.StringMap;
 import org.springframework.beans.factory.annotation.Value;
@@ -42,7 +46,32 @@ public class QiniuServiceImpl implements QiniuService {
     }
 
     @Override
-    public Map<String, String> imgToken(String key) {
+    public Map<String, String> imgToken(String suffix, Integer type) {
+        // 图片类型：[1]用户头像 [2]家族封面 [3]人物肖像 [4]家族相册 [5]家族大事
+        String imgType;
+        switch (type) {
+            case 1:
+                imgType = ImageTypeEnum.USER_AVATAR.getDirectory();
+                break;
+            case 2:
+                imgType = ImageTypeEnum.CLAN_COVER.getDirectory();
+                break;
+            case 3:
+                imgType = ImageTypeEnum.PEOPLE_PORTRAIT.getDirectory();
+                break;
+            case 4:
+                imgType = ImageTypeEnum.FAMILY_ALBUM.getDirectory();
+                break;
+            case 5:
+                imgType = ImageTypeEnum.MEMORABILIA.getDirectory();
+                break;
+            default:
+                throw new IncorrectConditionException("图片类型：[1]用户头像 [2]家族封面 [3]人物肖像 [4]家族相册 [5]家族大事");
+        }
+
+        // 自定义文件上传名，例：img/avatar/23/03/27/a5c8a5e8-df2b-4706-bea4-08d0939410e3.png
+        String key = "img/" + imgType + "/" + DateUtil.format(new Date(), "yyyy/MM/dd") + "/" + IdUtil.randomUUID() + suffix;
+
         StringMap policy = new StringMap();
         // 限制文件上传类型为图片
         policy.put("mimeLimit", "image/*");

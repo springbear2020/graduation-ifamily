@@ -2,7 +2,7 @@ import request from "@/utils/request";
 
 const superviseBaseUrl = '/ifamily-genealogy/genealogy/member/supervise'
 
-export function memberTreeOfGenealogy() {
+export function reqMemberTreeOfGenealogy() {
     return request({
         url: `${superviseBaseUrl}/tree`,
         method: 'get'
