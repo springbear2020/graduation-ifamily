@@ -12,7 +12,7 @@ public interface UsernameUpdateLogService extends IService<UsernameUpdateLogDO> 
     /**
      * 获取用户最新的用户名修改记录
      */
-    UsernameUpdateLogDO getLatest(Long userId);
+    UsernameUpdateLogDO getLatestOfUser(Long userId);
 
     /**
      * 保存用户用户名修改记录

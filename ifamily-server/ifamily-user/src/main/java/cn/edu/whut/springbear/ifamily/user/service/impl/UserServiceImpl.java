@@ -7,11 +7,11 @@ import cn.edu.whut.springbear.ifamily.common.enumerate.DeleteStatusEnum;
 import cn.edu.whut.springbear.ifamily.common.enumerate.EnableStatusEnum;
 import cn.edu.whut.springbear.ifamily.common.exception.IllegalConditionException;
 import cn.edu.whut.springbear.ifamily.common.exception.IllegalStatusException;
+import cn.edu.whut.springbear.ifamily.model.dto.SecurityUserDetailsDTO;
 import cn.edu.whut.springbear.ifamily.model.po.PermissionDO;
 import cn.edu.whut.springbear.ifamily.model.po.UserDO;
 import cn.edu.whut.springbear.ifamily.security.util.JwtUtils;
 import cn.edu.whut.springbear.ifamily.user.mapper.UserMapper;
-import cn.edu.whut.springbear.ifamily.user.pojo.dto.SecurityUserDetailsDTO;
 import cn.edu.whut.springbear.ifamily.user.pojo.po.UsernameUpdateLogDO;
 import cn.edu.whut.springbear.ifamily.user.pojo.query.UserLoginQuery;
 import cn.edu.whut.springbear.ifamily.user.pojo.query.UserQuery;
@@ -32,9 +32,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -47,7 +44,7 @@ import java.util.List;
  * @since 2023-03-10
  */
 @Service
-public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements UserService, UserDetailsService {
+public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements UserService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -59,29 +56,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
     private UsernameUpdateLogService usernameUpdateLogService;
     @Autowired
     private RedisTemplate<String, String> redisTemplate;
-
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        QueryWrapper<UserDO> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("username", username);
-        UserDO user = this.baseMapper.selectOne(queryWrapper);
-
-        if (user == null) {
-            // [401]UsernameNotFoundException -> AuthenticationException -> RestfulUnauthorizedEntryPoint
-            throw new UsernameNotFoundException(UserMessageConstants.USER_NOT_EXISTS);
-        }
-
-        // 检查用户账号状态
-        if (EnableStatusEnum.DISABLE.getCode().equals(user.getStatus())) {
-            // [401] RestfulUnauthorizedEntryPoint
-            throw new UsernameNotFoundException(UserMessageConstants.ILLEGAL_USER_STATUS);
-        }
-
-        // 查询当前用户下拥有的权限列表，提供给安全框架鉴权使用
-        List<PermissionDO> permissions = this.aclFeignClient.listPermissionsOfUser(user.getId());
-        permissions = permissions == null ? new ArrayList<>() : permissions;
-        return new SecurityUserDetailsDTO(user, permissions);
-    }
 
     @Override
     public String login(UserLoginQuery userLoginQuery) {
@@ -229,7 +203,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
         }
 
         // 查询当前用户用户名的上次更新时间，一年内只允许更新一次
-        UsernameUpdateLogDO latest = this.usernameUpdateLogService.getLatest(user.getId());
+        UsernameUpdateLogDO latest = this.usernameUpdateLogService.getLatestOfUser(user.getId());
         if (latest != null) {
             Date lastUpdate = latest.getCreated();
             long days = DateUtil.between(lastUpdate, new Date(), DateUnit.DAY);
@@ -316,16 +290,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
         if (userDetailsDTO == null) {
             throw new IllegalStatusException(UserMessageConstants.UNAUTHORIZED);
         }
-
-        // 根据用户查询用户信息
-        String username = userDetailsDTO.getUsername();
-        QueryWrapper<UserDO> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("username", username);
-        UserDO userDO = this.baseMapper.selectOne(queryWrapper);
-        if (userDO == null) {
-            throw new IllegalStatusException(UserMessageConstants.USER_NOT_EXISTS);
-        }
-        return userDO;
+        return userDetailsDTO.getUser();
     }
 
     /**

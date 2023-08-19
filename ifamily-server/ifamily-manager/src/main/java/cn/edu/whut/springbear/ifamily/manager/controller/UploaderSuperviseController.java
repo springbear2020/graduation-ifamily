@@ -1,11 +1,20 @@
 package cn.edu.whut.springbear.ifamily.manager.controller;
 
 import cn.edu.whut.springbear.ifamily.common.api.CommonResult;
+import cn.edu.whut.springbear.ifamily.common.constant.SystemMessageConstants;
+import cn.edu.whut.springbear.ifamily.manager.service.QiniuService;
+import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.IdUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Date;
+import java.util.Map;
 
 /**
  * @author Spring-_-Bear
@@ -16,10 +25,16 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/supervise/manager/uploader")
 public class UploaderSuperviseController {
 
-    @ApiOperation("获取七牛云图片上传令牌")
-    @GetMapping("/qiniu/img/token")
-    public CommonResult<String> qiniuImageToken() {
-        return CommonResult.success("get token success");
+    @Autowired
+    private QiniuService qiniuService;
+
+    @ApiOperation("获取七牛云头像图片上传令牌")
+    @GetMapping("/qiniu/token/img/avatar")
+    public CommonResult<Object> qiniuImageToken(@RequestParam("suffix") String suffix) {
+        // 自定义文件上传名，例：img/avatar/23/03/27/a5c8a5e8-df2b-4706-bea4-08d0939410e3.png
+        String key = "img/avatar/" + DateUtil.format(new Date(), "yyyy/MM/dd") + "/" + IdUtil.randomUUID() + suffix;
+        Map<String, String> map = qiniuService.imgToken(key);
+        return map == null ? CommonResult.failed(SystemMessageConstants.SYSTEM_EXCEPTION) : CommonResult.success(map);
     }
 
 }

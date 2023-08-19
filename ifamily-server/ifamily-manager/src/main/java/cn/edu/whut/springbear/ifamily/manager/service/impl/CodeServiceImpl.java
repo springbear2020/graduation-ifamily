@@ -4,6 +4,7 @@ package cn.edu.whut.springbear.ifamily.manager.service.impl;
 import cn.edu.whut.springbear.ifamily.common.constant.RedisConstants;
 import cn.edu.whut.springbear.ifamily.common.enumerate.DeleteStatusEnum;
 import cn.edu.whut.springbear.ifamily.common.enumerate.SuccessStatusEnum;
+import cn.edu.whut.springbear.ifamily.common.exception.IllegalStatusException;
 import cn.edu.whut.springbear.ifamily.common.exception.SystemServiceException;
 import cn.edu.whut.springbear.ifamily.manager.enumerate.CodeTypeEnum;
 import cn.edu.whut.springbear.ifamily.manager.pojo.po.CodeSendLogDO;
@@ -24,6 +25,7 @@ import javax.mail.internet.MimeMessage;
 import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -34,21 +36,26 @@ import java.util.concurrent.TimeUnit;
 public class CodeServiceImpl implements CodeService {
 
     private static final Integer CODE_LENGTH = 6;
+    private static final Integer MAX_TIMES = 5;
+
     @Value("${spring.mail.username}")
     private String sender;
-
     @Autowired
     private RedisTemplate<String, String> redisTemplate;
-    @Autowired
-    private CodeSendLogService codeSendLogService;
     @Autowired
     private JavaMailSender javaMailSender;
     @Autowired
     TemplateEngine templateEngine;
+    @Autowired
+    private CodeSendLogService codeSendLogService;
 
     @Override
     public boolean sendEmailCode(String email) {
-        // TODO 限制今日验证码发送次数
+        // 限制今日验证码发送次数
+        List<CodeSendLogDO> codeSendLogDOList = this.codeSendLogService.listLogsOnSpecifiedDate(email, new Date());
+        if (codeSendLogDOList != null && codeSendLogDOList.size() > MAX_TIMES) {
+            throw new IllegalStatusException("今日验证码发送次数已达上限");
+        }
 
         String code = RandomUtil.randomNumbers(CODE_LENGTH);
         // 将验证码内容注入到邮件 HTML 模板中，而后读取模板文件，将其内容解析为字符串
@@ -87,7 +94,7 @@ public class CodeServiceImpl implements CodeService {
     @Override
     public boolean sendSmsCode(String phone) {
         // TODO 手机验证码发送功能待实现
-        return true;
+        return false;
     }
 
 }

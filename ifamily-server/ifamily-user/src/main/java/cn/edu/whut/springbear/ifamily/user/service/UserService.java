@@ -6,22 +6,12 @@ import cn.edu.whut.springbear.ifamily.user.pojo.query.UserQuery;
 import cn.edu.whut.springbear.ifamily.user.pojo.query.UserResetQuery;
 import cn.edu.whut.springbear.ifamily.user.pojo.vo.UserVO;
 import com.baomidou.mybatisplus.extension.service.IService;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 /**
  * @author Spring-_-Bear
  * @since 2023-03-10
  */
 public interface UserService extends IService<UserDO> {
-
-    /**
-     * 根据用户名查询用户信息，将查询到的用户信息 UserDO 封装为 SecurityUserDetailsDTO，
-     * 以供 SpringSecurity 安全框架鉴权使用
-     *
-     * @return org.springframework.security.core.userdetails.UserDetails
-     */
-    UserDetails loadUserByUsername(String username) throws UsernameNotFoundException;
 
     /**
      * 用户登录

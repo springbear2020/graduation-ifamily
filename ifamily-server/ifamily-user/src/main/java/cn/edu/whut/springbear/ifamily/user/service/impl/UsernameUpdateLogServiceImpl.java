@@ -19,7 +19,7 @@ import java.util.List;
 public class UsernameUpdateLogServiceImpl extends ServiceImpl<UsernameUpdateLogMapper, UsernameUpdateLogDO> implements UsernameUpdateLogService {
 
     @Override
-    public UsernameUpdateLogDO getLatest(Long userId) {
+    public UsernameUpdateLogDO getLatestOfUser(Long userId) {
         QueryWrapper<UsernameUpdateLogDO> queryWrapper = new QueryWrapper<>();
         // 根据 ID 查询用户最新的用户名修改记录，而后根据创建时间逆序排序
         queryWrapper.eq("user_id", userId).orderByDesc("created");
