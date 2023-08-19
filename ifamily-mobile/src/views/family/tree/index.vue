@@ -3,8 +3,8 @@
     <van-nav-bar title="家族树谱" left-arrow @click-left="$router.replace(dstRoute)" @click-right="showPopover = true">
       <template #right>
         <!-- 右上角操作气泡弹出框 -->
-        <van-popover placement="bottom-end" trigger="click"
-                     v-model="showPopover" :actions="actions" @select="onSelect">
+        <van-popover v-if="tree.id" placement="bottom-end" trigger="click" v-model="showPopover" :actions="actions"
+                     @select="onSelect">
           <template #reference>
             <van-icon name="apps-o" size="20"/>
           </template>
@@ -13,39 +13,24 @@
     </van-nav-bar>
 
     <!-- 家族系谱图 -->
-    <FamilyTree :tree="tree" @click-node="clickPeopleNode" ref="familyTree"/>
+    <FamilyTree v-if="tree.id" :tree="tree" @click-node="clickPeopleNode" ref="familyTree"/>
 
-    <!-- 成员搜索动作面板 -->
-    <van-action-sheet v-model="showSearchSheet" title="搜索成员">
-      <van-search v-model="memberName" show-action placeholder="家族成员姓名" @search="locateMemberNode(memberName)">
-        <template #action>
-          <div @click="locateMemberNode(memberName)">搜索</div>
-        </template>
-      </van-search>
-      <van-empty description="无内容"/>
-    </van-action-sheet>
-    <!-- 树节点点击操作面板 -->
-    <van-action-sheet v-model="showPeopleSheet" cancel-text="取消" :description="peopleName">
-      <van-grid square :border="false">
-        <van-grid-item icon="add-o" text="添加亲人" to="/family/manage/members/add/0"/>
-        <van-grid-item icon="delete-o" text="移除此人" @click="removeFamilyPeople"/>
-        <van-grid-item icon="edit" text="编辑信息" to="/family/manage/members/edit/0"/>
-        <van-grid-item icon="manager-o" text="ta 的主页" to="/family/members/people/0"/>
-      </van-grid>
-    </van-action-sheet>
+    <van-empty class="empty" v-if="emptyShow" description="空空如也~">
+      <van-button icon="plus" type="info" to="/family/manage/member/init">添加成员</van-button>
+    </van-empty>
   </div>
 </template>
 
 <script>
 import FamilyTree from '@/components/tree/family-tree';
-import stone from '@/assets/json/stone.json'
+import MemberForm from "@/components/basis/member-form";
 
 export default {
   name: "index",
-  components: {FamilyTree},
+  components: {MemberForm, FamilyTree},
   data() {
     return {
-      tree: stone,
+      tree: {},
       showPopover: false,
       actions: [
         {text: '展开全部', icon: 'expand-o', disabled: false},
@@ -53,28 +38,29 @@ export default {
         {text: '定位到我', icon: 'aim'},
         {text: '搜索成员', icon: 'search'},
       ],
-      showSearchSheet: false,
-      memberName: '',
-      showPeopleSheet: false,
       // [true]全部节点折叠 [false]!全部节点折叠
       isAllFold: true,
-      // [0]家族 [1]列表成员 [2]成员管理 [3]成员管理
+      // [0]家族
       type: '0',
-      peopleName: '',
-      // 树节点旋转角度值
+      // 树节点旋转角度
       rotate: 0,
+      emptyShow: false
     }
   },
   mounted() {
-    this.type = this.$route.params.type
+    let type = this.$route.params.type
+    if (!(type === '0')) {
+      type = '0'
+    }
+    this.type = type
+
+    this.initTree()
   },
   computed: {
     dstRoute() {
       let dst = '/'
       if (this.type === '0') {
         dst = '/family'
-      } else if (this.type === '1' || this.type === '2' || this.type === '3') {
-        dst = '/family/member/people/' + this.type
       }
       return dst
     }
@@ -102,28 +88,42 @@ export default {
     }
   },
   methods: {
+    initTree() {
+      // 先从仓库获取家族树结构数据，不存在则进行查询
+      let tree = this.$store.state.genealogy.tree
+      if (!tree.id) {
+        this.$store.dispatch('genealogy/getGenealogyTree').then(() => {
+          tree = this.$store.state.genealogy.tree
+          this.tree = tree
+        }).catch(err => {
+          this.emptyShow = true
+          this.$toast.fail(err.data || err.desc)
+        })
+      }
+      this.tree = tree
+    },
     clickPeopleNode(node) {
-      this.peopleName = node.name
-      this.showPeopleSheet = true
+      this.$toast(node.name)
     },
     onSelect(action, index) {
-      // [0]展开全部 [1]折叠全部 [2]定位到我 [3]搜索成员
       switch (index) {
         case 0:
+          // [0]展开全部
           this.isAllFold = false;
           this.locateMemberNode(this.tree.id)
           break;
         case 1:
+          // [1]折叠全部
           this.isAllFold = true;
           this.locateMemberNode(this.tree.id)
           break;
         case 2:
-          this.isAllFold = false
-          this.locateMemberNode(21)
+          // [2]定位到我
+          this.locateMe()
           break;
         case 3:
+          // [3]搜索成员
           this.isAllFold = false
-          this.showSearchSheet = true
           break;
         default:
       }
@@ -139,19 +139,22 @@ export default {
           this.rotate = this.rotate > 360 ? 0 : this.rotate;
         })
       })
-      this.showSearchSheet = false
     },
-    removeFamilyPeople() {
-      this.$dialog.confirm({
-        title: '删除提示',
-        message: '您确定要删除《光头勇》这个家族成员吗？',
-      }).then(() => {
-        this.$toast.success('删除成功')
-        this.memberManageSheet = false
-      }).catch(() => {
-        // on cancel
-      });
+    locateMe() {
+      this.isAllFold = false
+      this.locateMemberNode(21)
     }
   }
 }
 </script>
+
+<style scoped>
+.empty {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+}
+</style>

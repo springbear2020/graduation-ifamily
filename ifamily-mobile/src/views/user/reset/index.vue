@@ -89,8 +89,8 @@ export default {
       const {account, password, code} = this.formData
       this.$api.user.register({account, password, code}).then((token) => {
         // 派发 mutation 设置用户登录信息，并将 token 信息存储到 localStorage 中
-        setToken(token);
         this.$store.commit('user/SET_TOKEN')
+        setToken(token);
         this.$router.replace('/home')
       }).catch(err => {
         this.error = err.data || err.desc
@@ -99,8 +99,9 @@ export default {
     resetPassword() {
       const {account, password, code} = this.formData
       this.$api.user.reset({account, password, code}).then(() => {
-        // 派发 action 清除登录用户信息
+        // 退出登录，清除仓库信息
         this.$store.dispatch('user/logout')
+        this.$store.dispatch('genealogy/logout')
         this.$toast('重置成功，即将前往登录页');
         setTimeout(() => {
           this.$router.replace('/user/login')

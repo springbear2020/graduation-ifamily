@@ -5,12 +5,9 @@ import cn.edu.whut.springbear.ifamily.genealogy.enumerate.DefaultStatusEnum;
 import cn.edu.whut.springbear.ifamily.genealogy.mapper.GenealogyUserMapper;
 import cn.edu.whut.springbear.ifamily.genealogy.pojo.po.GenealogyUserDO;
 import cn.edu.whut.springbear.ifamily.genealogy.service.GenealogyUserService;
-import cn.edu.whut.springbear.ifamily.genealogy.service.SecurityUserService;
-import cn.edu.whut.springbear.ifamily.model.po.UserDO;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -23,11 +20,8 @@ import java.util.List;
 @Service
 public class GenealogyUserServiceImpl extends ServiceImpl<GenealogyUserMapper, GenealogyUserDO> implements GenealogyUserService {
 
-    @Autowired
-    private SecurityUserService securityUserService;
-
     @Override
-    public boolean updateAllDefaultGenealogyOfUser(Long userId, Integer status) {
+    public boolean updateGenealogiesStatusOfUser(Long userId, Integer status) {
         UpdateWrapper<GenealogyUserDO> updateWrapper = new UpdateWrapper<>();
         updateWrapper.set("default_genealogy", status).eq("user_id", userId);
         this.baseMapper.update(null, updateWrapper);
@@ -55,15 +49,21 @@ public class GenealogyUserServiceImpl extends ServiceImpl<GenealogyUserMapper, G
     }
 
     @Override
-    public boolean setDefaultGenealogyForUser(Long genealogyId) {
-        UserDO currentUser = this.securityUserService.getCurrentUser();
+    public boolean setDefaultGenealogyForUser(Long userId, Long genealogyId) {
         // 将用户关联的所有家族的默认状态修改为否
-        this.updateAllDefaultGenealogyOfUser(currentUser.getId(), DefaultStatusEnum.NO.getCode());
+        this.updateGenealogiesStatusOfUser(userId, DefaultStatusEnum.NO.getCode());
         // 修改用户关联的 ID 为 genealogyId 的默认状态为是
         UpdateWrapper<GenealogyUserDO> updateWrapper = new UpdateWrapper<>();
-        updateWrapper.eq("genealogy_id", genealogyId).eq("user_id", currentUser.getId());
+        updateWrapper.eq("genealogy_id", genealogyId).eq("user_id", userId);
         updateWrapper.set("default_genealogy", DefaultStatusEnum.YES.getCode());
         return this.baseMapper.update(null, updateWrapper) == 1;
+    }
+
+    @Override
+    public GenealogyUserDO getDefaultGenealogyOfUser(Long userId) {
+        QueryWrapper<GenealogyUserDO> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("user_id", userId).eq("default_genealogy", DefaultStatusEnum.YES.getCode());
+        return this.baseMapper.selectOne(queryWrapper);
     }
 
 }

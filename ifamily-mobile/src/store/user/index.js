@@ -1,4 +1,4 @@
-import {login, getUser, getUserLoginLog} from '@/api/user'
+import {login, getUser} from '@/api/user'
 import {setToken, removeToken} from "@/utils/auth";
 
 export default {
@@ -12,15 +12,13 @@ export default {
         SET_TOKEN(state, token) {
             state.token = token
         },
-        REMOVE_TOKEN(state) {
-            state.token = ''
-        },
         SET_USER(state, user) {
             state.user = user
         },
-        REMOVE_USER(state) {
+        CLEAR_STATE(state) {
+            state.token = ''
             state.user = {}
-        },
+        }
     },
     actions: {
         login({commit}, params) {
@@ -36,8 +34,7 @@ export default {
         },
         logout({commit}) {
             removeToken()
-            commit('REMOVE_TOKEN')
-            commit('REMOVE_USER')
+            commit('CLEAR_STATE')
         },
         getUser({commit}) {
             return new Promise((resolve, reject) => {

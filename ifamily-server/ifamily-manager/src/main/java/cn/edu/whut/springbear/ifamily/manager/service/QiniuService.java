@@ -12,7 +12,7 @@ public interface QiniuService {
      * 从七牛云平台获取文件图片上传 token
      *
      * @param key 文件名
-     * @return Map
+     * @return Map: 键中包含 token, key, cdn
      */
     Map<String, String> imgToken(String key);
 

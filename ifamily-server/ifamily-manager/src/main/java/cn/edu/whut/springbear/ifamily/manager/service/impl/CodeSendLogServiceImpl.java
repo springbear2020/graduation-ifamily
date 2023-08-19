@@ -18,7 +18,7 @@ import java.util.List;
 public class CodeSendLogServiceImpl extends ServiceImpl<CodeSendLogMapper, CodeSendLogDO> implements CodeSendLogService {
 
     @Override
-    public List<CodeSendLogDO> listLogsOnSpecifiedDate(String receiver, Date date) {
+    public List<CodeSendLogDO> listOnSpecifiedDateOfReceiver(String receiver, Date date) {
         QueryWrapper<CodeSendLogDO> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("receiver", receiver).eq("DATE(created)", date);
         return this.baseMapper.selectList(queryWrapper);

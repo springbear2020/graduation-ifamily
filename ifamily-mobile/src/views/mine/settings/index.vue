@@ -3,7 +3,7 @@
     <van-nav-bar title="设置" left-arrow @click-left="$router.replace('/mine')"/>
 
     <van-cell title="账号安全" icon="shield-o" is-link to="/mine/settings/security"/>
-    <!-- 清空缓存、服务协议、隐私政策、 -->
+    <!-- 清空缓存、服务协议、隐私政策 -->
     <van-cell title="权限管理" icon="browsing-history-o" is-link/>
     <van-cell title="投诉举报" icon="warn-o" is-link/>
     <van-cell title="意见反馈" icon="smile-o" is-link/>
@@ -26,8 +26,9 @@ export default {
         title: '退出登录',
         message: '您确定要退出吗？您可以随时再次登录。',
       }).then(() => {
-        // 移除 store 和 localStorage 中的 token 信息
+        // 退出登录，移除仓库信息
         this.$store.dispatch('user/logout')
+        this.$store.dispatch('genealogy/logout')
         this.$router.replace('/user/login')
       }).catch(() => {
       });

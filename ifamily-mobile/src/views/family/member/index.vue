@@ -1,6 +1,6 @@
 <template>
   <div>
-    <van-nav-bar title="家族成员" left-arrow @click-left="$router.replace('/family')" @click-right="showSearchSheet = true">
+    <van-nav-bar title="家族成员" left-arrow @click-left="$router.replace('/family')" @click-right="$toast('搜索成员')">
       <template #right>
         <van-icon name="search" size="20"/>
       </template>
@@ -12,12 +12,12 @@
         <van-index-anchor :index="number">第 {{ number }} 世</van-index-anchor>
 
         <!-- 家族成员男 -->
-        <van-cell is-link center @click="$router.push('/family/member/people/1')" class="flex-cell-container">
+        <van-cell is-link center @click="$router.push('/family/member/people/1')">
           <template #title>
             <van-image round width="50" height="50" src="https://img01.yzcdn.cn/vant/cat.jpeg"/>
-            <p class="name-container">
+            <p>
               <span>光头勇</span>
-              <sex-tag/>
+              <sex-tag :sex="1"/>
             </p>
           </template>
           <template #default>
@@ -26,16 +26,6 @@
         </van-cell>
       </div>
     </van-index-bar>
-
-    <!-- 成员搜索动作面板 -->
-    <van-action-sheet v-model="showSearchSheet" title="搜索成员">
-      <van-search v-model="memberName" show-action placeholder="家族成员姓名" @search="$toast(memberName)">
-        <template #action>
-          <div @click="$toast(memberName)">搜索</div>
-        </template>
-      </van-search>
-      <van-empty description="无内容"/>
-    </van-action-sheet>
   </div>
 </template>
 
@@ -47,10 +37,18 @@ export default {
   components: {SexTag},
   data() {
     return {
-      indexList: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
-      memberName: '',
-      showSearchSheet: false,
+      indexList: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
     }
   }
 }
 </script>
+
+<style scoped>
+/deep/ .van-cell__title {
+  display: flex;
+}
+
+.van-cell__title p {
+  margin-left: 8px;
+}
+</style>

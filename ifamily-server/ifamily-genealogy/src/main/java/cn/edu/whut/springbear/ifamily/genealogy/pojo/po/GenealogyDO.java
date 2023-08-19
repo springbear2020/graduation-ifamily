@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
+ * 家族信息
+ *
  * @author Spring-_-Bear
  * @since 23/03/28 15:51
  */

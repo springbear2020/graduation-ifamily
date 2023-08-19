@@ -54,7 +54,7 @@ export const code = {
                 this.error = err.data || err.desc
             })
         },
-        // 发送手机验证码
+        // TODO 发送手机验证码
         sendPhoneVerifyCode() {
             this.$toast('手机验证码服务暂不可用，请使用邮箱验证码')
         },

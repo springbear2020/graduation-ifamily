@@ -55,8 +55,9 @@ export default {
     handleUpdate() {
       // [1]用户名 [2]邮箱 [3]手机
       this.$api.user.updateUserPrivacy(this.username, this.password, 1).then(() => {
-        // 身份令牌已无效，重新登录
+        // 退出登录，移除仓库信息
         this.$store.dispatch('user/logout')
+        this.$store.dispatch('genealogy/logout')
         this.$router.replace('/user/login')
         this.$toast('UID 修改成功，请重新登录')
       }).catch(err => {

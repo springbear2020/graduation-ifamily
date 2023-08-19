@@ -37,15 +37,27 @@ public class UserSuperviseController {
     @ApiOperation("获取当前用户")
     @GetMapping
     public CommonResult<Object> currentUser() {
-        UserVO userVO = this.userService.currentUser();
+        UserVO userVO = this.userService.current();
         return userVO != null ? CommonResult.success(userVO) : CommonResult.failed(UserMessageConstants.UNAUTHORIZED);
     }
 
     @ApiOperation("查询登录记录")
     @GetMapping("/devices")
     public CommonResult<Object> userLoginLog(@Validated PageQuery pageQuery) {
-        List<LoginLogVO> records = this.userLoginLogService.loginLogPageData(pageQuery);
+        UserVO current = this.userService.current();
+        List<LoginLogVO> records = this.userLoginLogService.page(pageQuery, current.getId());
         return records == null || records.isEmpty() ? CommonResult.failed("登录记录无数据") : CommonResult.success(records);
+    }
+
+    /**
+     * 用户账号注销
+     */
+    @ApiOperation("用户账号注销")
+    @DeleteMapping
+    public CommonResult<String> userLogout(@ApiParam("账号登录密码") @RequestParam("password") String password) {
+        UserVO current = this.userService.current();
+        boolean result = this.userService.remove(current.getId(), password);
+        return result ? CommonResult.success() : CommonResult.failed(SystemMessageConstants.SYSTEM_EXCEPTION);
     }
 
     @ApiOperation("更新用户资料")
@@ -54,8 +66,11 @@ public class UserSuperviseController {
             @ApiParam("需要保存的新内容") @RequestParam("content") String content,
             @ApiParam("操作类型：[1]用户昵称 [2]个性签名 [3]头像地址") @PathVariable("type") Integer type) {
 
-        final int limit = 30;
         UserQuery userQuery = new UserQuery();
+        UserVO current = this.userService.current();
+        userQuery.setId(current.getId());
+
+        final int limit = 30;
         switch (type) {
             case 1:
                 // 用户昵称
@@ -100,6 +115,7 @@ public class UserSuperviseController {
             @ApiParam("需要保存的新内容") @RequestParam("content") String content,
             @ApiParam("额外携带的信息：[type==1]携带用户密码 [type==2 || type=3]携带验证码") @RequestParam("extra") String extra) {
 
+        UserVO current = this.userService.current();
         boolean updateResult;
         switch (type) {
             case 1:
@@ -108,7 +124,7 @@ public class UserSuperviseController {
                 if (!ReUtil.isMatch(usernameRegexp, content)) {
                     return CommonResult.failed("用户名格式：以字母开头，可包含字母、数字、下划线和连字符，长度限 5 至 20 位");
                 }
-                updateResult = this.userService.updateUsername(content, extra);
+                updateResult = this.userService.updateUsername(current.getId(), content, extra);
                 break;
             case 2:
                 // 邮箱
@@ -116,7 +132,7 @@ public class UserSuperviseController {
                 if (!ReUtil.isMatch(emailRegexp, content)) {
                     return CommonResult.failed("请输入正确格式的邮箱地址");
                 }
-                updateResult = this.userService.updateEmail(content, extra);
+                updateResult = this.userService.updateEmail(current.getId(), content, extra);
                 break;
             case 3:
                 // 手机号
@@ -124,23 +140,13 @@ public class UserSuperviseController {
                 if (!ReUtil.isMatch(phoneRegexp, content)) {
                     return CommonResult.failed("请输入正确格式的手机号");
                 }
-                updateResult = this.userService.updatePhone(content, extra);
+                updateResult = this.userService.updatePhone(current.getId(), content, extra);
                 break;
             default:
                 return CommonResult.failed("类型：[1]用户名 [2]邮箱 [3]手机");
         }
 
         return updateResult ? CommonResult.success() : CommonResult.failed(SystemMessageConstants.SYSTEM_EXCEPTION);
-    }
-
-    /**
-     * 用户账号注销
-     */
-    @ApiOperation("用户账号注销")
-    @DeleteMapping
-    public CommonResult<String> userLogout(@ApiParam("账号登录密码") @RequestParam("password") String password) {
-        boolean result = this.userService.userLogout(password);
-        return result ? CommonResult.success() : CommonResult.failed(SystemMessageConstants.SYSTEM_EXCEPTION);
     }
 
 }

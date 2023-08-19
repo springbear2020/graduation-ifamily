@@ -66,6 +66,7 @@ public class QiniuServiceImpl implements QiniuService {
             return null;
         } finally {
             // 保存 token 获取记录
+            qiniuTokenLogDO.setToken("");
             qiniuTokenLogService.save(qiniuTokenLogDO);
         }
 

@@ -19,6 +19,6 @@ public interface PermissionService extends IService<PermissionDO> {
     /**
      * 查询系统所有权限
      */
-    List<PermissionDO> listAll();
+    List<PermissionDO> list();
 
 }

@@ -19,13 +19,13 @@ public interface AclFeignClient {
     /**
      * 查询用户拥有的所有系统权限
      */
-    @GetMapping("/user")
+    @GetMapping("/permissions/user")
     List<PermissionDO> listPermissionsOfUser(@RequestParam("userId") Long userId);
 
     /**
      * 查询系统所有权限
      */
-    @GetMapping("/all")
+    @GetMapping("/permissions/all")
     List<PermissionDO> listAllPermissions();
 
 }

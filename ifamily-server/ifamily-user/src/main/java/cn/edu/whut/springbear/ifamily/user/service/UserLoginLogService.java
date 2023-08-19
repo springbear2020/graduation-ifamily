@@ -19,8 +19,8 @@ public interface UserLoginLogService extends IService<UserLoginLogDO> {
     boolean create(Long userId);
 
     /**
-     * 查询用户登录记录分页数据
+     * 查询用户登录记录分页数据，若 userId 为 null 则查询当前请求用户
      */
-    List<LoginLogVO> loginLogPageData(PageQuery pageQuery);
+    List<LoginLogVO> page(PageQuery pageQuery, Long userId);
 
 }

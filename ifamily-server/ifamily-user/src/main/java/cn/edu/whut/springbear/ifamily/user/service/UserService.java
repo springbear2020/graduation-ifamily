@@ -37,7 +37,7 @@ public interface UserService extends IService<UserDO> {
     /**
      * 返回当前请求中已认证的用户信息
      */
-    UserVO currentUser();
+    UserVO current();
 
     /**
      * 更新用户简单资料，如用户头像地址、用户昵称、用户签名
@@ -49,34 +49,37 @@ public interface UserService extends IService<UserDO> {
     /**
      * 更新用户名
      *
+     * @param userId   用户 ID
      * @param username 新用户名
      * @param password 用户账号登录密码
      * @return [true]更新成功
      */
-    boolean updateUsername(String username, String password);
+    boolean updateUsername(Long userId, String username, String password);
 
     /**
      * 更新邮箱
      *
-     * @param email 新邮箱地址
-     * @param code  验证码
+     * @param userId 用户 ID
+     * @param email  新邮箱地址
+     * @param code   验证码
      * @return [true]更新成功
      */
-    boolean updateEmail(String email, String code);
+    boolean updateEmail(Long userId, String email, String code);
 
     /**
      * 更新手机号
      *
-     * @param phone 新手机号
-     * @param code  验证码
+     * @param userId 用户 ID
+     * @param phone  新手机号
+     * @param code   验证码
      * @return [true]更新成功
      */
-    boolean updatePhone(String phone, String code);
+    boolean updatePhone(Long userId, String phone, String code);
 
     /**
      * 用户账号注销
      */
-    boolean userLogout(String password);
+    boolean remove(Long userId, String password);
 
     /**
      * 根据用户名查询用户

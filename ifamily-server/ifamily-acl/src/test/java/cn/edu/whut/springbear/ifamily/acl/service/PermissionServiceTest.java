@@ -21,7 +21,7 @@ class PermissionServiceTest {
 
     @Test
     void listAll() {
-        permissionService.listAll().forEach(System.out::println);
+        permissionService.list().forEach(System.out::println);
     }
 
 }

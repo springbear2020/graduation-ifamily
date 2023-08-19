@@ -98,6 +98,10 @@ export const constantRoutes = [
         path: '/family/info',
         component: () => import('@/views/family/info'),
     },
+    {
+        path: '/family/manage/member/init',
+        component: () => import('@/views/family/manage/member/init'),
+    },
 
 
     {

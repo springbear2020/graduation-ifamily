@@ -6,9 +6,7 @@ import cn.edu.whut.springbear.ifamily.user.mapper.UserLoginLogMapper;
 import cn.edu.whut.springbear.ifamily.user.pojo.po.UserLoginLogDO;
 import cn.edu.whut.springbear.ifamily.user.pojo.query.PageQuery;
 import cn.edu.whut.springbear.ifamily.user.pojo.vo.LoginLogVO;
-import cn.edu.whut.springbear.ifamily.user.pojo.vo.UserVO;
 import cn.edu.whut.springbear.ifamily.user.service.UserLoginLogService;
-import cn.edu.whut.springbear.ifamily.user.service.UserService;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -28,8 +26,6 @@ import java.util.List;
 @Service
 public class UserLoginLogServiceImpl extends ServiceImpl<UserLoginLogMapper, UserLoginLogDO> implements UserLoginLogService {
 
-    @Autowired
-    private UserService userService;
     @Autowired
     HttpServletRequest request;
 
@@ -56,14 +52,10 @@ public class UserLoginLogServiceImpl extends ServiceImpl<UserLoginLogMapper, Use
     }
 
     @Override
-    public List<LoginLogVO> loginLogPageData(PageQuery pageQuery) {
-        // 获取当前登录系统的用户信息
-        UserVO userVO = this.userService.currentUser();
-        Long uid = userVO.getId();
-
+    public List<LoginLogVO> page(PageQuery pageQuery, Long userId) {
         // 查询用户登录记录分页数据
         QueryWrapper<UserLoginLogDO> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("user_id", uid).orderByDesc("login_datetime");
+        queryWrapper.eq("user_id", userId).orderByDesc("login_datetime");
         Page<UserLoginLogDO> pageData = new Page<>(pageQuery.getCurrent(), pageQuery.getSize());
         pageData = this.baseMapper.selectPage(pageData, queryWrapper);
         if (pageData == null || pageData.getRecords().isEmpty()) {

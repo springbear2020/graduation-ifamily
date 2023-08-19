@@ -8,6 +8,8 @@ import lombok.EqualsAndHashCode;
 import java.util.Date;
 
 /**
+ * 家族成员信息表
+ *
  * @author Spring-_-Bear
  * @since 23/03/29 19:26
  */
@@ -29,14 +31,9 @@ public class PeopleDO extends AbstractBaseDO {
     private String surname;
 
     /**
-     * 名字
+     * 姓名
      */
     private String name;
-
-    /**
-     * 全名：姓氏 + 名字
-     */
-    private String fullName;
 
     /**
      * 性别：[0]男 [1]女
@@ -54,7 +51,7 @@ public class PeopleDO extends AbstractBaseDO {
     private String generationName;
 
     /**
-     * 世代
+     * 排行
      */
     private Integer seniority;
 

@@ -45,7 +45,7 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
     }
 
     @Override
-    public List<PermissionDO> listAll() {
+    public List<PermissionDO> list() {
         return this.baseMapper.selectList(new QueryWrapper<>());
     }
 

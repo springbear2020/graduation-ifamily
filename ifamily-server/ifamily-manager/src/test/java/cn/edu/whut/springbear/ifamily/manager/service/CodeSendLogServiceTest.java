@@ -22,7 +22,7 @@ class CodeSendLogServiceTest {
     @Test
     void listLogsOnSpecifiedDate() {
         Date date = DateUtil.parse("2023-03-26", "yyyy-MM-dd");
-        List<CodeSendLogDO> codeSendLogDOS = codeSendLogService.listLogsOnSpecifiedDate("springbear2020@163.com", date);
+        List<CodeSendLogDO> codeSendLogDOS = codeSendLogService.listOnSpecifiedDateOfReceiver("springbear2020@163.com", date);
         codeSendLogDOS.forEach(System.out::println);
     }
 

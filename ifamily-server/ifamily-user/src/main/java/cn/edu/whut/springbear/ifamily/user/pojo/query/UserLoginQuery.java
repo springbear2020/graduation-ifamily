@@ -5,6 +5,7 @@ import lombok.Data;
 import org.hibernate.validator.constraints.Range;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 /**
  * @author Spring-_-Bear
@@ -25,6 +26,7 @@ public class UserLoginQuery {
 
     @ApiModelProperty("登录方式：[0]密码登录 [1]验证码登录")
     @Range(max = 1L, message = "登录方式：[0]密码登录 [1]验证码登录")
+    @NotNull
     private Integer loginType;
 
 }

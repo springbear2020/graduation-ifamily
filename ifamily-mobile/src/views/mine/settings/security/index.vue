@@ -71,6 +71,7 @@ export default {
         this.$api.user.logout({password}).then(() => {
           // 登出用户，前往登录页
           this.$store.dispatch('user/logout')
+          this.$store.dispatch('genealogy/logout')
           this.$router.replace('/user/login')
           this.$toast.success('注销成功')
           return done(true)

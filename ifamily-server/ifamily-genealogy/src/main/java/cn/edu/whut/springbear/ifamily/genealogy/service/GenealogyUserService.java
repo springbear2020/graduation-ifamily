@@ -12,13 +12,13 @@ import java.util.List;
 public interface GenealogyUserService extends IService<GenealogyUserDO> {
 
     /**
-     * 更新用户所关联的所有家族的默认状态
+     * 更新用户所关联的所有家族的默认家族状态
      *
      * @param userId 用户 ID
-     * @param status 家族的新默认状态
+     * @param status 家族的新默认状态：[0]非默认家族 [1]默认家族
      * @return 更新成功
      */
-    boolean updateAllDefaultGenealogyOfUser(Long userId, Integer status);
+    boolean updateGenealogiesStatusOfUser(Long userId, Integer status);
 
     /**
      * 保存并关联用户默认家族
@@ -33,6 +33,11 @@ public interface GenealogyUserService extends IService<GenealogyUserDO> {
     /**
      * 更新用户默认家族
      */
-    boolean setDefaultGenealogyForUser(Long genealogyId);
+    boolean setDefaultGenealogyForUser(Long userId, Long genealogyId);
+
+    /**
+     * 查询用户默认家族
+     */
+    GenealogyUserDO getDefaultGenealogyOfUser(Long userId);
 
 }

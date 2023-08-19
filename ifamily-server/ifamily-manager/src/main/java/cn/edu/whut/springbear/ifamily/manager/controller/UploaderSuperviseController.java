@@ -40,6 +40,9 @@ public class UploaderSuperviseController {
             case 2:
                 imgType = "cover";
                 break;
+            case 3:
+                imgType = "portrait";
+                break;
             default:
                 return CommonResult.failed("图片类型不正确");
         }

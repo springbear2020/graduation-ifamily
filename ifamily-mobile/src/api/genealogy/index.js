@@ -23,3 +23,25 @@ export function setDefaultGenealogyOfUser(genealogyId) {
         method: 'put',
     })
 }
+
+export function updateDefaultGenealogy(data) {
+    return request({
+        url: `${superviseBaseUrl}`,
+        method: 'put',
+        data
+    })
+}
+
+export function memberTreeOfGenealogy() {
+    return request({
+        url: `${superviseBaseUrl}/people/tree`,
+        method: 'get'
+    })
+}
+
+export function generationPeopleListOfGenealogy() {
+    return request({
+        url: `${superviseBaseUrl}/people/generation`,
+        method: 'get'
+    })
+}

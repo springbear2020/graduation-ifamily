@@ -52,7 +52,7 @@ public class CodeServiceImpl implements CodeService {
     @Override
     public boolean sendEmailCode(String email) {
         // 限制今日验证码发送次数
-        List<CodeSendLogDO> codeSendLogDOList = this.codeSendLogService.listLogsOnSpecifiedDate(email, new Date());
+        List<CodeSendLogDO> codeSendLogDOList = this.codeSendLogService.listOnSpecifiedDateOfReceiver(email, new Date());
         if (codeSendLogDOList != null && codeSendLogDOList.size() > MAX_TIMES) {
             throw new IllegalStatusException("今日验证码发送次数已达上限");
         }
@@ -75,7 +75,7 @@ public class CodeServiceImpl implements CodeService {
             helper.setTo(email);
             helper.setSubject("【百家谱】邮箱验证码身份认证");
             helper.setText(emailContent, true);
-            // TODO open the next line when deploy
+            /// FIXME open the next line when deploy
 //            javaMailSender.send(mimeMessage);
             // 邮件发送成功，更新发送记录状态为成功
             codeSendLogDO.setStatus(SuccessStatusEnum.SUCCESS.getCode());

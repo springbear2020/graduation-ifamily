@@ -24,7 +24,7 @@ public class AclFeignController {
     /**
      * 查询用户拥有的所有系统权限
      */
-    @GetMapping("/user")
+    @GetMapping("/permissions/user")
     public List<PermissionDO> listPermissionsOfUser(@RequestParam("userId") Long userId) {
         return this.permissionService.listPermissionsOfUser(userId);
     }
@@ -32,9 +32,9 @@ public class AclFeignController {
     /**
      * 查询系统所有权限
      */
-    @GetMapping("/all")
-    public List<PermissionDO> listAllPermissions() {
-        return this.permissionService.listAll();
+    @GetMapping("/permissions/all")
+    public List<PermissionDO> listPermissions() {
+        return this.permissionService.list();
     }
 
 }

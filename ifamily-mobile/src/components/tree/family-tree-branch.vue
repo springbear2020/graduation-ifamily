@@ -9,7 +9,7 @@
             <div class="person" @click="$emit('click-node', tree)"
                  :class="[Array.isArray(tree.class) ? tree.class : [], `pid-${tree.id}`]">
               <div class="avatar">
-                <img :src="tree.portrait" alt="img"/>
+                <img :src="tree.portrait || 'img/male.jpg'" alt="img"/>
               </div>
               <div class="name">{{ tree.name }}</div>
             </div>
@@ -20,7 +20,7 @@
                    :class="[Array.isArray(mate.class) ? mate.class : [],`pid-${mate.id}`]"
                    @click="$emit('click-node', mate)">
                 <div class="avatar">
-                  <img :src="mate.portrait" alt="img"/>
+                  <img :src="mate.portrait || 'img/female.jpg'" alt="img"/>
                 </div>
                 <div class="name">{{ mate.name }}</div>
               </div>

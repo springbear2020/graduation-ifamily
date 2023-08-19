@@ -11,7 +11,9 @@
 
     <van-field v-model.trim="formData.code" type="number" label="验证码" placeholder="验证码" maxlength="6">
       <template #button>
-        <van-button size="small" type="primary" @click="handleSendCode" :disabled="countdown > 0">{{ buttonText }}</van-button>
+        <van-button size="small" type="primary" @click="handleSendCode" :disabled="countdown > 0">
+          {{ buttonText }}
+        </van-button>
       </template>
     </van-field>
 
@@ -91,12 +93,11 @@ export default {
         this.$toast.success('更新成功')
         this.error = ''
         this.formData.code = ''
-        // 移除用户信息，重新查询最新信息
+        // 重新查询最新信息
         this.$store.dispatch('user/getUser')
       }).catch(err => {
         this.error = err.data || err.desc
       })
-
     }
   }
 }

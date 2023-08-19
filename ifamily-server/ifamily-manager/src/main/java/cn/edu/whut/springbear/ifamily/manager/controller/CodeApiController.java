@@ -1,7 +1,7 @@
 package cn.edu.whut.springbear.ifamily.manager.controller;
 
 import cn.edu.whut.springbear.ifamily.common.api.CommonResult;
-import cn.edu.whut.springbear.ifamily.manager.constant.CodeMessageConstants;
+import cn.edu.whut.springbear.ifamily.common.constant.SystemMessageConstants;
 import cn.edu.whut.springbear.ifamily.manager.service.CodeService;
 import cn.hutool.core.util.ReUtil;
 import io.swagger.annotations.Api;
@@ -32,7 +32,7 @@ public class CodeApiController {
         if (!ReUtil.isMatch(emailRegExp, email)) {
             return CommonResult.failed("请输入正确格式的邮箱地址");
         }
-        return codeService.sendEmailCode(email) ? CommonResult.success() : CommonResult.failed(CodeMessageConstants.CODE_SEND_FAILED);
+        return codeService.sendEmailCode(email) ? CommonResult.success() : CommonResult.failed(SystemMessageConstants.SYSTEM_EXCEPTION);
     }
 
     @ApiOperation("手机验证码发送")
@@ -42,7 +42,7 @@ public class CodeApiController {
         if (!ReUtil.isMatch(phoneRegExp, phone)) {
             return CommonResult.failed("请输入正确格式的手机号");
         }
-        return codeService.sendSmsCode(phone) ? CommonResult.success() : CommonResult.failed(CodeMessageConstants.CODE_SEND_FAILED);
+        return codeService.sendSmsCode(phone) ? CommonResult.success() : CommonResult.failed(SystemMessageConstants.SYSTEM_EXCEPTION);
     }
 
 }

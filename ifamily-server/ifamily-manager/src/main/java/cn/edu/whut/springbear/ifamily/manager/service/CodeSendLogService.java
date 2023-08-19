@@ -13,12 +13,12 @@ import java.util.List;
 public interface CodeSendLogService extends IService<CodeSendLogDO> {
 
     /**
-     * 查询指定日期的验证码发送记录
+     * 查询指定日期、指定接收者的验证码发送记录
      *
      * @param receiver 接收者
      * @param date     指定日期
      * @return 指定日期下指定接收者的验证码发送记录
      */
-    List<CodeSendLogDO> listLogsOnSpecifiedDate(String receiver, Date date);
+    List<CodeSendLogDO> listOnSpecifiedDateOfReceiver(String receiver, Date date);
 
 }

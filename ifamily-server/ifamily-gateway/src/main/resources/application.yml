@@ -25,7 +25,6 @@ spring:
           uri: http://localhost:8084
           predicates:
             - Path=/*/genealogy/**
-
 logging:
   level:
     com:

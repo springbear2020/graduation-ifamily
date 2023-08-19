@@ -16,7 +16,12 @@ class GenealogyUserServiceTest {
 
     @Test
     void listGenealogyIdsOfUser() {
-        genealogyUserService.listGenealogiesOfUser(1L).forEach(System.out::println);
+        genealogyUserService.listGenealogiesOfUser(10L).forEach(System.out::println);
+    }
+
+    @Test
+    void getUserDefaultGenealogy() {
+        System.out.println(this.genealogyUserService.getDefaultGenealogyOfUser(10L));
     }
 
 }

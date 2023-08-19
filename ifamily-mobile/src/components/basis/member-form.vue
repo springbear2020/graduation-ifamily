@@ -1,88 +1,87 @@
 <template>
   <div>
-    <!-- 信息表单 -->
-    <van-form>
-      <!-- 头像、姓氏、名字、字辈 -->
+    <van-form @submit="$emit('submit-form-data', formData)">
+      <!-- 肖像图片 -->
       <div class="flex-container">
         <van-field>
           <template #input>
-            <van-uploader max-count="1" v-model="formData.portrait"/>
+            <van-uploader max-count="1" :after-read="afterRead" v-model="fileList" :max-size="5 * 1024 * 1024"
+                          @oversize="$toast('文件大小不能超过 5MB')" :before-read="beforeRead"/>
           </template>
         </van-field>
       </div>
 
+      <!-- 姓氏、名字、字辈 -->
       <van-cell-group>
-        <van-field name="surname" v-model="formData.surname" label="姓氏" placeholder="姓氏" :border="false" required/>
-        <van-field name="name" v-model="formData.name" label="名字" placeholder="名字" :border="false" required/>
-        <van-field name="word" v-model="formData.word" label="字辈" placeholder="字辈" :border="false" required/>
+        <van-field label="姓氏" placeholder="姓氏" required :border="false" v-model="formData.surname"
+                   :rules="[{ required: true, pattern: /^.{1,30}$/, message: '请填写人员姓氏, 长度不大于 30' }]"/>
+        <van-field label="名字" placeholder="名字" required :border="false" v-model="formData.name"
+                   :rules="[{ required: true, pattern: /^.{1,30}$/, message: '请填写人员姓名, 长度不大于 30' }]"/>
+        <van-field v-model="formData.generationName" label="字辈" placeholder="字辈" required :border="false"
+                   :rules="[{ required: true, pattern: /^.{1,30}$/, message: '请填写人员字辈, 长度不大于 30' }]"/>
       </van-cell-group>
 
       <!-- 性别、世代、排行 -->
       <van-cell-group>
-        <van-field name="sex" label="性别" :border="false" required>
+        <van-field label="性别" :border="false" required>
           <template #input>
-            <van-radio-group v-model="formData.sex" direction="horizontal">
+            <van-radio-group v-model="formData.gender" direction="horizontal">
               <van-radio name="0">男</van-radio>
               <van-radio name="1">女</van-radio>
             </van-radio-group>
           </template>
         </van-field>
-        <van-field name="generation" label="世代" placeholder="世代" :border="false" required>
+        <van-field label="世代" placeholder="世代" :border="false" required>
           <template #input>
             <van-stepper v-model="formData.generation"/>
           </template>
         </van-field>
-        <van-field name="range" label="排行" placeholder="排行" :border="false" required>
+        <van-field label="排行" placeholder="排行" :border="false" required>
           <template #input>
-            <van-stepper v-model="formData.range"/>
+            <van-stepper v-model="formData.seniority"/>
           </template>
         </van-field>
       </van-cell-group>
 
       <!-- 手机、常住地 -->
       <van-cell-group>
-        <van-field name="mobile" type="tel" v-model="formData.mobile" label="手机" placeholder="手机" :border="false"/>
-        <van-field name="presentPlace" label="常住地" placeholder="点击选择省市区" readonly clickable
-                   v-model="formData.presentPlace" @click="areaType = '1'; showAreaPopup = true"
-                   :border="false"/>
+        <van-field type="tel" label="手机" placeholder="手机" :border="false" v-model="formData.phone"/>
+        <van-field label="常住地" placeholder="点击选择省市区" readonly clickable :border="false"
+                   v-model="formData.residence" @click="areaType = '1'; showAreaPopup = true"
+        />
       </van-cell-group>
 
       <!-- 生于、出生地 -->
       <van-cell-group>
-        <van-field readonly clickable name="birthdate" label="生于" placeholder="点击选择出生日期"
-                   v-model="formData.birthdate" @click="dateType = '0'; showDatetimePicker = true"
-                   :border="false"/>
-        <van-field name="birthplace" readonly clickable label="出生地" placeholder="点击选择省市区"
-                   v-model="formData.birthplace" @click="areaType = '2'; showAreaPopup = true"
-                   :border="false"/>
+        <van-field readonly clickable label="生于" placeholder="点击选择出生日期"
+                   v-model="formData.birthdate" @click="dateType = '0'; showDatetimePicker = true" :border="false"/>
+        <van-field readonly clickable label="出生地" placeholder="点击选择省市区"
+                   v-model="formData.birthplace" @click="areaType = '2'; showAreaPopup = true" :border="false"/>
       </van-cell-group>
 
       <!-- 逝于、埋葬地 -->
       <van-cell-group>
-        <van-field name="alive" v-model="formData.birthplace" label="健在" input-align="right" :border="false">
+        <van-field label="健在" input-align="right" :border="false">
           <template #input>
             <van-switch v-model="formData.alive" size="20"/>
           </template>
         </van-field>
         <div v-show="!formData.alive">
-          <van-field readonly clickable name="dieDate" label="逝于" placeholder="点击选择逝世日期"
-                     v-model="formData.dieDate" :border="false"
-                     @click="dateType = '1'; showDatetimePicker = true"/>
-          <van-field name="burialPlace" readonly clickable label="埋葬地" placeholder="点击选择省市区"
-                     @click="areaType = '3'; showAreaPopup = true" v-model="formData.burialPlace"
-                     :border="false"/>
+          <van-field readonly clickable label="逝于" placeholder="点击选择逝世日期"
+                     v-model="formData.deathDate" :border="false" @click="dateType = '1'; showDatetimePicker = true"/>
+          <van-field readonly clickable label="埋葬地" placeholder="点击选择省市区"
+                     @click="areaType = '3'; showAreaPopup = true" v-model="formData.burialPlace" :border="false"/>
         </div>
       </van-cell-group>
 
       <van-cell-group>
         <van-field rows="3" autosize type="textarea" maxlength="100" label="备注" placeholder="特殊家庭关系备注，如养子、养女、继子、继女等"
-                   show-word-limit
-                   v-model="formData.remarks"/>
+                   show-word-limit v-model="formData.familyRelationRemark"/>
       </van-cell-group>
 
       <div class="flex-container">
         <van-button block @click="$emit('hidden-form')">取消</van-button>
-        <van-button block type="info" @click="$emit('submit-form-data', formData)">保存</van-button>
+        <van-button block type="info" native-type="submit">保存</van-button>
       </div>
     </van-form>
 
@@ -105,8 +104,10 @@
     <van-popup v-model="showAreaPopup" position="bottom">
       <van-area :area-list="areaList" @confirm="confirmArea" @cancel="showAreaPopup = false">
         <template #columns-bottom>
-          <van-field rows="1" autosize label="详细地址" type="textarea" maxlength="100" placeholder="详细地址" show-word-limit
-                     v-model="fullAddress"/>
+          <div class="full-address-wrapper">
+            <van-field rows="1" autosize label="详细地址" type="textarea" maxlength="100" placeholder="详细地址" show-word-limit
+                       v-model="fullAddress"/>
+          </div>
         </template>
       </van-area>
     </van-popup>
@@ -116,6 +117,7 @@
 <script>
 import dayjs from 'dayjs'
 import {areaList} from '@vant/area-data'
+import {imageUploader} from "@/mixin/image-uploader";
 
 export default {
   name: "member-form",
@@ -134,36 +136,54 @@ export default {
       showAreaPopup: false,
       fullAddress: '',
       lunar: false,
+      // 肖像
+      fileList: [],
       formData: {
-        portrait: [],
+        portrait: '',
         surname: '',
         name: '',
-        sex: '0',
+        gender: '0',
         generation: 1,
-        word: '',
-        range: 1,
-        mobile: '',
-        presentPlace: '',
+        generationName: '',
+        seniority: 1,
+        phone: '',
+        residence: '',
         birthdate: '',
+        lunarBirthdate: 0,
         birthplace: '',
         alive: true,
-        dieDate: '',
+        deathDate: '',
+        lunarDeathDate: 0,
         burialPlace: '',
-        signature: '',
-        remarks: ''
+        familyRelationRemark: ''
       }
     }
   },
+  mixins: [imageUploader],
   mounted() {
     this.areaList = areaList
+    // 修改图片类型为家族封面 [1]用户头像 [2]家族封面 [3]人物肖像
+    this.imgType = '3';
+  },
+  watch: {
+    // 图片上传成功,将任务肖像链接保存到表单信息中
+    imgUrl() {
+      this.formData.portrait = this.imgUrl
+    }
   },
   methods: {
     confirmDate() {
       const dateStr = dayjs(this.selectedDate).format('YYYY-MM-DD')
       if (this.dateType === '0') {
         this.formData.birthdate = dateStr
+        if (this.lunar) {
+          this.formData.lunarBirthdate = 1
+        }
       } else if (this.dateType === '1') {
-        this.formData.dieDate = dateStr
+        this.formData.deathDate = dateStr
+        if (this.lunar) {
+          this.formData.lunarDeathDate = 1
+        }
       }
       this.showDatetimePicker = false
     },
@@ -172,7 +192,7 @@ export default {
       area = this.fullAddress.trim() ? area + "/" + this.fullAddress.trim() : area
       switch (this.areaType) {
         case "1":
-          this.formData.presentPlace = area;
+          this.formData.residence = area;
           break;
         case "2":
           this.formData.birthplace = area
@@ -207,5 +227,9 @@ export default {
 
 .flex-container button {
   margin: 8px 0;
+}
+
+.full-address-wrapper .van-field {
+  background-color: #f7f8fa;
 }
 </style>

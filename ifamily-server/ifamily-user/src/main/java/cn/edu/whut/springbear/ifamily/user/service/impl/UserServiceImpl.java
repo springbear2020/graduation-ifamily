@@ -69,16 +69,16 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
         }
 
         // 客户端请求的登录类型：[0]密码登录 [1]验证码登录
-        final int passwordLogin = 0;
+        final int codeLogin = 1;
         Integer loginType = userLoginQuery.getLoginType();
-        if (loginType == passwordLogin) {
+        if (loginType == codeLogin) {
+            // 检验当前验证码的正确性
+            this.validateVerifyCode(account, userLoginQuery.getCode());
+        } else {
             // 验证密码正确性
             if (!this.passwordEncoder.matches(userLoginQuery.getPassword(), user.getPassword())) {
                 throw new IllegalConditionException(UserMessageConstants.ERROR_PASSWORD);
             }
-        } else {
-            // 检验当前验证码的正确性
-            this.validateVerifyCode(account, userLoginQuery.getCode());
         }
 
         // 检查用户账号状态
@@ -138,6 +138,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
         userDO.setDeleted(DeleteStatusEnum.UNDELETED.getCode());
         this.baseMapper.insert(userDO);
 
+        // 保存用户登录记录
+        this.userLoginLogService.create(userDO.getId());
+
         return JwtUtils.create("username", userDO.getUsername());
     }
 
@@ -169,8 +172,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
     }
 
     @Override
-    public UserVO currentUser() {
-        UserDO userDO = this.getCurrentUser();
+    public UserVO current() {
+        SecurityUserDetailsDTO userDetailsDTO = (SecurityUserDetailsDTO) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (userDetailsDTO == null) {
+            throw new IllegalStatusException(UserMessageConstants.UNAUTHORIZED);
+        }
+        UserDO userDO = userDetailsDTO.getUser();
+
         // 手机号脱敏，隐藏中间四位为 *
         userDO.setPhone(DesensitizedUtil.mobilePhone(userDO.getPhone()));
         UserVO userVO = new UserVO();
@@ -180,17 +188,15 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
 
     @Override
     public boolean updateSimpleProfile(UserQuery userQuery) {
-        UserDO user = this.getCurrentUser();
         UserDO userDO = new UserDO();
         // 更新头像地址 || 用户昵称 || 个性签名
         BeanUtils.copyProperties(userQuery, userDO);
-        userDO.setId(user.getId());
         return this.baseMapper.updateById(userDO) == 1;
     }
 
     @Override
-    public boolean updateUsername(String username, String password) {
-        UserDO user = this.getCurrentUser();
+    public boolean updateUsername(Long userId, String username, String password) {
+        UserDO user = this.getById(userId);
 
         // 新用户名与旧用户名一致，不允许修改
         if (user.getUsername().equals(username)) {
@@ -200,6 +206,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
         // 验证密码是否正确
         if (!passwordEncoder.matches(password, user.getPassword())) {
             throw new IllegalConditionException(UserMessageConstants.ERROR_PASSWORD);
+        }
+
+        // 验证用户输入的用户名是否已被占用
+        UserDO otherUser = this.getUserByUsername(username);
+        if (otherUser != null) {
+            throw new IllegalConditionException("用户名已被占用，请重新输入");
         }
 
         // 查询当前用户用户名的上次更新时间，一年内只允许更新一次
@@ -224,9 +236,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
     }
 
     @Override
-    public boolean updateEmail(String email, String code) {
+    public boolean updateEmail(Long userId, String email, String code) {
         // 验证新旧邮箱是否一致，注意旧邮箱为 null
-        UserDO user = this.getCurrentUser();
+        UserDO user = this.getById(userId);
         if (user.getEmail() != null && email.equals(user.getEmail())) {
             throw new IllegalConditionException("新旧邮箱一致，请重新输入");
         }
@@ -244,9 +256,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
     }
 
     @Override
-    public boolean updatePhone(String phone, String code) {
+    public boolean updatePhone(Long userId, String phone, String code) {
         // 验证新旧手机号是否一致，注意旧手机号为 null
-        UserDO user = this.getCurrentUser();
+        UserDO user = this.getById(userId);
         if (user.getPhone() != null && phone.equals(user.getPhone())) {
             throw new IllegalConditionException("新旧手机号一致，请重新输入");
         }
@@ -264,8 +276,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
     }
 
     @Override
-    public boolean userLogout(String password) {
-        UserDO user = this.getCurrentUser();
+    public boolean remove(Long userId, String password) {
+        UserDO user = this.getById(userId);
         // 验证输入的密码是否正确
         if (!this.passwordEncoder.matches(password, user.getPassword())) {
             throw new IllegalConditionException(UserMessageConstants.ERROR_PASSWORD);
@@ -280,17 +292,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
         QueryWrapper<UserDO> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("username", username);
         return this.baseMapper.selectOne(queryWrapper);
-    }
-
-    /**
-     * 获取当前请求登录系统的用户信息
-     */
-    UserDO getCurrentUser() {
-        SecurityUserDetailsDTO userDetailsDTO = (SecurityUserDetailsDTO) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (userDetailsDTO == null) {
-            throw new IllegalStatusException(UserMessageConstants.UNAUTHORIZED);
-        }
-        return userDetailsDTO.getUser();
     }
 
     /**

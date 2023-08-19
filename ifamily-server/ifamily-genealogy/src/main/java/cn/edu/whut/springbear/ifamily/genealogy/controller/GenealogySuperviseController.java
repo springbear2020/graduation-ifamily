@@ -2,10 +2,13 @@ package cn.edu.whut.springbear.ifamily.genealogy.controller;
 
 import cn.edu.whut.springbear.ifamily.common.api.CommonResult;
 import cn.edu.whut.springbear.ifamily.common.constant.SystemMessageConstants;
+import cn.edu.whut.springbear.ifamily.genealogy.pojo.po.GenealogyUserDO;
 import cn.edu.whut.springbear.ifamily.genealogy.pojo.query.GenealogyQuery;
-import cn.edu.whut.springbear.ifamily.genealogy.pojo.vo.GenealogyMemberVO;
+import cn.edu.whut.springbear.ifamily.genealogy.pojo.vo.GenealogyVO;
 import cn.edu.whut.springbear.ifamily.genealogy.service.GenealogyService;
 import cn.edu.whut.springbear.ifamily.genealogy.service.GenealogyUserService;
+import cn.edu.whut.springbear.ifamily.genealogy.service.SecurityUserService;
+import cn.edu.whut.springbear.ifamily.model.po.UserDO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,26 +30,47 @@ public class GenealogySuperviseController {
     private GenealogyService genealogyService;
     @Autowired
     private GenealogyUserService genealogyUserService;
+    @Autowired
+    private SecurityUserService securityUserService;
 
     @ApiOperation("新增家族")
     @PostMapping
     public CommonResult<String> saveGenealogy(@Validated @RequestBody GenealogyQuery genealogyQuery) {
-        boolean saveResult = this.genealogyService.create(genealogyQuery);
+        UserDO currentUser = securityUserService.getCurrentUser();
+        boolean saveResult = this.genealogyService.create(genealogyQuery, currentUser.getId());
         return saveResult ? CommonResult.success() : CommonResult.failed(SystemMessageConstants.SYSTEM_EXCEPTION);
     }
 
-    @ApiOperation("查询用户所有家族")
+    @ApiOperation("查询用户所有家族和概况")
     @GetMapping("/list")
     public CommonResult<Object> listGenealogiesOfUser() {
-        List<GenealogyMemberVO> genealogiesOfUser = this.genealogyService.listGenealogiesOfUser();
-        return genealogiesOfUser == null || genealogiesOfUser.isEmpty() ? CommonResult.failed("不存在家族信息") : CommonResult.success(genealogiesOfUser);
+        UserDO currentUser = securityUserService.getCurrentUser();
+        List<GenealogyVO> genealogiesOfUser = this.genealogyService.listGenealogiesWithProfileOfUser(currentUser.getId());
+        return genealogiesOfUser == null || genealogiesOfUser.isEmpty() ? CommonResult.failed("家族列表信息无数据") : CommonResult.success(genealogiesOfUser);
     }
 
     @ApiOperation("设置用户默认家族")
     @PutMapping("/{genealogyId}")
     public CommonResult<String> setDefaultGenealogy(@PathVariable("genealogyId") Long genealogyId) {
-        boolean result = this.genealogyUserService.setDefaultGenealogyForUser(genealogyId);
+        UserDO currentUser = securityUserService.getCurrentUser();
+        boolean result = this.genealogyUserService.setDefaultGenealogyForUser(currentUser.getId(), genealogyId);
         return result ? CommonResult.success() : CommonResult.failed("设置默认家族失败");
+    }
+
+    @ApiOperation("更新用户默认家族")
+    @PutMapping
+    public CommonResult<String> editDefaultGenealogy(@Validated @RequestBody GenealogyQuery genealogyQuery) {
+        UserDO currentUser = securityUserService.getCurrentUser();
+        // 查询用户默认家族
+        GenealogyUserDO defaultGenealogy = this.genealogyUserService.getDefaultGenealogyOfUser(currentUser.getId());
+        if (defaultGenealogy == null) {
+            return CommonResult.failed("默认家族信息无数据");
+        }
+
+        // 更新用户默认家族信息
+        genealogyQuery.setId(defaultGenealogy.getGenealogyId());
+        boolean result = this.genealogyService.editGenealogy(genealogyQuery);
+        return result ? CommonResult.success() : CommonResult.failed(SystemMessageConstants.SYSTEM_EXCEPTION);
     }
 
 }

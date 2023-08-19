@@ -6,7 +6,7 @@
       </template>
     </van-nav-bar>
 
-    <van-card centered :thumb="user.avatar ? user.avatar : 'avatar.jpg'">
+    <van-card centered :thumb="user.avatar ? user.avatar : 'img/avatar.jpg'">
       <template #desc>
         <van-cell is-link center @click="$router.push('/mine/info')">
           <p class="van-ellipsis">UID：{{ user.username }}</p>
@@ -17,17 +17,17 @@
     </van-card>
 
     <van-grid :column-num="3">
-      <van-grid-item icon="contact" text="通讯录" @click="$router.push('/mine/contact')"/>
-      <van-grid-item icon="calendar-o" text="纪念日" @click="$router.push('/mine/memorial')"/>
-      <van-grid-item icon="star-o" text="收藏夹" @click="$toast('收藏夹')"/>
+      <van-grid-item icon="contact" text="通讯录"/>
+      <van-grid-item icon="calendar-o" text="纪念日"/>
+      <van-grid-item icon="star-o" text="收藏夹"/>
     </van-grid>
 
-    <van-cell title="我的动态" icon="flag-o" is-link to="/mine/moments"/>
-    <van-cell title="我的资料" icon="user-circle-o" is-link to="/family/members/people/4"/>
+    <van-cell title="我的动态" icon="flag-o" is-link/>
+    <van-cell title="我的资料" icon="user-circle-o" is-link/>
     <van-cell title="我的家族" icon="cluster-o" is-link/>
-    <van-cell title="我的亲人" icon="friends-o" is-link to="/mine/family"/>
-    <van-cell title="我的相册" icon="photo-o" is-link to="/mine/family/album"/>
-    <van-cell title="联系客服" icon="service-o" is-link @click="$toast('联系客服')"/>
+    <van-cell title="我的亲人" icon="friends-o" is-link/>
+    <van-cell title="我的相册" icon="photo-o" is-link/>
+    <van-cell title="联系客服" icon="service-o" is-link/>
   </div>
 </template>
 
