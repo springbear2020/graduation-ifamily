@@ -3,33 +3,43 @@ server:
 spring:
   application:
     name: ifamily-gateway
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
   cloud:
     nacos:
       discovery:
-        server-addr: 127.0.0.1:8848
+        server-addr: localhost:8848
     gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
       routes:
-        - id: ifamily-acl
-          uri: http://localhost:8081
+        - id: ifamily-auth
+          uri: lb://ifamily-auth
           predicates:
-            - Path=/*/acl/**
+            - Path=/ifamily-auth/**
+          filters:
+            - StripPrefix=1
         - id: ifamily-user
-          uri: http://localhost:8082
+          uri: lb://ifamily-user
           predicates:
-            - Path=/*/user/**
-        - id: ifamily-manager
-          uri: http://localhost:8083
+            - Path=/ifamily-user/**
+          filters:
+            - StripPrefix=1
+        - id: ifamily-admin
+          uri: lb://ifamily-admin
           predicates:
-            - Path=/*/manager/**
-        - id: ifamily-genealogy
-          uri: http://localhost:8084
-          predicates:
-            - Path=/*/genealogy/**
-logging:
-  level:
-    com:
-      netflix:
-        config:
-          sources:
-            URLConfigurationSource:
-              ERROR
+            - Path=/ifamily-admin/**
+          filters:
+            - StripPrefix=1
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: 'http://localhost:9420/rsa/public'
+secure:
+  ignore:
+    urls:
+      - "/ifamily-auth/oauth/token"

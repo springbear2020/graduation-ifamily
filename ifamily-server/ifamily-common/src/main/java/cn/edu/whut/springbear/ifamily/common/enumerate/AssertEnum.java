@@ -10,13 +10,13 @@ import lombok.Getter;
 public enum AssertEnum {
 
     /**
-     * [1]是
-     */
-    YES(1, "是"),
-    /**
      * [0]否
      */
-    NO(0, "否");
+    NO(0, "否"),
+    /**
+     * [1]是
+     */
+    YES(1, "是");
 
     private final Integer code;
     private final String desc;

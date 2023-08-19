@@ -1,109 +1,96 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-    <packaging>pom</packaging>
-    <modules>
-        <module>ifamily-common</module>
-        <module>ifamily-gateway</module>
-        <module>ifamily-user</module>
-        <module>ifamily-security</module>
-        <module>ifamily-manager</module>
-        <module>ifamily-client</module>
-        <module>ifamily-model</module>
-        <module>ifamily-acl</module>
-        <module>ifamily-genealogy</module>
-    </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.2.1.RELEASE</version>
+        <version>2.7.0</version>
         <relativePath/>
     </parent>
+    <modelVersion>4.0.0</modelVersion>
+
     <groupId>cn.edu.whut.springbear</groupId>
-    <artifactId>ifamily</artifactId>
+    <artifactId>ifamily-server</artifactId>
     <version>1.0.0</version>
-    <name>ifamily</name>
-    <description>genealogy server system</description>
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>ifamily-auth</module>
+        <module>ifamily-common</module>
+        <module>ifamily-gateway</module>
+        <module>ifamily-service</module>
+    </modules>
 
     <properties>
-        <java.version>1.8</java.version>
-        <swagger.version>2.9.2</swagger.version>
+        <maven.compiler.source>8</maven.compiler.source>
+        <maven.compiler.target>8</maven.compiler.target>
+        <ifamily.version>1.0.0</ifamily.version>
+        <spring.boot.version>2.7.0</spring.boot.version>
+        <spring.cloud.version>2021.0.3</spring.cloud.version>
+        <cloud.alibaba.version>2021.0.1.0</cloud.alibaba.version>
+        <jose.jwt.version>9.23</jose.jwt.version>
+        <oauth2.version>2.2.5.RELEASE</oauth2.version>
+        <hutool.version>5.8.0</hutool.version>
+        <mybatisplus.version>3.5.1</mybatisplus.version>
     </properties>
 
     <dependencyManagement>
         <dependencies>
-            <!-- mybatis plus -->
+            <!-- mine -->
             <dependency>
-                <groupId>com.baomidou</groupId>
-                <artifactId>mybatis-plus-boot-starter</artifactId>
-                <version>3.5.1</version>
+                <groupId>cn.edu.whut.springbear</groupId>
+                <artifactId>ifamily-common</artifactId>
+                <version>${ifamily.version}</version>
             </dependency>
-            <!-- spring cloud -->
+            <!-- cloud -->
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-dependencies</artifactId>
-                <version>Hoxton.RELEASE</version>
+                <version>${spring.cloud.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
-            <!-- spring cloud alibaba -->
             <dependency>
                 <groupId>com.alibaba.cloud</groupId>
                 <artifactId>spring-cloud-alibaba-dependencies</artifactId>
-                <version>2.2.0.RELEASE</version>
+                <version>${cloud.alibaba.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
-            <!-- swagger -->
             <dependency>
-                <groupId>io.springfox</groupId>
-                <artifactId>springfox-swagger2</artifactId>
-                <version>${swagger.version}</version>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-starter-oauth2</artifactId>
+                <version>${oauth2.version}</version>
             </dependency>
+            <!-- third -->
             <dependency>
-                <groupId>io.springfox</groupId>
-                <artifactId>springfox-swagger-ui</artifactId>
-                <version>${swagger.version}</version>
+                <groupId>com.nimbusds</groupId>
+                <artifactId>nimbus-jose-jwt</artifactId>
+                <version>${jose.jwt.version}</version>
             </dependency>
-            <!-- jwt -->
-            <dependency>
-                <groupId>io.jsonwebtoken</groupId>
-                <artifactId>jjwt</artifactId>
-                <version>0.9.1</version>
-            </dependency>
-            <!-- hutool -->
             <dependency>
                 <groupId>cn.hutool</groupId>
                 <artifactId>hutool-all</artifactId>
-                <version>5.8.15</version>
+                <version>${hutool.version}</version>
             </dependency>
-            <!-- qiniu -->
             <dependency>
-                <groupId>com.qiniu</groupId>
-                <artifactId>qiniu-java-sdk</artifactId>
-                <version>7.7.0</version>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-boot-starter</artifactId>
+                <version>${mybatisplus.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
 
     <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.1</version>
-                <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
-                    <encoding>UTF-8</encoding>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
-        </plugins>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-maven-plugin</artifactId>
+                    <version>${spring.boot.version}</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
     </build>
 
 </project>

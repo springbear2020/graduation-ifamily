@@ -1,0 +1,12 @@
+server:
+  port: 9420
+spring:
+  application:
+    name: ifamily-auth
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848

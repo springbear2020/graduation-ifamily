@@ -44,6 +44,13 @@ public final class CommonResult<T> {
         return new CommonResult<>(ResultCodeEnum.SUCCESS.getCode(), ResultCodeEnum.SUCCESS.getMessage(), data);
     }
 
+    /**
+     * 失败
+     */
+    public static <T> CommonResult<T> failed(T data) {
+        return new CommonResult<>(ResultCodeEnum.NOT_ACCEPTABLE.getCode(), ResultCodeEnum.NOT_ACCEPTABLE.getMessage(), data);
+    }
+
     /// ================================================================================================================
 
     /**
@@ -78,12 +85,6 @@ public final class CommonResult<T> {
 
     /// ================================================================================================================
 
-    /**
-     * 失败
-     */
-    public static <T> CommonResult<T> failed(T data) {
-        return new CommonResult<>(ResultCodeEnum.NOT_ACCEPTABLE.getCode(), ResultCodeEnum.NOT_ACCEPTABLE.getMessage(), data);
-    }
     /**
      * 错误条件
      */
