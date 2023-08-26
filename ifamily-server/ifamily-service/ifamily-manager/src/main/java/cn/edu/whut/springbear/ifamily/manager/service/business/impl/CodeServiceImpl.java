@@ -96,7 +96,7 @@ public class CodeServiceImpl implements CodeService {
             helper.setTo(email);
             helper.setSubject("【百家谱】邮箱验证码身份认证");
             helper.setText(emailContent, true);
-//            javaMailSender.send(mimeMessage);
+            javaMailSender.send(mimeMessage);
             // 邮件发送成功，更新发送状态为成功
             codeLogDO.setSuccess(AssertEnum.YES.getCode());
         } catch (MessagingException | UnsupportedEncodingException e) {
