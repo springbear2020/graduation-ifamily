@@ -1,5 +1,5 @@
 server:
-  port: 8888
+  port: 8820
 spring:
   application:
     name: ifamily-gateway
@@ -62,7 +62,7 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          jwk-set-uri: "http://localhost:9420/rsa/public"
+          jwk-set-uri: "http://localhost:8821/rsa/public"
 secure:
   ignore:
     urls:

@@ -11,4 +11,8 @@
 
     <artifactId>ifamily-genealogy</artifactId>
 
+    <build>
+        <finalName>ifamily-genealogy</finalName>
+    </build>
+
 </project>

@@ -28,4 +28,8 @@
         </dependency>
     </dependencies>
 
+    <build>
+        <finalName>ifamily-manager</finalName>
+    </build>
+
 </project>

@@ -54,7 +54,7 @@ export default {
   computed: {
     ...mapGetters(['sidebar', 'userInfo', 'device']),
     userAvatar() {
-      return this.userInfo.avatar ? `${this.userInfo.avatar}?imageView2/1/w/80/h/80` : '/img/avatar.gif?imageView2/1/w/80/h/80'
+      return this.userInfo.avatar ? `${this.userInfo.avatar}?imageView2/1/w/80/h/80` : '/ifamily-backend/img/avatar.gif?imageView2/1/w/80/h/80'
     }
   },
   methods: {

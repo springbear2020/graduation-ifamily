@@ -11,4 +11,8 @@
 
     <artifactId>ifamily-backend</artifactId>
 
+    <build>
+        <finalName>ifamily-backend</finalName>
+    </build>
+
 </project>

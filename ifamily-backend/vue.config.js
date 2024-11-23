@@ -16,12 +16,18 @@ module.exports = defineConfig({
      * In most cases please use '/' !!!
      * Details: https://cli.vuejs.org/config/#publicpath
      */
-    publicPath: '/',
+    publicPath: './',
     transpileDependencies: true,
     lintOnSave: false,
     productionSourceMap: false,
     devServer: {
-        port: 9528
+        port: 9528,
+        proxy: {
+            '/ifamily-gateway-api': {
+                target: 'http://localhost:8820',
+                pathRewrite: {'^/ifamily-gateway-api': ''}
+            },
+        },
     },
     configureWebpack: {
         // provide the app's title in webpack's name field, so that it can be accessed in index.html to inject the correct title.

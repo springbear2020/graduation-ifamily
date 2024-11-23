@@ -1,5 +1,5 @@
 server:
-  port: 8087
+  port: 8827
 spring:
   application:
     name: ifamily-user

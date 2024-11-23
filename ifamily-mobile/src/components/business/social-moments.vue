@@ -5,7 +5,7 @@
       <!-- 头像、昵称、描述、更多 -->
       <van-cell center class="avatar-cell" :border="false" @click="viewUser(moment.publisher)">
         <template #title>
-          <van-image round width="52" height="52" :src="moment.publisher.avatar || 'img/avatar.jpg'"/>
+          <van-image round width="52" height="52" :src="moment.publisher.avatar || '/ifamily-mobile/img/avatar.jpg'"/>
           <div class="avatar-wrapper">
             <p class="plain-border">{{ moment.publisher.nickname }}</p>
             <p class="plain-border avatar-wrapper_desc">{{ moment.scheduled }}</p>
@@ -100,8 +100,8 @@
         </template>
       </van-nav-bar>
 
-      <van-card centered :thumb="clickedUser.avatar || 'img/avatar.jpg'" class="white-background"
-                @click-thumb="previewImage(clickedUser.avatar || 'img/avatar.jpg')">
+      <van-card centered :thumb="clickedUser.avatar || '/ifamily-mobile/img/avatar.jpg'" class="white-background"
+                @click-thumb="previewImage(clickedUser.avatar || '/ifamily-mobile/img/avatar.jpg')">
         <template #desc>
           <van-cell center>
             <p class="van-ellipsis plain-border">昵称：{{ clickedUser.nickname }}</p>

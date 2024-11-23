@@ -11,4 +11,8 @@
 
     <artifactId>ifamily-user</artifactId>
 
+    <build>
+        <finalName>ifamily-user</finalName>
+    </build>
+
 </project>

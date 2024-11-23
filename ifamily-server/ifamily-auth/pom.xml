@@ -57,6 +57,7 @@
     </dependencies>
 
     <build>
+        <finalName>ifamily-auth</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>

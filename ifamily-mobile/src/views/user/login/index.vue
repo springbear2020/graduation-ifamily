@@ -40,8 +40,8 @@ export default {
   data() {
     return {
       formData: {
-        account: undefined,
-        password: undefined,
+        account: "jiabaoyu",
+        password: "jiabaoyu",
       },
       agree: false,
       passwordFieldType: 'password'

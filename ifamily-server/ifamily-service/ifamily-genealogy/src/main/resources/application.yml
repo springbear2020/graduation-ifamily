@@ -1,5 +1,5 @@
 server:
-  port: 7319
+  port: 8824
 spring:
   application:
     name: ifamily-genealogy

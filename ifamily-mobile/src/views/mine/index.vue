@@ -41,7 +41,7 @@ export default {
       return this.$store.state.user.user || {}
     },
     avatar() {
-      return this.userInfo.avatar || 'img/avatar.jpg'
+      return this.userInfo.avatar || '/ifamily-mobile/img/avatar.jpg'
     }
   }
 }

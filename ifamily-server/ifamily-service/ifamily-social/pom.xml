@@ -11,4 +11,8 @@
 
     <artifactId>ifamily-social</artifactId>
 
+    <build>
+        <finalName>ifamily-social</finalName>
+    </build>
+
 </project>

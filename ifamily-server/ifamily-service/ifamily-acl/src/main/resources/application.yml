@@ -1,5 +1,5 @@
 server:
-  port: 1372
+  port: 8822
 spring:
   application:
     name: ifamily-acl

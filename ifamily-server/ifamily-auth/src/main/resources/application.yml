@@ -1,5 +1,5 @@
 server:
-  port: 9420
+  port: 8821
 spring:
   application:
     name: ifamily-auth

@@ -1,5 +1,5 @@
 server:
-  port: 8384
+  port: 8826
 spring:
   application:
     name: ifamily-social

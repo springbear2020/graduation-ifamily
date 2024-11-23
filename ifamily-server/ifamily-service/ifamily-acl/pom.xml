@@ -11,4 +11,8 @@
 
     <artifactId>ifamily-acl</artifactId>
 
+    <build>
+        <finalName>ifamily-acl</finalName>
+    </build>
+
 </project>

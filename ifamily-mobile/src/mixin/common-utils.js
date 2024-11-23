@@ -19,7 +19,7 @@ export const previewImage = {
 export const defaultPortrait = {
     methods: {
         defaultPortrait(gender) {
-            return gender === 0 ? 'img/male.jpg' : 'img/female.jpg'
+            return gender === 0 ? '/ifamily-mobile/img/male.jpg' : '/ifamily-mobile/img/female.jpg'
         }
     }
 }

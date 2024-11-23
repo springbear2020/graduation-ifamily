@@ -9,7 +9,7 @@ import store from '@/store'
 nprogress.configure({showSpinner: false})
 
 const service = axios.create({
-    baseURL: 'http://localhost:8888',
+    baseURL: '/ifamily-gateway-api',
     timeout: 10000
 })
 

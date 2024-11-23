@@ -3,7 +3,7 @@ import {getToken, TOKEN_KEY} from '@/utils/auth'
 import {Message} from 'element-ui'
 import {TOKEN_PREFIX} from "@/utils/auth"
 
-export const BASE_REQUEST_URL = 'http://localhost:8888'
+export const BASE_REQUEST_URL = '/ifamily-gateway-api'
 
 const service = axios.create({
     baseURL: BASE_REQUEST_URL,
